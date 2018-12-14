@@ -1,0 +1,5 @@
+- Add inter-critter communication
+- Add critter shooting or "spitting"
+- Add scroll bars to LoggingWindow.
+- Add "gifts": power-up or poison.
+- Add bombs
