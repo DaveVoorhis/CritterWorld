@@ -37,7 +37,7 @@ namespace CritterWorld
 
             Random rnd = new Random(DateTime.Now.Millisecond);
 
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < 20; i++)
             {
                 PolygonSprite s = new PolygonSprite(0, -10, 5, 10, 0, 5, -5, 10);
                 if (rnd.Next(100) > 50)
