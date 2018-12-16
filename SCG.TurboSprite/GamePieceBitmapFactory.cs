@@ -80,6 +80,7 @@ namespace SCG.TurboSprite
                 _cellsX = value;
             }
         }
+
         public int CellsY
         {
             get
@@ -103,6 +104,7 @@ namespace SCG.TurboSprite
                 return _masterBitmap.Width / _cellsX;
             }
         }
+
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public int CellHeight
         {

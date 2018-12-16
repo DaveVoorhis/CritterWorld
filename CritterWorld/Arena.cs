@@ -105,28 +105,30 @@ namespace CritterWorld
 
             Random rnd = new Random(DateTime.Now.Millisecond);
 
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i < 3; i++)
             {
                 Sprite s;
 
-                if (i % 2 == 0)
-                    s = new BitmapSprite(new Bitmap("Images/Robo0_01.png"));
-                else
-                    s = new PolygonSprite(Scale(body, scale));
-                if (rnd.Next(100) > 50)
-                {
-                    if (rnd.Next(100) > 50)
-                        s.Spin = SpinType.Clockwise;
-                    else
-                        s.Spin = SpinType.CounterClockwise;
-                    s.SpinSpeed = rnd.Next(20) + 1;
-                }
-                s.Position = new Point(rnd.Next(spriteSurface1.Width), rnd.Next(spriteSurface1.Height));
+                s = new PolygonSprite(Scale(body, scale));
+
+                int startX = rnd.Next(spriteSurface1.Width);
+                int startY = rnd.Next(spriteSurface1.Height);
+
+                s.Position = new Point(startX, startY);
+
                 spriteEngine1.AddSprite(s);
+
                 DestinationMover dm = spriteEngine1.GetMover(s);
                 dm.Speed = rnd.Next(10) + 1;
-                dm.Destination = new Point(rnd.Next(spriteSurface1.Width), rnd.Next(spriteSurface1.Height));
+
+                int destX = rnd.Next(spriteSurface1.Width);
+                int destY = rnd.Next(spriteSurface1.Height);
+                dm.Destination = new Point(destX, destY);
                 dm.StopAtDestination = false;
+
+                double theta = Math.Atan2(destY - startY, destX - startX) * 180 / Math.PI;
+
+                s.FacingAngle = (int)theta + 90;
             }
 
             spriteSurface1.Active = true;
