@@ -48,6 +48,7 @@ namespace SCG.TurboSprite
         {
             InitializeComponent();
         }
+
         public GamePieceBitmapFactory(IContainer container)
         {
             container.Add(this);

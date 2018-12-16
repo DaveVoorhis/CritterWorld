@@ -138,6 +138,7 @@ namespace SCG.TurboSprite
                 return (int)Shape.Width;
             }
         }
+
         public int Height
         {
             get
@@ -154,6 +155,7 @@ namespace SCG.TurboSprite
                 return Width / 2;
             }
         }
+
         public int HeightHalf
         {
             get
@@ -218,6 +220,7 @@ namespace SCG.TurboSprite
                 _x = value;
             }
         }
+
         public float Y
         {
             get
@@ -229,6 +232,7 @@ namespace SCG.TurboSprite
                 _y = value;
             }
         }
+
         public PointF PositionF
         {
             get
@@ -241,6 +245,7 @@ namespace SCG.TurboSprite
                 _y = value.Y;
             }
         }
+
         public Point Position
         {
             get
@@ -266,6 +271,7 @@ namespace SCG.TurboSprite
                 _spin = value;
             }
         }
+
         public int SpinSpeed
         {
             get

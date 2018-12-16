@@ -45,6 +45,7 @@ namespace SCG.TurboSprite
             _unrotated = new PointF[_points.Length];
             _points.CopyTo(_unrotated, 0);
         }
+
         public PolygonSprite(params float[] values)
         {
             PointF[] points = new PointF[values.Length / 2];

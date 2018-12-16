@@ -44,6 +44,7 @@ namespace SCG.TurboSprite
         {
             InitializeComponent();
         }
+
         public SpriteEngine(IContainer container)
         {
             container.Add(this);

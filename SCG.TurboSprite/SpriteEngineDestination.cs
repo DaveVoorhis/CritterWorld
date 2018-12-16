@@ -44,6 +44,7 @@ namespace SCG.TurboSprite
         {
             InitializeComponent();
         }
+
         public SpriteEngineDestination(IContainer container)
         {
             container.Add(this);
@@ -111,6 +112,7 @@ namespace SCG.TurboSprite
                 _speed = value;               
             }
         }
+
         public float SpeedX
         {
             get
@@ -122,6 +124,7 @@ namespace SCG.TurboSprite
                 _speedX = value;
             }
         }
+
         public float SpeedY
         {
             get
@@ -147,6 +150,7 @@ namespace SCG.TurboSprite
                 CalculateVectors();
             }
         }
+
         public float DestY
         {
             get
@@ -159,6 +163,7 @@ namespace SCG.TurboSprite
                 CalculateVectors();
             }
         }
+
         public PointF DestinationF
         {
             get
@@ -172,6 +177,7 @@ namespace SCG.TurboSprite
                 CalculateVectors();
             }
         }
+
         public Point Destination
         {
             get

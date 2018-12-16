@@ -36,22 +36,28 @@
             // spriteSurface1
             // 
             this.spriteSurface1.Active = false;
+            this.spriteSurface1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.spriteSurface1.AutoBlank = true;
-            this.spriteSurface1.AutoBlankColor = System.Drawing.Color.Black;
+            this.spriteSurface1.AutoBlankColor = System.Drawing.Color.White;
+            this.spriteSurface1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.spriteSurface1.CausesValidation = false;
             this.spriteSurface1.DesiredFPS = 30;
-            this.spriteSurface1.Location = new System.Drawing.Point(40, 40);
+            this.spriteSurface1.Location = new System.Drawing.Point(0, 0);
+            this.spriteSurface1.Margin = new System.Windows.Forms.Padding(0);
             this.spriteSurface1.Name = "spriteSurface1";
             this.spriteSurface1.OffsetX = 0;
             this.spriteSurface1.OffsetY = 0;
-            this.spriteSurface1.Size = new System.Drawing.Size(1555, 927);
+            this.spriteSurface1.Size = new System.Drawing.Size(1626, 994);
             this.spriteSurface1.TabIndex = 0;
             this.spriteSurface1.Text = "spriteSurface1";
             this.spriteSurface1.ThreadPriority = System.Threading.ThreadPriority.Normal;
             this.spriteSurface1.UseVirtualSize = false;
-            this.spriteSurface1.VirtualHeight = 0;
-            this.spriteSurface1.VirtualSize = new System.Drawing.Size(1555, 927);
+            this.spriteSurface1.VirtualHeight = 927;
+            this.spriteSurface1.VirtualSize = new System.Drawing.Size(1626, 994);
             this.spriteSurface1.VirtualWidth = 0;
-            this.spriteSurface1.WraparoundEdges = false;
+            this.spriteSurface1.WraparoundEdges = true;
             // 
             // spriteEngine1
             // 

@@ -48,6 +48,7 @@ namespace SCG.TurboSprite
             InitializeComponent();
             UseVirtualSize = true;
         }
+
         public SquareGridSpriteSurface(IContainer container)
         {
             container.Add(this);
@@ -71,6 +72,7 @@ namespace SCG.TurboSprite
                 }
             }
         }
+
         public int CellHeight
         {
             get
@@ -86,6 +88,7 @@ namespace SCG.TurboSprite
                 }
             }
         }
+
         public int CellsX
         {
             get
@@ -101,6 +104,7 @@ namespace SCG.TurboSprite
                 }
             }
         }
+
         public int CellsY
         {
             get
@@ -129,6 +133,7 @@ namespace SCG.TurboSprite
                 _drawGrid = value;
             }
         }
+
         public Color GridColor
         {
             get
@@ -181,6 +186,7 @@ namespace SCG.TurboSprite
                 return Width / CellWidth;
             }
         }
+
         public int VisibleCellsY
         {
             get
@@ -215,6 +221,7 @@ namespace SCG.TurboSprite
                 _cursorX = value;
             }
         }
+
         public int CursorY
         {
             get
