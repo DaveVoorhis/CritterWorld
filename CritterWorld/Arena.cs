@@ -25,8 +25,12 @@ namespace CritterWorld
             dm1.SpeedY = sy2;
             dm2.SpeedX = sx1;
             dm2.SpeedY = sy1;
-            // e.Sprite1.Kill();
-            // e.Sprite2.Kill();
+
+            double theta1 = Math.Atan2(dm1.SpeedY, dm1.SpeedX) * 180 / Math.PI;
+            e.Sprite1.FacingAngle = (int)theta1 + 90;
+
+            double theta2 = Math.Atan2(dm2.SpeedY, dm2.SpeedX) * 180 / Math.PI;
+            e.Sprite2.FacingAngle = (int)theta2 + 90;
         }
 
         float[] Scale(float[] array, float scale)
@@ -39,65 +43,96 @@ namespace CritterWorld
             return scaledArray;
         }
 
+        /* Return a random value near the given value, but greater than or equal to minimum. */
+        public static int Fuzzy(int nearThis, int minimum)
+        {
+            return Math.Max(minimum, nearThis + Sprite.RND.Next(-2, 2));
+        }
+
+        /* Return a random value near the given value. */
+        public static int Fuzzy(int nearThis)
+        {
+            return nearThis + Sprite.RND.Next(-2, 2);
+        }
+
+        /* Return a random Point near the given x and y coordinates. */
+        public static Point FuzzyPoint(int x, int y)
+        {
+            return new Point(Fuzzy(x), Fuzzy(y));
+        }
+
+        public float[] MakeCritterBody()
+        {
+            Point[] antenna = new Point[3];
+            antenna[0] = FuzzyPoint(4, -10);
+            antenna[1] = FuzzyPoint(8, -12);
+            antenna[2] = FuzzyPoint(12, -8);
+
+            Point[,] leg = new Point[3, 3];
+            leg[0, 0] = FuzzyPoint(4, -3);
+            leg[0, 1] = FuzzyPoint(7, -3);
+            leg[0, 2] = FuzzyPoint(10, -3);
+
+            leg[1, 0] = FuzzyPoint(4, 0);
+            leg[1, 1] = FuzzyPoint(7, 0);
+            leg[1, 2] = FuzzyPoint(10, 0);
+
+            leg[2, 0] = FuzzyPoint(4, 3);
+            leg[2, 1] = FuzzyPoint(7, 3);
+            leg[2, 2] = FuzzyPoint(10, 3);
+
+            List<Point> rightBody = new List<Point>();
+
+            rightBody.Add(new Point(0, -8));
+            rightBody.Add(FuzzyPoint(2, -6));
+            rightBody.Add(antenna[0]);
+            rightBody.Add(antenna[1]);
+            rightBody.Add(antenna[2]);
+            rightBody.Add(antenna[1]);
+            rightBody.Add(antenna[0]);
+            rightBody.Add(FuzzyPoint(2, -5));
+            rightBody.Add(FuzzyPoint(2, -4));
+            rightBody.Add(leg[0, 0]);
+            rightBody.Add(leg[0, 1]);
+            rightBody.Add(leg[0, 2]);
+            rightBody.Add(leg[0, 1]);
+            rightBody.Add(leg[0, 0]);
+            rightBody.Add(FuzzyPoint(3, -3));
+            rightBody.Add(leg[1, 0]);
+            rightBody.Add(leg[1, 1]);
+            rightBody.Add(leg[1, 2]);
+            rightBody.Add(leg[1, 1]);
+            rightBody.Add(leg[1, 0]);
+            rightBody.Add(FuzzyPoint(3, 0));
+            rightBody.Add(leg[2, 0]);
+            rightBody.Add(leg[2, 1]);
+            rightBody.Add(leg[2, 2]);
+            rightBody.Add(leg[2, 1]);
+            rightBody.Add(leg[2, 0]);
+            rightBody.Add(FuzzyPoint(2, 3));
+            rightBody.Add(FuzzyPoint(3, 5));
+            rightBody.Add(new Point(0, 7));
+
+            List<float> outvector = new List<float>();
+            foreach (Point point in rightBody)
+            {
+                outvector.Add(point.X);
+                outvector.Add(point.Y);
+            }
+            rightBody.Reverse();
+            foreach (Point point in rightBody)
+            {
+                outvector.Add(-point.X);
+                outvector.Add(point.Y);
+            }
+
+            return outvector.ToArray();
+        }
+
         public Arena()
         {
             float scale = 1;
-
-            float[] body = {
-                // abdomen
-                -3,  -5,
-                3,   -5,
-                5,   -3,
-                5,   3,
-                3,   5,
-                -3,  5,
-                -5,  3,
-                -5,  -3,
-                -3,  -5,
-                // head
-                -2,  -5,
-                -2,  -9,
-                2,   -9,
-                2,   -5,
-                -2,  -5,
-                // left eye
-                -2,  -9,
-                -1,  -9,
-                -1,  -7,
-                -2,  -7,
-                -2,  -5,
-                // right eye
-                2,   -5,
-                2,   -9,
-                1,   -9,
-                1,   -7,
-                2,   -7,
-                2,   -5,
-                // Antennae
-                2,   -5,
-                -3,  -12,
-                -5,  -12,
-                -1,  -9,
-                1,   -9,
-                5,   -12,
-                3,   -12,
-                -2,  -5,
-                // Legs
-                -2,  -5,
-                -10, 5,
-                -5,  0,
-                -11, -1,
-                -5,  -1,
-                -10, -7,
-                -5,  0,
-                5,   0,
-                11,  -1,
-                5,   -1,
-                10,  -7,
-                5,   0,
-                10,  5,
-                2,   -5,
-            };
+            float critterCount = 10;
 
             InitializeComponent();
 
@@ -105,11 +140,11 @@ namespace CritterWorld
 
             Random rnd = new Random(DateTime.Now.Millisecond);
 
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < critterCount; i++)
             {
                 Sprite s;
 
-                s = new PolygonSprite(Scale(body, scale));
+                s = new PolygonSprite(Scale(MakeCritterBody(), scale));
 
                 int startX = rnd.Next(spriteSurface1.Width);
                 int startY = rnd.Next(spriteSurface1.Height);
@@ -127,7 +162,6 @@ namespace CritterWorld
                 dm.StopAtDestination = false;
 
                 double theta = Math.Atan2(destY - startY, destX - startX) * 180 / Math.PI;
-
                 s.FacingAngle = (int)theta + 90;
             }
 
