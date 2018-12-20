@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Timers;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using SCG.TurboSprite;
@@ -33,106 +34,9 @@ namespace CritterWorld
             e.Sprite2.FacingAngle = (int)theta2 + 90;
         }
 
-        float[] Scale(float[] array, float scale)
-        {
-            float[] scaledArray = new float[array.Length];
-            for (int i = 0; i < array.Length; i++)
-            {
-                scaledArray[i] = array[i] * scale;
-            }
-            return scaledArray;
-        }
-
-        /* Return a random value near the given value, but greater than or equal to minimum. */
-        public static int Fuzzy(int nearThis, int minimum)
-        {
-            return Math.Max(minimum, nearThis + Sprite.RND.Next(-2, 2));
-        }
-
-        /* Return a random value near the given value. */
-        public static int Fuzzy(int nearThis)
-        {
-            return nearThis + Sprite.RND.Next(-2, 2);
-        }
-
-        /* Return a random Point near the given x and y coordinates. */
-        public static Point FuzzyPoint(int x, int y)
-        {
-            return new Point(Fuzzy(x), Fuzzy(y));
-        }
-
-        public float[] MakeCritterBody()
-        {
-            Point[] antenna = new Point[3];
-            antenna[0] = FuzzyPoint(4, -10);
-            antenna[1] = FuzzyPoint(8, -12);
-            antenna[2] = FuzzyPoint(12, -8);
-
-            Point[,] leg = new Point[3, 3];
-            leg[0, 0] = FuzzyPoint(4, -3);
-            leg[0, 1] = FuzzyPoint(7, -3);
-            leg[0, 2] = FuzzyPoint(10, -3);
-
-            leg[1, 0] = FuzzyPoint(4, 0);
-            leg[1, 1] = FuzzyPoint(7, 0);
-            leg[1, 2] = FuzzyPoint(10, 0);
-
-            leg[2, 0] = FuzzyPoint(4, 3);
-            leg[2, 1] = FuzzyPoint(7, 3);
-            leg[2, 2] = FuzzyPoint(10, 3);
-
-            List<Point> rightBody = new List<Point>();
-
-            rightBody.Add(new Point(0, -8));
-            rightBody.Add(FuzzyPoint(2, -6));
-            rightBody.Add(antenna[0]);
-            rightBody.Add(antenna[1]);
-            rightBody.Add(antenna[2]);
-            rightBody.Add(antenna[1]);
-            rightBody.Add(antenna[0]);
-            rightBody.Add(FuzzyPoint(2, -5));
-            rightBody.Add(FuzzyPoint(2, -4));
-            rightBody.Add(leg[0, 0]);
-            rightBody.Add(leg[0, 1]);
-            rightBody.Add(leg[0, 2]);
-            rightBody.Add(leg[0, 1]);
-            rightBody.Add(leg[0, 0]);
-            rightBody.Add(FuzzyPoint(3, -3));
-            rightBody.Add(leg[1, 0]);
-            rightBody.Add(leg[1, 1]);
-            rightBody.Add(leg[1, 2]);
-            rightBody.Add(leg[1, 1]);
-            rightBody.Add(leg[1, 0]);
-            rightBody.Add(FuzzyPoint(3, 0));
-            rightBody.Add(leg[2, 0]);
-            rightBody.Add(leg[2, 1]);
-            rightBody.Add(leg[2, 2]);
-            rightBody.Add(leg[2, 1]);
-            rightBody.Add(leg[2, 0]);
-            rightBody.Add(FuzzyPoint(2, 3));
-            rightBody.Add(FuzzyPoint(3, 5));
-            rightBody.Add(new Point(0, 7));
-
-            List<float> outvector = new List<float>();
-            foreach (Point point in rightBody)
-            {
-                outvector.Add(point.X);
-                outvector.Add(point.Y);
-            }
-            rightBody.Reverse();
-            foreach (Point point in rightBody)
-            {
-                outvector.Add(-point.X);
-                outvector.Add(point.Y);
-            }
-
-            return outvector.ToArray();
-        }
-
         public Arena()
         {
-            float scale = 1;
-            float critterCount = 10;
+            float critterCount = 1;
 
             InitializeComponent();
 
@@ -142,27 +46,7 @@ namespace CritterWorld
 
             for (int i = 0; i < critterCount; i++)
             {
-                Sprite s;
-
-                s = new PolygonSprite(Scale(MakeCritterBody(), scale));
-
-                int startX = rnd.Next(spriteSurface1.Width);
-                int startY = rnd.Next(spriteSurface1.Height);
-
-                s.Position = new Point(startX, startY);
-
-                spriteEngine1.AddSprite(s);
-
-                DestinationMover dm = spriteEngine1.GetMover(s);
-                dm.Speed = rnd.Next(10) + 1;
-
-                int destX = rnd.Next(spriteSurface1.Width);
-                int destY = rnd.Next(spriteSurface1.Height);
-                dm.Destination = new Point(destX, destY);
-                dm.StopAtDestination = false;
-
-                double theta = Math.Atan2(destY - startY, destX - startX) * 180 / Math.PI;
-                s.FacingAngle = (int)theta + 90;
+                Critter critter = new Critter(spriteSurface1, spriteEngine1);
             }
 
             spriteSurface1.Active = true;
