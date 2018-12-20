@@ -23,30 +23,20 @@ namespace CritterWorld
             return scaledArray;
         }
 
-        private bool alternateBody = false;
-
         public Critter(SpriteSurface spriteSurface, SpriteEngineDestination spriteEngine)
         {
-            PolygonSprite sprite;
+            PolygonSpriteAnimated sprite;
             Random rnd = Sprite.RND;
 
             CritterBody body = new CritterBody();
-            sprite = new PolygonSprite(Scale(body.GetBody1(), scale));
+            PointF[][] frames = new PointF[2][];
+            frames[0] = body.GetBody1();
+            frames[1] = body.GetBody2();
+            sprite = new PolygonSpriteAnimated(frames);
 
             Timer timer = new Timer();
             timer.Interval = 1000;
-            timer.Tick += (obj, eventArgs) =>
-            {
-                if (alternateBody)
-                {
-                    sprite.Points = body.GetBody2();
-                }
-                else
-                {
-                    sprite.Points = body.GetBody1();
-                }
-                alternateBody = !alternateBody;
-            };
+            timer.Tick += (obj, eventArgs) => sprite.Frame = 1 - sprite.Frame;
             timer.Start();
 
             int startX = rnd.Next(spriteSurface.Width);

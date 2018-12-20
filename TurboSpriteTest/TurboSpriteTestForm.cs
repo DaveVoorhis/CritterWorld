@@ -126,7 +126,8 @@ namespace TurboSpriteTest
 
         private void btnPolygon_Click(object sender, EventArgs e)
         {
-            PolygonSprite s = new PolygonSprite(0, -10, 5, 10, 0, 5, -5, 10);
+            PointF[] poly = { new PointF(0, -10), new PointF(5, 10), new PointF(0, 5), new PointF(-5, 10) };
+            PolygonSprite s = new PolygonSprite(poly);
             if (rnd.Next(100) > 50)
             {
                 if (rnd.Next(100) > 50)
