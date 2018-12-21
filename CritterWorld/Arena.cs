@@ -45,6 +45,11 @@ namespace CritterWorld
 
             Random rnd = new Random(DateTime.Now.Millisecond);
 
+            CritterBody body = new CritterBody();
+            PointF[][] frames = new PointF[2][];
+            frames[0] = Critter.Scale(body.GetBody1(), 3);
+            frames[1] = Critter.Scale(body.GetBody2(), 3);
+
             for (int i = 0; i < critterCount; i++)
             {
                 Critter critter = new Critter(spriteSurface1, spriteEngine1);

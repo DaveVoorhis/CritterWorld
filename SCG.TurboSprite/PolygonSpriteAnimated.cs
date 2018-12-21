@@ -81,7 +81,7 @@ namespace SCG.TurboSprite
             }
         }
 
-        override internal void notifyMoved()
+        override public void notifyMoved()
         {
             int nextFrame = NextFrame + 1;
             if (nextFrame >= _frameCount)
@@ -180,14 +180,14 @@ namespace SCG.TurboSprite
                 obtainShape();
             }
 
-            //Transform polygon into viewport coordinates
+            // Transform polygon into viewport coordinates
             for (int pt = 0; pt < _points[_frame].Length; pt++)
             {
                 _drawnPoints[_frame][pt].X = _points[_frame][pt].X + X - Surface.OffsetX;
                 _drawnPoints[_frame][pt].Y = _points[_frame][pt].Y + Y - Surface.OffsetY;
             }
 
-            //Fill it?
+            // Fill it?
             if (_filled)
             {
                 Brush brush = new SolidBrush(_fillColor);
@@ -197,7 +197,7 @@ namespace SCG.TurboSprite
                 }
             }
 
-            //Draw outline
+            // Draw outline
             Pen pen = new Pen(_color, _width);
             using(pen)
             {

@@ -16,7 +16,7 @@ namespace CritterWorld
         private DestinationMover destinationMover;
         private PolygonSpriteAnimated sprite;
 
-        PointF[] Scale(PointF[] array, float scale)
+        public static PointF[] Scale(PointF[] array, float scale)
         {
             PointF[] scaledArray = new PointF[array.Length];
             for (int i = 0; i < array.Length; i++)
@@ -43,7 +43,7 @@ namespace CritterWorld
             frames[0] = Scale(body.GetBody1(), scale);
             frames[1] = Scale(body.GetBody2(), scale);
             sprite = new PolygonSpriteAnimated(frames);
-            sprite.LineWidth = 2;
+            sprite.LineWidth = 1;
 
             spriteEngine.AddSprite(sprite);
 

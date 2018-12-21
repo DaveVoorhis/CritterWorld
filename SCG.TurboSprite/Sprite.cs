@@ -37,7 +37,6 @@ namespace SCG.TurboSprite
     //Sprite class - defines behavior of all TurboSprite sprite objects
     public abstract class Sprite
     {
-
         // Lookup table to degree to radian conversion
         private static float[] _sin = new float[360];
         private static float[] _cos = new float[360];
@@ -313,7 +312,7 @@ namespace SCG.TurboSprite
             _dead = true;
         }
 
-        virtual internal void notifyMoved()
+        virtual public void notifyMoved()
         {
         }
 

@@ -88,39 +88,33 @@ namespace CritterWorld
             List<PointF> outvector = new List<PointF>();
             foreach (Point point in rightBody)
             {
-                Console.WriteLine("out 1 - " + point);
                 outvector.Add(point);
             }
             rightBody.Reverse();
             foreach (Point point in rightBody)
             {
-                Console.WriteLine("out 1 - " + point);
                 outvector.Add(new PointF(-point.X, point.Y));
             }
 
             body1 = outvector.ToArray();
 
-            for (int i = 0; i < 3; i++)
-            {
-                rightBody[legIndex[i] + 0] = new Point(leg[0, 1].X, leg[0, 1].Y + 1);
-                rightBody[legIndex[i] + 1] = new Point(leg[0, 1].X, leg[0, 1].Y + 3);
-                rightBody[legIndex[i] + 2] = new Point(leg[0, 1].X, leg[0, 1].Y + 7);
-                rightBody[legIndex[i] + 3] = new Point(leg[0, 1].X, leg[0, 1].Y + 3);
-                rightBody[legIndex[i] + 4] = new Point(leg[0, 1].X, leg[0, 1].Y + 1);
-            }
-
-            // temporary
             rightBody.Reverse();
 
+            for (int i = 0; i < 3; i++) 
+            {
+                rightBody[legIndex[i] + 1] = new Point(rightBody[legIndex[i] + 1].X, rightBody[legIndex[i] + 1].Y + 2);
+                rightBody[legIndex[i] + 2] = new Point(rightBody[legIndex[i] + 2].X, rightBody[legIndex[i] + 2].Y + 5);
+                rightBody[legIndex[i] + 3] = new Point(rightBody[legIndex[i] + 3].X, rightBody[legIndex[i] + 3].Y + 2);
+            }
+
+            outvector.Clear();
             foreach (Point point in rightBody)
             {
-                Console.WriteLine("out 2 - " + point);
                 outvector.Add(point);
             }
             rightBody.Reverse();
             foreach (Point point in rightBody)
             {
-                Console.WriteLine("out 2 - " + point);
                 outvector.Add(new PointF(-point.X, point.Y));
             }
 
