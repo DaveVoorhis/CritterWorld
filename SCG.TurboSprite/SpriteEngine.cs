@@ -192,7 +192,7 @@ namespace SCG.TurboSprite
                 foreach (Sprite sprite in Sprites)
                 {
                     sprite.PreProcess();
-                    sprite.Process();
+                    sprite.launchProcess();
                     MoveSprite(sprite);
                 }
             }

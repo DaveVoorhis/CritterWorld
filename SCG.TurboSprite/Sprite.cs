@@ -1,6 +1,7 @@
 #region copyright
 /*
 * Copyright (c) 2008, Dion Kurczek
+* Modifications Copyright (c) 2018, Dave Voorhis
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -35,10 +36,31 @@ namespace SCG.TurboSprite
 {
     //Sprite class - defines behavior of all TurboSprite sprite objects
     public abstract class Sprite
-    {       
-        //Public Properties
+    {
 
-        //Static constructor populates the sin/cos lookup tables
+        // Lookup table to degree to radian conversion
+        private static float[] _sin = new float[360];
+        private static float[] _cos = new float[360];
+
+        private int _facingAngle;
+        private float _x;
+        private float _y;
+        private bool _dead;
+        private RectangleF _shape = new RectangleF(-1, -1, -1, -1);
+        private RectangleF _clickShape = new RectangleF(-1, -1, -1, -1);
+        private RectangleF _bounds = new RectangleF();
+        private RectangleF _clickBounds = new RectangleF();
+        private SpinType _spin;
+        private int _spinSpeed;
+
+        // Internal "MoveData" object used by SpriteEngines to store movement info
+        internal Object MovementData;
+
+        // Internal Members
+        internal SpriteEngine _engine;
+        internal SpriteSurface _surface;
+
+        // Static constructor populates the sin/cos lookup tables
         static Sprite()
         {
             for (int degree = 0; degree < 360; degree++)
@@ -48,26 +70,27 @@ namespace SCG.TurboSprite
             }
         }
 
-        //A random number generator anyone can use
+        // A random number generator anyone can use
         public static Random RND = new Random();
 
-        //Utility function to quickly convert degrees to Radians
+        // Utility function to quickly convert degrees to Radians
         public static float DegToRad(int degree)
         {
             return (float)((Math.PI / 180) * degree);
         }
 
-        //Static properties return the Sin/Cos for specified degree values
+        // Static properties return the Sin/Cos for specified degree values
         public static float Sin(int degree)
         {
             return _sin[degree];
         }
+
         public static float Cos(int degree)
         {
             return _cos[degree];
         }
 
-        //Obtain a random color within start to end range
+        // Obtain a random color within start to end range
         public static Color ColorFromRange(Color startColor, Color endColor)
         {
             byte a = rndByte(startColor.A, endColor.A);
@@ -77,7 +100,7 @@ namespace SCG.TurboSprite
             return Color.FromArgb(a, r, g, b);
         }
 
-        //The "Shape" of the sprite represents its Width and Height as relative to its center
+        // The "Shape" of the sprite represents its Width and Height as relative to its center
         public RectangleF Shape
         {
             get
@@ -91,7 +114,7 @@ namespace SCG.TurboSprite
             }
         }
 
-        //Clickshape determines the size of the sprite for purposes of registering a mouse click
+        // Clickshape determines the size of the sprite for purposes of registering a mouse click
         public RectangleF ClickShape
         {
             get
@@ -104,7 +127,7 @@ namespace SCG.TurboSprite
             }
         }
 
-        //Sprite's bounding rectangle, calculated based on size and position
+        // Sprite's bounding rectangle, calculated based on size and position
         public RectangleF Bounds
         {
             get
@@ -117,7 +140,7 @@ namespace SCG.TurboSprite
             }
         }
 
-        //Bounding rectangle of clickable region
+        // Bounding rectangle of clickable region
         public RectangleF ClickBounds
         {
             get
@@ -130,7 +153,7 @@ namespace SCG.TurboSprite
             }
         }
 
-        //Helper property, returns integer Width and Height
+        // Helper property, returns integer Width and Height
         public int Width
         {
             get
@@ -147,7 +170,7 @@ namespace SCG.TurboSprite
             }
         }
 
-        //Helper properties, returns half of the Width and Height
+        // Helper properties, returns half of the Width and Height
         public int WidthHalf
         {
             get
@@ -163,8 +186,8 @@ namespace SCG.TurboSprite
                 return Height / 2;
             }
         }
-        
-        //Angle sprite is facing - values between 0 and 360 allowed - auto-conversion occurs
+
+        // Angle sprite is facing - values between 0 and 360 allowed - auto-conversion occurs
         public int FacingAngle
         {
             get
@@ -181,7 +204,7 @@ namespace SCG.TurboSprite
             }
         }
 
-        //The Sprite's associated SpriteEngine
+        // The Sprite's associated SpriteEngine
         public SpriteEngine Engine
         {
             get
@@ -190,7 +213,7 @@ namespace SCG.TurboSprite
             }
         }
 
-        //Expose the surface
+        // Expose the surface
         public SpriteSurface Surface
         {
             get
@@ -199,7 +222,7 @@ namespace SCG.TurboSprite
             }
         }
 
-        //Is the sprite dead?
+        // Is the sprite dead?
         public bool Dead
         {
             get
@@ -208,7 +231,7 @@ namespace SCG.TurboSprite
             }
         }
 
-        //Sprite's position - integer and float types supported
+        // Sprite's position - integer and float types supported
         public float X
         {
             get
@@ -259,7 +282,7 @@ namespace SCG.TurboSprite
             }
         }
 
-        //The sprite's spin (if any)
+        // The sprite's spin (if any)
         public SpinType Spin
         {
             get
@@ -284,36 +307,17 @@ namespace SCG.TurboSprite
             }
         }
 
-        //Kill a sprite - it will be removed after next processing cycle
+        // Kill a sprite - it will be removed after next processing cycle
         public void Kill()
         {
             _dead = true;
         }
 
-        //Lookup table to degree to radian conversion
-        private static float[] _sin = new float[360];
-        private static float[] _cos = new float[360];
+        virtual internal void notifyMoved()
+        {
+        }
 
-        //Private Members        
-        private int _facingAngle;
-        private float _x;
-        private float _y;
-        private bool _dead;
-        private RectangleF _shape = new RectangleF(-1, -1, -1, -1);
-        private RectangleF _clickShape = new RectangleF(-1, -1, -1, -1);
-        private RectangleF _bounds = new RectangleF();
-        private RectangleF _clickBounds = new RectangleF();
-        private SpinType _spin;
-        private int _spinSpeed;
-
-        //Internal "MoveData" object used by SpriteEngines to store movement info
-        internal Object MovementData;
-
-        //Internal Members
-        internal SpriteEngine _engine;
-        internal SpriteSurface _surface;  
-       
-        //Process the internal logic a sprite may require during each animation cycle
+        // Process the internal logic a sprite may require during each animation cycle
         internal void PreProcess()
         {
             switch (_spin)
@@ -327,15 +331,34 @@ namespace SCG.TurboSprite
             }
         }
 
-        //Render the sprite on the SpriteSurface
+        // Render the sprite on the SpriteSurface
         protected internal abstract void Render(Graphics g);
 
-        //Perform any additional processing if required
-        protected internal virtual void Process()
-        {
+        public delegate void Processor(Sprite sprite);
+
+        private List<Processor> processors = new List<Processor>();
+
+        // Add additional processing handler.
+        public void addProcessHandler(Processor processor) {
+            processors.Add(processor);
         }
 
-        //Get a random color byte value
+        // Remove additional processing handler.
+        public void removeProcessHandler(Processor processor)
+        {
+            processors.Remove(processor);
+        }
+
+        // Launch any additional processing.
+        protected internal void launchProcess()
+        {
+            foreach (Processor processor in processors)
+            {
+                processor.Invoke(this);
+            }
+        }
+
+        // Get a random color byte value
         private static byte rndByte(byte b1, byte b2)
         {
             if (b1 > b2)
@@ -349,6 +372,6 @@ namespace SCG.TurboSprite
         }
     }
 
-    //Direction of sprite's spin
+    // Direction of sprite's spin
     public enum SpinType { None, Clockwise, CounterClockwise };
 }

@@ -139,8 +139,8 @@ namespace SCG.TurboSprite
         private Color _fillColor = Color.Empty;
         private int _lastAngle;
 
-        //Process the sprite on each animation cycle - handle rotation
-        protected internal override void Process()
+        //Render the sprite - draw the polygon
+        protected internal override void Render(System.Drawing.Graphics g)
         {
             //Process rotation of shape
             if (FacingAngle != _lastAngle)
@@ -157,13 +157,9 @@ namespace SCG.TurboSprite
                 //This causes shape to be correctly recalculated
                 Points = _points;
             }
-        }
 
-        //Render the sprite - draw the polygon
-        protected internal override void Render(System.Drawing.Graphics g)
-        {
             //Transform polygon into viewport coordinates
-            for(int pt = 0; pt < _points.Length; pt++)
+            for (int pt = 0; pt < _points.Length; pt++)
             {
                 _drawnPoints[pt].X = _points[pt].X + X - Surface.OffsetX;
                 _drawnPoints[pt].Y = _points[pt].Y + Y - Surface.OffsetY;

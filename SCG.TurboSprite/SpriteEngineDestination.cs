@@ -230,11 +230,16 @@ namespace SCG.TurboSprite
         //Move the sprite, called by SpriteEngine's MoveSprite method
         internal void MoveSprite()
         {
+            bool moved = false;
             //Do not check destination, just move the sprite
             if (!_stopAtDestination)
             {
                 _sprite.X += _speedX;
-                _sprite.Y += _speedY;                
+                _sprite.Y += _speedY;
+                if (_speedX != 0 && _speedY != 0)
+                {
+                    moved = true;
+                }
             }
             //Check to see if it stopped at its destination
             else
@@ -248,7 +253,13 @@ namespace SCG.TurboSprite
                 else if (_speedX < 0 && Temp < DestinationF.X)
                     _sprite.X = DestX;
                 else
+                {
                     _sprite.X += SpeedX;
+                    if (_speedX != 0)
+                    {
+                        moved = true;
+                    }
+                }
                 //Check Y-Axis movement
                 Temp = _sprite.PositionF.Y + _speedY;
                 if (_speedY > 0 && Temp > DestinationF.Y)
@@ -256,8 +267,18 @@ namespace SCG.TurboSprite
                 else if (_speedY < 0 && Temp < DestinationF.Y)
                     _sprite.Y = DestY;
                 else
+                {
                     _sprite.Y += SpeedY;
-            }                       
+                    if (_speedX != 0)
+                    {
+                        moved = true;
+                    }
+                }
+            }
+            if (moved)
+            {
+                _sprite.notifyMoved();
+            }
         }
     }
 }

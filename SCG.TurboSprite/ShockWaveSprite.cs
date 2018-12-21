@@ -48,14 +48,13 @@ namespace SCG.TurboSprite
                 waves--;
             }
             Shape = new RectangleF(-50, -50, 100, 100);
-        }
-
-        //decrease life span
-        protected internal override void Process()
-        {
-            _lifeSpan--;
-            if (_lifeSpan <= 0)
-                Kill();
+            addProcessHandler(sprite =>
+            {
+                //decrease life span
+                _lifeSpan--;
+                if (_lifeSpan <= 0)
+                    Kill();
+            });
         }
 
         //Render the sprite

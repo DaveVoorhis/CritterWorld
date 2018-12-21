@@ -50,14 +50,13 @@ namespace SCG.TurboSprite
                 particles--;
             }
             Shape = new RectangleF(-15, -15, 30, 30);
-        }
-
-        //Decrement life
-        protected internal override void Process()
-        {
-            _lifeSpan--;
-            if (_lifeSpan <= 0)
-                Kill();
+            addProcessHandler(sprite =>
+            {
+                //Decrement life
+                _lifeSpan--;
+                if (_lifeSpan <= 0)
+                    Kill();
+            });
         }
 
         //Render the sprite

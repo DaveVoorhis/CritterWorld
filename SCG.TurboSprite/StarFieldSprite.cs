@@ -59,6 +59,19 @@ namespace SCG.TurboSprite
             _q1 = numStars / 4 * 3;
             _q2 = numStars / 2;
             _q3 = numStars / 4;
+
+            addProcessHandler(sprite => {
+                for (int i = 0; i < _numStars; i++)
+                {
+                    Star s = _starArray[i];
+                    s.Z = s.Z - _speed;
+                    if (s.Z < 0)
+                        s.Z += _numStars;
+                    else if (s.Z >= _numStars)
+                        s.Z -= _numStars;
+                }
+
+            });
         }
 
         //Private and internal members
@@ -87,21 +100,6 @@ namespace SCG.TurboSprite
         private int _q1;
         private int _q2;
         private int _q3;
-
-        //Process the StarField
-        protected internal override void Process()
-        {
-            base.Process();
-            for (int i = 0; i < _numStars; i++)
-            {
-                Star s = _starArray[i];
-                s.Z = s.Z - _speed;
-                if (s.Z < 0)
-                    s.Z += _numStars;
-                else if (s.Z >= _numStars)
-                    s.Z -= _numStars;
-            }
-        }
 
         //Render
         protected internal override void Render(Graphics g)
