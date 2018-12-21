@@ -26,13 +26,6 @@ namespace CritterWorld
             dm1.SpeedY = sy2;
             dm2.SpeedX = sx1;
             dm2.SpeedY = sy1;
-/*
-            double theta1 = Math.Atan2(dm1.SpeedY, dm1.SpeedX) * 180 / Math.PI;
-            e.Sprite1.FacingAngle = (int)theta1 + 90;
-
-            double theta2 = Math.Atan2(dm2.SpeedY, dm2.SpeedX) * 180 / Math.PI;
-            e.Sprite2.FacingAngle = (int)theta2 + 90;
-            */
         }
 
         public Arena()
@@ -53,9 +46,11 @@ namespace CritterWorld
             for (int i = 0; i < critterCount; i++)
             {
                 Critter critter = new Critter(spriteSurface1, spriteEngine1);
+                critter.GetSprite().Color = Sprite.ColorFromRange(Color.Aqua, Color.Red);
+                critter.GetSprite().LineWidth = 2;
 
                 DestinationMover mover = critter.GetMover();
-                mover.Speed = rnd.Next(10) + 1;
+                mover.Speed = rnd.Next(5);
 
                 int startX = rnd.Next(spriteSurface1.Width);
                 int startY = rnd.Next(spriteSurface1.Height);

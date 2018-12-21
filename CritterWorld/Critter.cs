@@ -31,7 +31,7 @@ namespace CritterWorld
             return destinationMover;
         }
 
-        public Sprite GetSprite()
+        public PolygonSpriteAnimated GetSprite()
         {
             return sprite;
         }
