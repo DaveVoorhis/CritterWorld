@@ -30,7 +30,7 @@ namespace CritterWorld
 
         public Arena()
         {
-            float critterCount = 50;
+            float critterCount = 150;
 
             InitializeComponent();
 
@@ -43,8 +43,8 @@ namespace CritterWorld
             frames[0] = Critter.Scale(body.GetBody1(), 3);
             frames[1] = Critter.Scale(body.GetBody2(), 3);
 
-            int startX = 0;
-            int startY = 0;
+            int startX = 30;
+            int startY = 30;
 
             for (int i = 0; i < critterCount; i++)
             {
@@ -52,21 +52,20 @@ namespace CritterWorld
                 critter.GetSprite().Color = Sprite.ColorFromRange(Color.Aqua, Color.Red);
                 critter.GetSprite().LineWidth = 1;
 
-                DestinationMover mover = critter.GetMover();
-                mover.Speed = rnd.Next(10);
-
                 critter.GetSprite().Position = new Point(startX, startY);
 
                 int destX = rnd.Next(spriteSurface1.Width);
                 int destY = rnd.Next(spriteSurface1.Height);
 
+                DestinationMover mover = critter.GetMover();
+                mover.Speed = rnd.Next(10);
                 mover.Destination = new Point(destX, destY);
                 mover.StopAtDestination = false;
 
                 startY += 30;
-                if (startY >= spriteSurface1.Height) 
+                if (startY >= spriteSurface1.Height - 30) 
                 {
-                    startY = 0;
+                    startY = 30;
                     startX += 100;
                 }
             }
