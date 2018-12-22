@@ -7,16 +7,16 @@ namespace CritterWorld
 {
     class CritterBody
     {
-        /* Return a random value near the given value, but greater than or equal to minimum. */
-        public static int Fuzzy(int nearThis, int minimum)
+        /* Return a random value near the given value with a specified range of values. */
+        public static int Fuzzy(int nearThis, int range) 
         {
-            return Math.Max(minimum, nearThis + Sprite.RND.Next(-2, 2));
+            return nearThis + Sprite.RND.Next(-range, range);
         }
 
         /* Return a random value near the given value. */
         public static int Fuzzy(int nearThis)
         {
-            return nearThis + Sprite.RND.Next(-2, 2);
+            return Fuzzy(nearThis, 2);
         }
 
         /* Return a random Point near the given x and y coordinates. */
@@ -31,9 +31,9 @@ namespace CritterWorld
         public CritterBody()
         {
             Point[] antenna = new Point[3];
-            antenna[0] = FuzzyPoint(4, -10);
-            antenna[1] = FuzzyPoint(8, -12);
-            antenna[2] = FuzzyPoint(12, -8);
+            antenna[0] = new Point(Fuzzy(4, 4), Fuzzy(-10, 4));
+            antenna[1] = new Point(Fuzzy(8, 4), Fuzzy(-12, 4));
+            antenna[2] = new Point(Fuzzy(12, 4), Fuzzy(-8, 4));
 
             Point[,] leg = new Point[3, 3];
             leg[0, 0] = FuzzyPoint(4, -3);
