@@ -30,7 +30,7 @@ namespace CritterWorld
 
         public Arena()
         {
-            float critterCount = 150;
+            float critterCount = 20;
 
             InitializeComponent();
 
@@ -50,7 +50,7 @@ namespace CritterWorld
             {
                 Critter critter = new Critter(spriteSurface1, spriteEngine1);
                 critter.GetSprite().Color = Sprite.ColorFromRange(Color.Aqua, Color.Red);
-                critter.GetSprite().LineWidth = 1;
+                critter.GetSprite().LineWidth = 2;
 
                 critter.GetSprite().Position = new Point(startX, startY);
 
