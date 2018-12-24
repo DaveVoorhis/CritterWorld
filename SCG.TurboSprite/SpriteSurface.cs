@@ -1,6 +1,7 @@
 #region copyright
 /*
 * Copyright (c) 2008, Dion Kurczek
+* Modifications copyright (c) 2018, Dave Voorhis
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -37,10 +38,9 @@ using System.Drawing;
 
 namespace SCG.TurboSprite
 {
-    //SpriteSurface - implements an animated surface where sprites can be registered
+    // SpriteSurface - implements an animated surface where sprites can be registered
     public partial class SpriteSurface : Control
     {
-        //Private members
         private int _desiredFPS = 10;
         private bool _active;
         private Thread _thrdAnimate;       
@@ -62,11 +62,11 @@ namespace SCG.TurboSprite
         private int _offsetY;
         private ThreadPriority _tp = ThreadPriority.Normal;
 
-        //Constructors
         public SpriteSurface()
         {
             InitializeComponent();
         }
+
         public SpriteSurface(IContainer container)
         {
             container.Add(this);
@@ -74,16 +74,13 @@ namespace SCG.TurboSprite
             InitializeComponent();
         }
 
-        //Events
         public event EventHandler<EventArgs> BeforeAnimationCycle;
         public event EventHandler<PaintEventArgs> BeforeSpriteRender;
         public event EventHandler<PaintEventArgs> AfterSpriteRender;
         public event EventHandler<SpriteCollisionEventArgs> SpriteCollision;
         public event EventHandler<SpriteClickEventArgs> SpriteClicked;
 
-        //Public properties
-
-        //The frames per second desired by the user
+        // The frames per second desired by the user
         public int DesiredFPS
         {
             get
@@ -100,7 +97,7 @@ namespace SCG.TurboSprite
             }
         }
 
-        //The actual frames per second the control is animating at
+        // The actual frames per second the control is animating at
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public int ActualFPS
@@ -111,7 +108,7 @@ namespace SCG.TurboSprite
             }
         }
 
-        //"Active" property turns animation on and off
+        // "Active" property turns animation on and off
         public bool Active
         {
             get
@@ -121,21 +118,21 @@ namespace SCG.TurboSprite
             set
             {
                 _active = value;
-                //Set Active to true
+                // Set Active to true
                 if (Active)
                 {
-                    //Create animation thread, set to background to app to close while running
+                    // Create animation thread, set to background to app to close while running
                     _thrdAnimate = new Thread(AnimateProc);
                     _thrdAnimate.IsBackground = true;
                     _thrdAnimate.Priority = ThreadPriority;
 
-                    //We need an animation update right away
+                    // We need an animation update right away
                     _nextFrameTime = DateTime.Now;
 
-                    //Activate thread
+                    // Activate thread
                     _thrdAnimate.Start();
                 }
-                //Set Active to false
+                // Set Active to false
                 else
                 {
                     _lastSecond = -1;
@@ -143,7 +140,7 @@ namespace SCG.TurboSprite
             }
         }
 
-        //Priority of the animation thread
+        // Priority of the animation thread
         public ThreadPriority ThreadPriority
         {
             get
@@ -156,7 +153,7 @@ namespace SCG.TurboSprite
             }
         }
 
-        //AutoBlank property determines if background will be filled before rendering frame
+        // AutoBlank property determines if background will be filled before rendering frame
         public bool AutoBlank
         {
             get
@@ -169,7 +166,7 @@ namespace SCG.TurboSprite
             }
         }
 
-        //Color to fill for AutoBlank
+        // Color to fill for AutoBlank
         public Color AutoBlankColor
         {
             get
@@ -182,7 +179,7 @@ namespace SCG.TurboSprite
             }
         }
 
-        //Should sprites wrap around the edge if they move beyond it?
+        // Should sprites wrap around the edge if they move beyond it?
         public bool WraparoundEdges
         {
             get
@@ -195,7 +192,7 @@ namespace SCG.TurboSprite
             }
         }
 
-        //Virtual size
+        // Virtual size
         public bool UseVirtualSize
         {
             get
@@ -207,6 +204,7 @@ namespace SCG.TurboSprite
                 _useVirtualSize = value;
             }
         }
+
         public Size VirtualSize
         {
             get
@@ -221,6 +219,7 @@ namespace SCG.TurboSprite
                 _virtualSize = value;
             }
         }
+
         [Browsable(false)]
         public int VirtualWidth
         {
@@ -233,6 +232,7 @@ namespace SCG.TurboSprite
                 _virtualSize.Width = value;
             }
         }
+
         [Browsable(false)]
         public int VirtualHeight
         {
@@ -246,7 +246,7 @@ namespace SCG.TurboSprite
             }
         }
 
-        //Offset into virtual size
+        // Offset into virtual size
         public int OffsetX
         {
             get
@@ -272,7 +272,7 @@ namespace SCG.TurboSprite
             }
         }
 
-        //Center on the specific coordinates
+        // Center on the specific coordinates
         public void CenterOn(int x, int y)
         {
             if (!UseVirtualSize)
@@ -287,35 +287,35 @@ namespace SCG.TurboSprite
             OffsetY = centery;
         }
 
-        //Thread animation procedure
+        // Thread animation procedure
         protected void AnimateProc()
         {            
             while (Active)
             {
-                //Do we need to render a frame?
+                // Do we need to render a frame?
                 if (DateTime.Now > _nextFrameTime)
                 {
-                    //Determine time stamp that next frame needs to be rendered
+                    // Determine time stamp that next frame needs to be rendered
                     _nextFrameTime = DateTime.Now + _animationSpan;
 
-                    //Trigger event to client
+                    // Trigger event to client
                     if (BeforeAnimationCycle != null)
                         BeforeAnimationCycle(this, EventArgs.Empty);
 
-                    //Process Sprite movement
+                    // Process Sprite movement
                     lock (_engineList)
                     {
                         for(int i = 0; i < _engineList.Count; i++)
                         {
                             SpriteEngine se = _engineList[i];
                             se.MoveSprites();
-                            //Handle wrapping around edges
+                            // Handle wrapping around edges
                             if (_wraparoundEdges)
                                 se.WrapSprites();
-                            //Handle collision detection with itself
+                            // Handle collision detection with itself
                             if (se.DetectCollisionSelf && SpriteCollision != null)
                                 se.PerformSelfCollisionDetection();                                                        
-                            //Handle collision detection with other engines
+                            // Handle collision detection with other engines
                             for (int k = i + 1; k < _engineList.Count; k++)
                             {
                                 SpriteEngine se2 = _engineList[k];
@@ -323,11 +323,11 @@ namespace SCG.TurboSprite
                                     se.PerformCollisionWith(se2);
                             }                                                        
                         }
-                        //Remove dead sprites from engines
+                        // Remove dead sprites from engines
                         foreach (SpriteEngine se in _engineList)
                             se.RemoveDeadSprites();
                     }                   
-                    //Trigger a repaint of surface
+                    // Trigger a repaint of surface
                     Invalidate();
                 }
                 else
@@ -335,41 +335,41 @@ namespace SCG.TurboSprite
             }
         }
 
-        //Override to avoid flickering when animating
+        // Override to avoid flickering when animating
         protected override void OnPaintBackground(PaintEventArgs pevent)
         {
             if (!Active)
                 base.OnPaintBackground(pevent);
         }
 
-        //Paint procedure
+        // Paint procedure
         protected override void OnPaint(PaintEventArgs e)
         {           
-            //See if we need to re-size the double buffer
+            // See if we need to re-size the double buffer
             if (_buffer.Size != Size)
                 _buffer = new Bitmap(Width, Height);
 
             try
             {
-                //Obtain Graphics object of double buffer
+                // Obtain Graphics object of double buffer
                 Graphics grBuffer = Graphics.FromImage(_buffer);
 
-                //Obtain Graphics object of SpriteSurface
+                // Obtain Graphics object of SpriteSurface
                 Graphics grSurface = e.Graphics;
                 using (grBuffer)
                 {
-                    //Process AutoBlank
+                    // Process AutoBlank
                     if (AutoBlank)
                         grBuffer.Clear(AutoBlankColor);
 
-                    //Allow client to hook in before sprites are rendered
+                    // Allow client to hook in before sprites are rendered
                     if (BeforeSpriteRender != null)
                         BeforeSpriteRender(this, new PaintEventArgs(grBuffer, e.ClipRectangle));
 
-                    //now give derived classes a chance
+                    // now give derived classes a chance
                     DoBeforeSpriteRender(grBuffer);
 
-                    //Render Sprites
+                    // Render Sprites
                     Rectangle viewport = new Rectangle(OffsetX, OffsetY, Width, Height);
                     lock (_engineList)
                     {
@@ -382,20 +382,20 @@ namespace SCG.TurboSprite
                             }
                     }
 
-                    //Allow client to hook in after sprites are rendered
+                    // Allow client to hook in after sprites are rendered
                     if (AfterSpriteRender != null)
                         AfterSpriteRender(this, new PaintEventArgs(grBuffer, e.ClipRectangle));
                     DoAfterSpriteRender(grBuffer);
 
-                    //Copy double buffer to primary Graphics object
+                    // Copy double buffer to primary Graphics object
                     grSurface.DrawImage(_buffer, 0, 0);
 
-                    //Has another second worth or animation time elapsed?
+                    // Has another second worth or animation time elapsed?
                     _dtStamp = DateTime.Now;
                     _compareSecond = _dtStamp.Second;
                     if (_compareSecond != _lastSecond)
                     {
-                        //Yes, update the number of actual frames per second we animated
+                        // Yes, update the number of actual frames per second we animated
                         if (_lastSecond != -1)
                             _actualFPS = _frames;
                         _frames = 1;
@@ -405,18 +405,18 @@ namespace SCG.TurboSprite
                         _frames++;
                 }
             }
-            catch
+            catch (Exception exception)
             {
-                //swallow exceptions
+                Console.WriteLine("Exception during rendering: " + exception);
             }
             finally
             {
-                //Allow custom OnPaint handler to execute
+                // Allow custom OnPaint handler to execute
                 base.OnPaint(e);
             }
         }
 
-        //Process clicking of sprite
+        // Process clicking of sprite
         protected override void OnMouseUp(MouseEventArgs e)
         {
             base.OnMouseUp(e);
@@ -434,9 +434,7 @@ namespace SCG.TurboSprite
             }
         }
 
-        //Internal worker methods
-
-        //Register and de-register SpriteEngines - called by the SpriteEngine.Surface settor
+        // Register and de-register SpriteEngines - called by the SpriteEngine.Surface settor
         internal void RegisterSpriteEngine(SpriteEngine engine)
         {
             lock (_engineList)
@@ -445,6 +443,7 @@ namespace SCG.TurboSprite
                 SortEngines();
             }
         }
+
         internal void UnRegisterSpriteEngine(SpriteEngine engine)
         {
             lock (_engineList)
@@ -453,23 +452,24 @@ namespace SCG.TurboSprite
             }
         }
 
-        //Sort the SpriteEngine list, after change of priority, or newly added
+        // Sort the SpriteEngine list, after change of priority, or newly added
         internal void SortEngines()
         {
             _engineList.Sort();
         }
 
-        //Trigger collision detection event - called from SpriteEngine collision detection
+        // Trigger collision detection event - called from SpriteEngine collision detection
         internal void TriggerCollision(Sprite sprite1, Sprite sprite2)
         {
             if (SpriteCollision != null)
                 SpriteCollision(this, new SpriteCollisionEventArgs(sprite1, sprite2));
         }
 
-        //Protected methods provide hooks to derived classes
+        // Protected methods provide hooks to derived classes
         protected virtual void DoBeforeSpriteRender(Graphics g)
         {
         }
+
         protected virtual void DoAfterSpriteRender(Graphics g)
         {
         }

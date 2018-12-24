@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="AnimatedBitmapSprite.cs" />
     <Compile Include="BitmapSprite.cs" />
+    <Compile Include="DestinationMover.cs" />
     <Compile Include="GamePieceBitmapFactory.cs">
       <SubType>Component</SubType>
     </Compile>

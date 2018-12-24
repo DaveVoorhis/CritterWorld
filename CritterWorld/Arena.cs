@@ -61,6 +61,7 @@ namespace CritterWorld
                 mover.Speed = rnd.Next(10);
                 mover.Destination = new Point(destX, destY);
                 mover.StopAtDestination = false;
+                
 
                 startY += 30;
                 if (startY >= spriteSurface1.Height - 30) 

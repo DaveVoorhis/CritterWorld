@@ -1,6 +1,7 @@
 #region copyright
 /*
 * Copyright (c) 2008, Dion Kurczek
+* Modifications copyright (c) 2018, Dave Voorhis
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -35,9 +36,13 @@ namespace SCG.TurboSprite
 {
     public class StarFieldSprite : Sprite
     {
-        //Public members
+        private int _numStars;
+        private int _speed;
+        private Star[] _starArray;
+        private int _q1;
+        private int _q2;
+        private int _q3;
 
-        //Constructor
         public StarFieldSprite(int numStars, int width, int height, int speed)
         {
             Shape = new RectangleF(width / 2, height / 2, width, height);
@@ -74,9 +79,7 @@ namespace SCG.TurboSprite
             });
         }
 
-        //Private and internal members
-
-        //Internal struct used to represent a single star
+        // Internal struct used to represent a single star
         class Star
         {
             internal int X;
@@ -84,24 +87,16 @@ namespace SCG.TurboSprite
             internal int Z;
         }
 
-        //Four quadrant colors
+        // Four quadrant colors
         private static Color _color1 = Color.FromArgb(255, 255, 255);
         private static Color _color2 = Color.FromArgb(204, 204, 204);
         private static Color _color3 = Color.FromArgb(163, 163, 163);
         private static Color _color4 = Color.FromArgb(131, 131, 131);
 
-        //Random Number Generator
+        // Random Number Generator
         private static Random _rnd = new Random(DateTime.Now.Millisecond);
 
-        //Private members
-        private int _numStars;
-        private int _speed;
-        private Star[] _starArray;
-        private int _q1;
-        private int _q2;
-        private int _q3;
-
-        //Render
+        // Render
         protected internal override void Render(Graphics g)
         {
             int x;

@@ -1,6 +1,7 @@
 #region copyright
 /*
 * Copyright (c) 2008, Dion Kurczek
+* Modifications copyright (c) 2018, Dave Voorhis
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -35,11 +36,16 @@ using System.Drawing;
 
 namespace SCG.TurboSprite
 {
-    //SpriteEngine component - manages a collection of sprites
-    //Provides sprite movement logic
+    // SpriteEngine component - manages a collection of sprites
+    // Provides sprite movement logic
     public partial class SpriteEngine : Component, IComparable
     {
-        //Constructors
+        private SpriteSurface _surface;
+        private int _priority = 1;
+        internal List<Sprite> _spriteList = new List<Sprite>();
+        private bool _detectCollisionSelf;
+        private int _detectCollisionTag;
+
         public SpriteEngine()
         {
             InitializeComponent();
@@ -51,12 +57,10 @@ namespace SCG.TurboSprite
             InitializeComponent();            
         }
 
-        //Events
+        // Events
         public event EventHandler<SpriteEventArgs> SpriteRemoved;
 
-        //Public properties
-
-        //The SpriteSurface this SpriteEngine is associated with
+        // The SpriteSurface this SpriteEngine is associated with
         public SpriteSurface Surface
         {
             get
@@ -73,7 +77,7 @@ namespace SCG.TurboSprite
             }
         }
 
-        //The Sprites that are contained in the SpriteList
+        // The Sprites that are contained in the SpriteList
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public IList<Sprite> Sprites
@@ -84,7 +88,7 @@ namespace SCG.TurboSprite
             }
         }
 
-        //The Priority determines the order that the SpriteEngines are rendered
+        // The Priority determines the order that the SpriteEngines are rendered
         public int Priority
         {
             get
@@ -99,7 +103,7 @@ namespace SCG.TurboSprite
             }
         }
 
-        //Should the engine detect collisions between its own sprites?
+        // Should the engine detect collisions between its own sprites?
         public bool DetectCollisionSelf
         {
             get
@@ -112,7 +116,7 @@ namespace SCG.TurboSprite
             }
         }
 
-        //The engine will detect collisions with other engines having the same tag
+        // The engine will detect collisions with other engines having the same tag
         public int DetectCollisionTag
         {
             get
@@ -125,9 +129,7 @@ namespace SCG.TurboSprite
             }
         }
 
-        //Public methods
-
-        //Add a sprite to the engine
+        // Add a sprite to the engine
         public void AddSprite(Sprite sprite)
         {
             if (sprite.Shape.X == -1)
@@ -141,13 +143,13 @@ namespace SCG.TurboSprite
             }            
         }
 
-        //Remove a sprite from the engine
+        // Remove a sprite from the engine
         public void RemoveSprite(Sprite sprite)
         {
             sprite.Kill();
         }
 
-        //Remove all sprites
+        // Remove all sprites
         public void Clear()
         {
             lock (_spriteList)
@@ -155,38 +157,28 @@ namespace SCG.TurboSprite
                     sprite.Kill();
         }
 
-        //IComparable implementation - allows list of SpriteEngines to be sorted
+        // IComparable implementation - allows list of SpriteEngines to be sorted
         public int CompareTo(object obj)
         {
             SpriteEngine e2 = (SpriteEngine)obj;
             return e2.Priority - Priority;
         }
 
-        //Private members
-        private SpriteSurface _surface;
-        private int _priority = 1;
-        internal List<Sprite> _spriteList = new List<Sprite>();
-        private bool _detectCollisionSelf;
-        private int _detectCollisionTag;
-
-        //Protected methods - override to support custom Sprite movement logic in
-        //derived classes
-
-        //Initialize a sprite's "MoveData" object - default implementation does nothing
+        // Initialize a sprite's "MoveData" object - default implementation does nothing
         protected virtual void InitializeSprite(Sprite sprite)
         {
             sprite.MovementData = null;
         }
 
-        //Default Sprite movement logic does nothing
+        // Default Sprite movement logic does nothing
         protected virtual void MoveSprite(Sprite sprite)
         {
         }
 
-        //Internal methods - called by SpriteSurface
+        // Internal methods - called by SpriteSurface
         internal void MoveSprites()
         {
-            //Execute the protected "MoveSprite" method for each sprite we have
+            // Execute the protected "MoveSprite" method for each sprite we have
             lock (_spriteList)
             {
                 foreach (Sprite sprite in Sprites)
@@ -198,7 +190,7 @@ namespace SCG.TurboSprite
             }
         }
 
-        //Wrap sprites around edges of surface if they are out of bounds
+        // Wrap sprites around edges of surface if they are out of bounds
         internal void WrapSprites()
         {
             int Width = _surface.VirtualSize.Width;
@@ -219,7 +211,7 @@ namespace SCG.TurboSprite
             }
         }
 
-        //Detect collisions among its own sprites
+        // Detect collisions among its own sprites
         internal void PerformSelfCollisionDetection()
         {
             lock (_spriteList)
@@ -237,7 +229,7 @@ namespace SCG.TurboSprite
             }
         }
 
-        //Detect collisions against a different sprite engine
+        // Detect collisions against a different sprite engine
         internal void PerformCollisionWith(SpriteEngine se)
         {
             lock (_spriteList)
@@ -252,7 +244,7 @@ namespace SCG.TurboSprite
             }
         }
 
-        //Remove dead sprites from list
+        // Remove dead sprites from list
         internal void RemoveDeadSprites()
         {
             lock (_spriteList)
@@ -270,7 +262,7 @@ namespace SCG.TurboSprite
             }
         }
 
-        //Remove a sprite from the engine - called during processing cycle RemoveDeadSprites
+        // Remove a sprite from the engine - called during processing cycle RemoveDeadSprites
         internal void DeleteSprite(Sprite sprite)
         {
             _spriteList.Remove(sprite);

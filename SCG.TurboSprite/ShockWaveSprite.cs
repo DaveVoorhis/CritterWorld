@@ -35,7 +35,9 @@ namespace SCG.TurboSprite
 {
     public class ShockWaveSprite : Sprite
     {
-        //constructor
+        private List<Wave> _waves = new List<Wave>();
+        private int _lifeSpan;
+
         public ShockWaveSprite(int waves, float radius, int lifeSpan, Color startColor, Color endColor)
         {
             _lifeSpan = lifeSpan;
@@ -50,14 +52,14 @@ namespace SCG.TurboSprite
             Shape = new RectangleF(-50, -50, 100, 100);
             addProcessHandler(sprite =>
             {
-                //decrease life span
+                // decrease life span
                 _lifeSpan--;
                 if (_lifeSpan <= 0)
                     Kill();
             });
         }
 
-        //Render the sprite
+        // Render the sprite
         protected internal override void Render(System.Drawing.Graphics g)
         {
             Pen pen = new Pen(Color.Black);
@@ -72,10 +74,6 @@ namespace SCG.TurboSprite
                 g.DrawEllipse(pen, x - Surface.OffsetX, y - Surface.OffsetY, w, h);
             }
         }
-
-        //private members
-        private List<Wave> _waves = new List<Wave>();
-        private int _lifeSpan;
     }
 
     internal class Wave

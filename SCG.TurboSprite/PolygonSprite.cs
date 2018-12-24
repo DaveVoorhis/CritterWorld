@@ -1,6 +1,7 @@
 #region copyright
 /*
 * Copyright (c) 2008, Dion Kurczek
+* Modifications copyright (c) 2018, Dave Voorhis
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -35,9 +36,16 @@ namespace SCG.TurboSprite
 {
     public class PolygonSprite : Sprite
     {
-        //Public members
+        private PointF[] _points;
+        private PointF[] _drawnPoints;
+        private PointF[] _unrotated;
+        private Color _color = Color.Red;
+        private int _width;
+        private bool _filled;
+        private Color _fillColor = Color.Empty;
+        private int _lastAngle;
 
-        //Construct a PolygonSprite with the specified array of points
+        // Construct a PolygonSprite with the specified array of points
         public PolygonSprite(params PointF[] points)
         {
             Points = points;
@@ -46,7 +54,7 @@ namespace SCG.TurboSprite
             _points.CopyTo(_unrotated, 0);
         }
 
-        //Access Points collection, allow it to change
+        // Access Points collection, allow it to change
         public PointF[] Points
         {
             get
@@ -57,7 +65,7 @@ namespace SCG.TurboSprite
             {
                 _points = value;
 
-                //Set the shape of the sprite based on largest dimension from center
+                // Set the shape of the sprite based on largest dimension from center
                 float x1 = 0;
                 float y1 = 0;
                 float x2 = 0;
@@ -77,7 +85,7 @@ namespace SCG.TurboSprite
             }
         }
 
-        //Access line color
+        // Access line color
         public Color Color
         {
             get
@@ -90,7 +98,7 @@ namespace SCG.TurboSprite
             }
         }
 
-        //Access line width
+        // Access line width
         public int LineWidth
         {
             get
@@ -103,7 +111,7 @@ namespace SCG.TurboSprite
             }
         }
 
-        //Determine whether the Sprite is filled
+        // Determine whether the Sprite is filled
         public bool IsFilled
         {
             get
@@ -116,7 +124,7 @@ namespace SCG.TurboSprite
             }
         }
 
-        //Access the fill color
+        // Access the fill color
         public Color FillColor
         {
             get
@@ -129,20 +137,10 @@ namespace SCG.TurboSprite
             }
         }
 
-        //Private members
-        private PointF[] _points;
-        private PointF[] _drawnPoints;
-        private PointF[] _unrotated;
-        private Color _color = Color.Red;
-        private int _width;
-        private bool _filled;
-        private Color _fillColor = Color.Empty;
-        private int _lastAngle;
-
-        //Render the sprite - draw the polygon
+        // Render the sprite - draw the polygon
         protected internal override void Render(System.Drawing.Graphics g)
         {
-            //Process rotation of shape
+            // Process rotation of shape
             if (FacingAngle != _lastAngle)
             {
                 float sin = Sprite.Sin(FacingAngle);
@@ -154,18 +152,18 @@ namespace SCG.TurboSprite
                     _points[p].Y = _unrotated[p].Y * cos + _unrotated[p].X * sin;
                 }
 
-                //This causes shape to be correctly recalculated
+                // This causes shape to be correctly recalculated
                 Points = _points;
             }
 
-            //Transform polygon into viewport coordinates
+            // Transform polygon into viewport coordinates
             for (int pt = 0; pt < _points.Length; pt++)
             {
                 _drawnPoints[pt].X = _points[pt].X + X - Surface.OffsetX;
                 _drawnPoints[pt].Y = _points[pt].Y + Y - Surface.OffsetY;
             }
 
-            //Fill it?
+            // Fill it?
             if (_filled)
             {
                 Brush brush = new SolidBrush(_fillColor);
@@ -175,7 +173,7 @@ namespace SCG.TurboSprite
                 }
             }
 
-            //Draw outline
+            // Draw outline
             Pen pen = new Pen(_color, _width);
             using(pen)
             {

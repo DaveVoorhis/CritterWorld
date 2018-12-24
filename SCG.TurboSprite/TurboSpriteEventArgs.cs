@@ -1,6 +1,7 @@
 #region copyright
 /*
 * Copyright (c) 2008, Dion Kurczek
+* Modifications copyright (c) 2018, Dave Voorhis
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -33,7 +34,7 @@ using System.Windows.Forms;
 
 namespace SCG.TurboSprite
 {
-    //EventArgs that contains Sprite parameter
+    // EventArgs that contains Sprite parameter
     public class SpriteEventArgs : EventArgs
     {
         private Sprite _sprite;
@@ -51,6 +52,7 @@ namespace SCG.TurboSprite
             }
         }
     }
+
     public class SpriteClickEventArgs : SpriteEventArgs
     {
         private MouseButtons _mb;
@@ -70,7 +72,7 @@ namespace SCG.TurboSprite
         }
     }
 
-    //Collision detection event
+    // Collision detection event
     public class SpriteCollisionEventArgs : EventArgs
     {
         private Sprite _sprite1;

@@ -1,6 +1,7 @@
 #region copyright
 /*
 * Copyright (c) 2008, Dion Kurczek
+* Modifications copyright (c) 2018, Dave Voorhis
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -38,11 +39,33 @@ namespace SCG.TurboSprite
 {
     public partial class SquareGridSpriteSurface : SpriteSurface
     {
-        //Events
         public event EventHandler<CellEventArgs> CellClicked;
         public event EventHandler<RangeSelectedEventArgs> RangeSelected;
 
-        //Constructors
+        private int _cellWidth;
+        private int _cellHeight;
+        private int _cellsX;
+        private int _cellsY;
+        private bool _drawGrid;
+        private Color _gridColor;
+        private int _offsetCellX;
+        private int _offsetCellY;
+        private Color _cursorColor;
+        private int _cursorX;
+        private int _cursorY;
+        private bool _cursorVisible;
+        private Pen _penCursor;
+        private int _cursorWidth = 4;
+        private bool _selectionBand = false;
+        private Color _selectionBandColor = Color.Aqua;
+        private bool _dragging = false;
+        private Rectangle _dragRect = new Rectangle(0, 0, 0, 0);
+        private int _startX = 0;
+        private int _startY = 0;
+        private int _dragX = 0;
+        private int _dragY = 0;
+        private Pen _penSelectionBand = Pens.Aqua;
+
         public SquareGridSpriteSurface()
         {
             InitializeComponent();
@@ -56,7 +79,6 @@ namespace SCG.TurboSprite
             UseVirtualSize = true;
         }
 
-        //Public properties
         public int CellWidth
         {
             get
@@ -121,7 +143,7 @@ namespace SCG.TurboSprite
             }
         }
 
-        //Shold the grid be drawn?
+        // Shold the grid be drawn?
         public bool GridVisible
         {
             get
@@ -146,7 +168,7 @@ namespace SCG.TurboSprite
             }
         }
 
-        //Control offset via grid
+        // Control offset via grid
         public int OffsetCellX
         {
             get
@@ -162,6 +184,7 @@ namespace SCG.TurboSprite
                 }
             }
         }
+
         public int OffsetCellY
         {
             get
@@ -178,7 +201,7 @@ namespace SCG.TurboSprite
             }
         }
 
-        //Number of visible cells
+        // Number of visible cells
         public int VisibleCellsX
         {
             get
@@ -195,7 +218,7 @@ namespace SCG.TurboSprite
             }
         }
 
-        //Color of cursor
+        // Color of cursor
         public Color CursorColor
         {
             get
@@ -209,7 +232,7 @@ namespace SCG.TurboSprite
             }
         }
 
-        //Position of cursor
+        // Position of cursor
         public int CursorX
         {
             get
@@ -234,7 +257,7 @@ namespace SCG.TurboSprite
             }
         }
 
-        //Should we draw the cursor?
+        // Should we draw the cursor?
         public bool CursorVisible
         {
             get
@@ -247,7 +270,7 @@ namespace SCG.TurboSprite
             }
         }
 
-        //Width of cursor
+        // Width of cursor
         public int CursorWidth
         {
             get
@@ -261,7 +284,7 @@ namespace SCG.TurboSprite
             }
         }
 
-        //center on a specified cell
+        // center on a specified cell
         public void CenterOnCell(int x, int y)
         {
             int cellsWide = Width / CellWidth;
@@ -280,7 +303,7 @@ namespace SCG.TurboSprite
             OffsetCellY = topCell;
         }
 
-        //Should there be a selection band?
+        // Should there be a selection band?
         public bool SelectionBand
         {
             get
@@ -293,7 +316,7 @@ namespace SCG.TurboSprite
             }
         }
 
-        //Color of the selection band
+        // Color of the selection band
         public Color SelectionBandColor
         {
             get
@@ -307,32 +330,7 @@ namespace SCG.TurboSprite
             }
         }
 
-        //Private members
-        private int _cellWidth;
-        private int _cellHeight;
-        private int _cellsX;
-        private int _cellsY;
-        private bool _drawGrid;
-        private Color _gridColor;
-        private int _offsetCellX;
-        private int _offsetCellY;
-        private Color _cursorColor;
-        private int _cursorX;
-        private int _cursorY;
-        private bool _cursorVisible;
-        private Pen _penCursor;
-        private int _cursorWidth = 4;
-        private bool _selectionBand = false;
-        private Color _selectionBandColor = Color.Aqua;
-        private bool _dragging = false;
-        private Rectangle _dragRect = new Rectangle(0, 0, 0, 0);
-        private int _startX = 0;
-        private int _startY = 0;
-        private int _dragX = 0;
-        private int _dragY = 0;
-        private Pen _penSelectionBand = Pens.Aqua;
-
-        //Render the grid before sprites are drawn
+        // Render the grid before sprites are drawn
         protected override void DoBeforeSpriteRender(System.Drawing.Graphics g)
         {
             if (GridVisible)
@@ -360,10 +358,10 @@ namespace SCG.TurboSprite
             }
         }
 
-        //Render the cursor
+        // Render the cursor
         protected override void DoAfterSpriteRender(Graphics g)
         {
-            //Draw the cursor
+            // Draw the cursor
             if (CursorVisible)
             {
                 int x = _cursorX * CellWidth - OffsetX;
@@ -371,7 +369,7 @@ namespace SCG.TurboSprite
                 g.DrawRectangle(_penCursor, x, y, CellWidth, CellHeight);
             }
 
-            //Draw the selection band
+            // Draw the selection band
             if (SelectionBand && _dragging)
             {
                 int x = _startX < _dragX ? _startX : _dragX;
@@ -384,7 +382,7 @@ namespace SCG.TurboSprite
             }
         }
 
-        //Sense a drag
+        // Sense a drag
         protected override void OnMouseDown(System.Windows.Forms.MouseEventArgs e)
         {
             base.OnMouseDown(e);
@@ -395,16 +393,16 @@ namespace SCG.TurboSprite
             _dragY = _startY;
         }
 
-        //Respond to cell click
+        // Respond to cell click
         protected override void OnMouseUp(MouseEventArgs e)
         {
             bool range = false;
 
-            //get coordinates
+            // get coordinates
             int x = (e.X + OffsetX) / CellWidth;
             int y = (e.Y + OffsetY) / CellHeight;
 
-            //Process a drag?
+            // Process a drag?
             _dragging = false;
             if ((x != _startX || y != _startY) && SelectionBand)
             {
@@ -440,7 +438,7 @@ namespace SCG.TurboSprite
                     CellClicked(this, new CellEventArgs(x, y, e.Button));            
         }
 
-        //if dragging update end coords
+        // if dragging update end coords
         protected override void OnMouseMove(System.Windows.Forms.MouseEventArgs e)
         {
             base.OnMouseMove(e);
@@ -452,10 +450,13 @@ namespace SCG.TurboSprite
         }
     }
 
-    //Event triggered with cell 
+    // Event triggered with cell 
     public class CellEventArgs : EventArgs
     {
-        //public members
+        private int _x;
+        private int _y;
+        private MouseButtons _mb;
+
         public CellEventArgs(int x, int y, MouseButtons mb)
         {
             _x = x;
@@ -463,7 +464,7 @@ namespace SCG.TurboSprite
             _mb = mb;
         }
 
-        //Retrive coordinates
+        // Retrieve coordinates
         public int X
         {
             get
@@ -471,6 +472,7 @@ namespace SCG.TurboSprite
                 return _x;
             }
         }
+
         public int Y
         {
             get
@@ -478,6 +480,7 @@ namespace SCG.TurboSprite
                 return _y;
             }
         }
+
         public MouseButtons Button
         {
             get
@@ -485,17 +488,14 @@ namespace SCG.TurboSprite
                 return _mb;
             }
         }
-
-        //private members
-        private int _x;
-        private int _y;
-        private MouseButtons _mb;
     }
 
-    //event that's triggered when a range is selected
+    // event that's triggered when a range is selected
     public class RangeSelectedEventArgs : EventArgs
     {
-        //constructor
+        // private members
+        private Rectangle _selection;
+
         public RangeSelectedEventArgs(Rectangle rect)
         {
             _selection = rect;
@@ -509,8 +509,5 @@ namespace SCG.TurboSprite
                 return _selection;
             }
         }
-
-        //private members
-        private Rectangle _selection;
     }
 }

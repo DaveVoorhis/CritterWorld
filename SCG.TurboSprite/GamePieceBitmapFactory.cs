@@ -1,6 +1,7 @@
 #region copyright
 /*
 * Copyright (c) 2008, Dion Kurczek
+* Modifications copyright (c) 2018, Dave Voorhis
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -41,9 +42,15 @@ namespace SCG.TurboSprite
 {
     public partial class GamePieceBitmapFactory : Component
     {
-        //Public members
+        private Bitmap _masterBitmap;
+        private int _cellsX;
+        private int _cellsY;
+        private Dictionary<Color, Bitmap> _colorized = new Dictionary<Color, Bitmap>();
+        private Dictionary<Bitmap, Bitmap[,]> _mapping = new Dictionary<Bitmap, Bitmap[,]>();
+        private Bitmap[,] _cells = null;
+        private Dictionary<RotatedBitmap, Bitmap> _rotations = new Dictionary<RotatedBitmap, Bitmap>();
 
-        //Constructors
+        // Constructors
         public GamePieceBitmapFactory()
         {
             InitializeComponent();
@@ -55,7 +62,7 @@ namespace SCG.TurboSprite
             InitializeComponent();
         }
 
-        //The Master bitmap that contains all of the cells
+        // The Master bitmap that contains all of the cells
         public Bitmap MasterBitmap
         {
             get
@@ -68,7 +75,7 @@ namespace SCG.TurboSprite
             }
         }
 
-        //The number of cells that the master bitmap contains
+        // The number of cells that the master bitmap contains
         public int CellsX
         {
             get
@@ -93,7 +100,7 @@ namespace SCG.TurboSprite
             }
         }
 
-        //Returns the cell width/height
+        // Returns the cell width/height
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public int CellWidth
         {
@@ -116,12 +123,12 @@ namespace SCG.TurboSprite
             }
         }
 
-        //Return a bitmap based on cell, do not colorize
+        // Return a bitmap based on cell, do not colorize
         public Bitmap GetGamePieceBitmap(int cellx, int celly)
         {
             if (_cells == null)
             {
-                //break up the bitmap into cells
+                // break up the bitmap into cells
                 Bitmap copied = new Bitmap(_masterBitmap.Width, _masterBitmap.Height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
                 Graphics g = Graphics.FromImage(copied);
                 using (g)
@@ -145,13 +152,13 @@ namespace SCG.TurboSprite
             return _cells[cellx, celly];
         }
 
-        //Return a Bitmap based on one of the cells, with the specified Color
+        // Return a Bitmap based on one of the cells, with the specified Color
         public Bitmap GetGamePieceBitmap(int cellx, int celly, Color color)
         {
-            //Have we already created a colorized version of the master bitmap?
+            // Have we already created a colorized version of the master bitmap?
             if (!_colorized.ContainsKey(color))
             {
-                //Create colorized version of the source
+                // Create colorized version of the source
                 Color c;
                 float red = color.R;
                 float green = color.G;
@@ -178,10 +185,10 @@ namespace SCG.TurboSprite
                         }
                     }
 
-                //Save colorized source
+                // Save colorized source
                 _colorized.Add(color, colorized);
 
-                //Chop colorized source into array of cells
+                // Chop colorized source into array of cells
                 Bitmap[,] cells = new Bitmap[CellsX, CellsY];
                 for(int y = 0; y < CellsY; y++)
                     for (int x = 0; x < CellsX; x++)
@@ -195,32 +202,32 @@ namespace SCG.TurboSprite
                         cells[x, y] = cellBitmap;
                     }
 
-                //Save the cell array for reference
+                // Save the cell array for reference
                 _mapping.Add(colorized, cells);
             }
 
-            //Find the colorized bitmap
+            // Find the colorized bitmap
             Bitmap colorizedMaster = _colorized[color];
 
-            //Find the array of cells
+            // Find the array of cells
             Bitmap[,] cellArray = _mapping[colorizedMaster];
 
-            //Return the appropriate cell
+            // Return the appropriate cell
             return cellArray[cellx, celly];
         }
 
-        //Get a rotated bitmap
+        // Get a rotated bitmap
         public Bitmap GetGamePieceBitmap(int cellx, int celly, Color color, Rotation rotation)
         {
-            //Get the base (unrotated) cell
+            // Get the base (unrotated) cell
             Bitmap bmp = GetGamePieceBitmap(cellx, celly, color);
 
-            //If we have one already return it
+            // If we have one already return it
             RotatedBitmap rb = new RotatedBitmap(bmp, rotation);
             if (_rotations.ContainsKey(rb))
                 return _rotations[rb];
 
-            //create it
+            // create it
             Bitmap rotatedBmp = new Bitmap(bmp);
             switch (rotation)
             {
@@ -237,21 +244,12 @@ namespace SCG.TurboSprite
             _rotations[rb] = rotatedBmp;
             return rotatedBmp;
         }
-
-        //Private members
-        private Bitmap _masterBitmap;
-        private int _cellsX;
-        private int _cellsY;
-        private Dictionary<Color, Bitmap> _colorized = new Dictionary<Color, Bitmap>();
-        private Dictionary<Bitmap, Bitmap[,]> _mapping = new Dictionary<Bitmap, Bitmap[,]>();
-        private Bitmap[,] _cells = null;
-        private Dictionary<RotatedBitmap, Bitmap> _rotations = new Dictionary<RotatedBitmap, Bitmap>();
     }
 
-    //Supported rotations
+    // Supported rotations
     public enum Rotation { R90, R180, R270 };
 
-    //Desired Bitmap/Rotation combo
+    // Desired Bitmap/Rotation combo
     internal struct RotatedBitmap
     {
         internal RotatedBitmap(Bitmap bitmap, Rotation rotation)

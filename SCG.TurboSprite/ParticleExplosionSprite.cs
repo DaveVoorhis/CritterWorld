@@ -1,6 +1,7 @@
 #region copyright
 /*
 * Copyright (c) 2008, Dion Kurczek
+* Modifications copyright (c) 2018, Dave Voorhis
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -35,7 +36,9 @@ namespace SCG.TurboSprite
 {
     public class ParticleExplosionSprite : Sprite
     {
-        //public members
+        private List<Particle> _particles = new List<Particle>();
+        private int _lifeSpan;
+
         public ParticleExplosionSprite(int particles, Color startColor, Color endColor, int startDiam, int endDiam, int lifeSpan)
         {
             _lifeSpan = lifeSpan;
@@ -52,14 +55,14 @@ namespace SCG.TurboSprite
             Shape = new RectangleF(-15, -15, 30, 30);
             addProcessHandler(sprite =>
             {
-                //Decrement life
+                // Decrement life
                 _lifeSpan--;
                 if (_lifeSpan <= 0)
                     Kill();
             });
         }
 
-        //Render the sprite
+        // Render the sprite
         protected internal override void Render(Graphics g)
         {
             Brush b;
@@ -73,10 +76,6 @@ namespace SCG.TurboSprite
                 g.FillEllipse(b, x, y, p.Diameter * 2, p.Diameter * 2);
             }
         }
-
-        //private members
-        private List<Particle> _particles = new List<Particle>();
-        private int _lifeSpan;       
     }
 
     internal class Particle

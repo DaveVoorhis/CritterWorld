@@ -1,6 +1,7 @@
 #region copyright
 /*
 * Copyright (c) 2008, Dion Kurczek
+* Modifications copyright (c) 2018, Dave Voorhis
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -35,22 +36,21 @@ namespace SCG.TurboSprite
 {
     public class BitmapSprite : Sprite
     {
-        //Private fields
         private Bitmap _bitmap;           
 
-        //Constructor - Bitmap must be supplied
+        // Constructor - Bitmap must be supplied
         public BitmapSprite(Bitmap bitmap)
         {
             Bitmap = bitmap;          
         }
 
-        //Render it on the sprite surface
+        // Render it on the sprite surface
         protected internal override void Render(Graphics g)
         {
             g.DrawImage(Bitmap, X - WidthHalf - Surface.OffsetX, Y - HeightHalf - Surface.OffsetY);
         }
 
-        //The bitmap used to render the sprite
+        // The bitmap used to render the sprite
         public Bitmap Bitmap
         {
             get

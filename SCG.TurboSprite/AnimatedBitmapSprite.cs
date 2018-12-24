@@ -1,6 +1,7 @@
 #region copyright
 /*
 * Copyright (c) 2008, Dion Kurczek
+* Modifications copyright (c) 2018, Dave Voorhis
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -35,7 +36,15 @@ namespace SCG.TurboSprite
 {
     public class AnimatedBitmapSprite : Sprite
     {
-        //Constructor - pass a GPSF, and desired row to use
+        private GamePieceBitmapFactory _gpbf;
+        private int _row;
+        private int _latency = 10;
+        private int _counter = 0;
+        private int _frame = 0;
+        private int _widthHalf;
+        private int _heightHalf;
+
+        // Constructor - pass a GPSF, and desired row to use
         public AnimatedBitmapSprite(GamePieceBitmapFactory gpbf, int row)
         {
             _gpbf = gpbf;
@@ -45,7 +54,7 @@ namespace SCG.TurboSprite
             Shape = new System.Drawing.RectangleF(-gpbf.CellWidth / 2, -gpbf.CellHeight / 2, gpbf.CellWidth, gpbf.CellHeight);
         }
 
-        //The row to use
+        // The row to use
         public int Row
         {
             get
@@ -59,7 +68,7 @@ namespace SCG.TurboSprite
             }
         }
 
-        //The latency, number of cycles to wait before advancing frame
+        // The latency, number of cycles to wait before advancing frame
         public int FrameLatency
         {
             get
@@ -72,7 +81,7 @@ namespace SCG.TurboSprite
             }
         }
 
-        //Allow access to the frame
+        // Allow access to the frame
         public int Frame
         {
             get
@@ -85,10 +94,10 @@ namespace SCG.TurboSprite
             }
         }
 
-        //Render the sprite
+        // Render the sprite
         protected internal override void Render(Graphics g)
         {
-            //advance the counter/frame
+            // advance the counter/frame
             _counter++;
             if (_counter >= _latency)
             {
@@ -98,20 +107,11 @@ namespace SCG.TurboSprite
                     _frame = 0;
             }
 
-            //get the appropriate cell
+            // get the appropriate cell
             Bitmap bmp = _gpbf.GetGamePieceBitmap(_frame, _row);
 
-            //draw it
+            // draw it
             g.DrawImage(bmp, X - _widthHalf - Surface.OffsetX, Y - _heightHalf - Surface.OffsetY);
         }
-
-        //private members
-        private GamePieceBitmapFactory _gpbf;
-        private int _row;
-        private int _latency = 10;
-        private int _counter = 0;
-        private int _frame = 0;
-        private int _widthHalf;
-        private int _heightHalf;
     }
 }
