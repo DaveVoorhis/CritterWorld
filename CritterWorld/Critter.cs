@@ -14,7 +14,7 @@ namespace CritterWorld
         private const float scale = 1;
 
         private DestinationMover destinationMover;
-        private PolygonSpriteAnimated sprite;
+        private PolygonSprite sprite;
 
         public static PointF[] Scale(PointF[] array, float scale)
         {
@@ -31,18 +31,18 @@ namespace CritterWorld
             return destinationMover;
         }
 
-        public PolygonSpriteAnimated GetSprite()
+        public PolygonSprite GetSprite()
         {
             return sprite;
         }
 
-        public Critter(SpriteSurface spriteSurface, SpriteEngineDestination spriteEngine)
+        public Critter(SpriteEngineDestination spriteEngine)
         {
             CritterBody body = new CritterBody();
             PointF[][] frames = new PointF[2][];
             frames[0] = Scale(body.GetBody1(), scale);
             frames[1] = Scale(body.GetBody2(), scale);
-            sprite = new PolygonSpriteAnimated(frames);
+            sprite = new PolygonSprite(frames);
             sprite.LineWidth = 1;
 
             spriteEngine.AddSprite(sprite);

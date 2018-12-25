@@ -14,6 +14,8 @@ namespace CritterWorld
 {
     public partial class Arena : Form
     {
+        Random rnd = Sprite.RND;
+
         private void surface_SpriteCollision(object sender, SpriteCollisionEventArgs e)
         {
             DestinationMover dm1 = spriteEngine1.GetMover(e.Sprite1);
@@ -28,15 +30,44 @@ namespace CritterWorld
             dm2.SpeedY = sy1;
         }
 
+        private void AssignRandomDestination(Sprite sprite)
+        {
+            int destX = rnd.Next(spriteSurface1.Width);
+            int destY = rnd.Next(spriteSurface1.Height);
+
+            PointF[] markerPoly = new PointF[]
+            {
+                new PointF(-2, -2),
+                new PointF(2, 2),
+                new PointF(0, 0),
+                new PointF(-2, 2),
+                new PointF(2, -2)
+            };
+            PolygonSprite marker = new PolygonSprite(markerPoly);
+            marker.Position = new Point(destX, destY);
+            marker.Color = Color.Red;
+
+            spriteEngine1.AddSprite(marker);
+
+            DestinationMover mover = spriteEngine1.GetMover(sprite);
+            mover.Speed = rnd.Next(10) + 1;
+            mover.Destination = new Point(destX, destY);
+            mover.StopAtDestination = true;
+        }
+
+        private void surface_SpriteReachedDestination(object sender, SpriteEventArgs e)
+        {
+            AssignRandomDestination(e.Sprite);
+        }
+
         public Arena()
         {
-            float critterCount = 20;
+            float critterCount = 3;
 
             InitializeComponent();
 
             spriteSurface1.SpriteCollision += new System.EventHandler<SCG.TurboSprite.SpriteCollisionEventArgs>(this.surface_SpriteCollision);
-
-            Random rnd = new Random(DateTime.Now.Millisecond);
+      //      spriteEngine1.SpriteReachedDestination += new System.EventHandler<SCG.TurboSprite.SpriteEventArgs>(this.surface_SpriteReachedDestination);
 
             CritterBody body = new CritterBody();
             PointF[][] frames = new PointF[2][];
@@ -48,20 +79,13 @@ namespace CritterWorld
 
             for (int i = 0; i < critterCount; i++)
             {
-                Critter critter = new Critter(spriteSurface1, spriteEngine1);
+                Critter critter = new Critter(spriteEngine1);
                 critter.GetSprite().Color = Sprite.ColorFromRange(Color.Aqua, Color.Red);
                 critter.GetSprite().LineWidth = 2;
 
                 critter.GetSprite().Position = new Point(startX, startY);
 
-                int destX = rnd.Next(spriteSurface1.Width);
-                int destY = rnd.Next(spriteSurface1.Height);
-
-                DestinationMover mover = critter.GetMover();
-                mover.Speed = rnd.Next(10);
-                mover.Destination = new Point(destX, destY);
-                mover.StopAtDestination = false;
-                
+                AssignRandomDestination(critter.GetSprite());
 
                 startY += 30;
                 if (startY >= spriteSurface1.Height - 30) 

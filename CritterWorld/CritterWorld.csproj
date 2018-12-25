@@ -54,6 +54,7 @@
     </Compile>
     <Compile Include="Critter.cs" />
     <Compile Include="CritterBody.cs" />
+    <Compile Include="PolygonSpriteAnimated.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Arena.resx">
