@@ -213,7 +213,7 @@ namespace SCG.TurboSprite
                 else
                     _sprite.Y += SpeedY;
             }
-            _sprite.notifyMoved();
+            _sprite.NotifyMoved();
         }
     }
 }

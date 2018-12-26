@@ -42,18 +42,12 @@ namespace SCG.TurboSprite
         private static float[] _cos = new float[360];
 
         private int _facingAngle;
-        private float _x;
-        private float _y;
-        private bool _dead;
         private RectangleF _shape = new RectangleF(-1, -1, -1, -1);
-        private RectangleF _clickShape = new RectangleF(-1, -1, -1, -1);
         private RectangleF _bounds = new RectangleF();
         private RectangleF _clickBounds = new RectangleF();
-        private SpinType _spin;
-        private int _spinSpeed;
 
         // Internal "MoveData" object used by SpriteEngines to store movement info
-        internal Object MovementData;
+        internal object MovementData;
 
         // Internal Members
         internal SpriteEngine _engine;
@@ -99,6 +93,12 @@ namespace SCG.TurboSprite
             return Color.FromArgb(a, r, g, b);
         }
 
+        // This can be used to associate user data with the Sprite.
+        public object Data
+        {
+            get; set;
+        }
+
         // The "Shape" of the sprite represents its Width and Height as relative to its center
         public RectangleF Shape
         {
@@ -114,17 +114,7 @@ namespace SCG.TurboSprite
         }
 
         // Clickshape determines the size of the sprite for purposes of registering a mouse click
-        public RectangleF ClickShape
-        {
-            get
-            {
-                return _clickShape;
-            }
-            set
-            {
-                _clickShape = value;
-            }
-        }
+        public RectangleF ClickShape { get; set; } = new RectangleF(-1, -1, -1, -1);
 
         // Sprite's bounding rectangle, calculated based on size and position
         public RectangleF Bounds
@@ -144,10 +134,10 @@ namespace SCG.TurboSprite
         {
             get
             {
-                _clickBounds.X = X + _clickShape.Left - Surface.OffsetX;
-                _clickBounds.Width = _clickShape.Width;
-                _clickBounds.Y = Y + _clickShape.Top - Surface.OffsetY;
-                _clickBounds.Height = _clickShape.Height;
+                _clickBounds.X = X + ClickShape.Left - Surface.OffsetX;
+                _clickBounds.Width = ClickShape.Width;
+                _clickBounds.Y = Y + ClickShape.Top - Surface.OffsetY;
+                _clickBounds.Height = ClickShape.Height;
                 return _clickBounds;
             }
         }
@@ -222,49 +212,23 @@ namespace SCG.TurboSprite
         }
 
         // Is the sprite dead?
-        public bool Dead
-        {
-            get
-            {
-                return _dead;
-            }
-        }
+        public bool Dead { get; private set; }
 
         // Sprite's position - integer and float types supported
-        public float X
-        {
-            get
-            {
-                return _x;
-            }
-            set
-            {
-                _x = value;
-            }
-        }
+        public float X { get; set; }
 
-        public float Y
-        {
-            get
-            {
-                return _y;
-            }
-            set
-            {
-                _y = value;
-            }
-        }
+        public float Y { get; set; }
 
         public PointF PositionF
         {
             get
             {
-                return new PointF(_x, _y);
+                return new PointF(X, Y);
             }
             set
             {
-                _x = value.X;
-                _y = value.Y;
+                X = value.X;
+                Y = value.Y;
             }
         }
 
@@ -272,54 +236,34 @@ namespace SCG.TurboSprite
         {
             get
             {
-                return new Point((int)_x, (int)_y);
+                return new Point((int)X, (int)Y);
             }
             set
             {
-                _x = value.X;
-                _y = value.Y;
+                X = value.X;
+                Y = value.Y;
             }
         }
 
         // The sprite's spin (if any)
-        public SpinType Spin
-        {
-            get
-            {
-                return _spin;
-            }
-            set
-            {
-                _spin = value;
-            }
-        }
+        public SpinType Spin { get; set; }
 
-        public int SpinSpeed
-        {
-            get
-            {
-                return _spinSpeed;
-            }
-            set
-            {
-                _spinSpeed = value;
-            }
-        }
+        public int SpinSpeed { get; set; }
 
         // Kill a sprite - it will be removed after next processing cycle
         public void Kill()
         {
-            _dead = true;
+            Dead = true;
         }
 
-        virtual public void notifyMoved()
+        virtual public void NotifyMoved()
         {
         }
 
         // Process the internal logic a sprite may require during each animation cycle
         internal void PreProcess()
         {
-            switch (_spin)
+            switch (Spin)
             {
                 case SpinType.Clockwise:
                     FacingAngle += SpinSpeed;

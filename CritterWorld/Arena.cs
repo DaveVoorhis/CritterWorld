@@ -32,34 +32,10 @@ namespace CritterWorld
             dm2.SpeedY = sy1;
         }
 
-        private void AssignRandomDestination(Sprite sprite)
-        {
-            int destX = rnd.Next(spriteSurfaceMain.Width);
-            int destY = rnd.Next(spriteSurfaceMain.Height);
-
-            PointF[] markerPoly = new PointF[]
-            {
-                new PointF(-2, -2),
-                new PointF(2, 2),
-                new PointF(0, 0),
-                new PointF(-2, 2),
-                new PointF(2, -2)
-            };
-            PolygonSprite marker = new PolygonSprite(markerPoly);
-            marker.Position = new Point(destX, destY);
-            marker.Color = Color.Red;
-
-            spriteEngineDebug.AddSprite(marker);
-
-            DestinationMover mover = spriteEngineMain.GetMover(sprite);
-            mover.Speed = rnd.Next(10) + 1;
-            mover.Destination = new Point(destX, destY);
-            mover.StopAtDestination = true;
-        }
-
         private void surface_SpriteReachedDestination(object sender, SpriteEventArgs e)
         {
-            AssignRandomDestination(e.Sprite);
+            Critter critter = (Critter)e.Sprite.Data;
+            critter.AssignRandomDestination(spriteEngineDebug);
         }
 
         public Arena()
@@ -92,7 +68,7 @@ namespace CritterWorld
 
                 critter.GetSprite().Position = new Point(startX, startY);
 
-                AssignRandomDestination(critter.GetSprite());
+                critter.AssignRandomDestination(spriteEngineDebug);
 
                 startY += 30;
                 if (startY >= spriteSurfaceMain.Height - 30) 

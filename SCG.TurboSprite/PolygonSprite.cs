@@ -84,7 +84,7 @@ namespace SCG.TurboSprite
             }
         }
 
-        override public void notifyMoved()
+        override public void NotifyMoved()
         {
             int nextFrame = NextFrame + 1;
             if (nextFrame >= _frameCount)

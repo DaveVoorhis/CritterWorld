@@ -36,6 +36,33 @@ namespace CritterWorld
             return sprite;
         }
 
+        public void AssignRandomDestination(SpriteEngine spriteEngineDebug)
+        {
+            Random rnd = Sprite.RND;
+
+            int destX = rnd.Next(sprite.Surface.Width);
+            int destY = rnd.Next(sprite.Surface.Height);
+
+            PointF[] markerPoly = new PointF[]
+            {
+                new PointF(-2, -2),
+                new PointF(-2, 2),
+                new PointF(2, 2),
+                new PointF(2, -2)
+            };
+            PolygonSprite marker = new PolygonSprite(markerPoly);
+            marker.Position = new Point(destX, destY);
+            marker.Color = Color.Red;
+
+            spriteEngineDebug.AddSprite(marker);
+
+            SpriteEngineDestination spriteEngine = (SpriteEngineDestination)sprite.Engine;
+            DestinationMover mover = spriteEngine.GetMover(sprite);
+            mover.Speed = rnd.Next(10) + 1;
+            mover.Destination = new Point(destX, destY);
+            mover.StopAtDestination = true;
+        }
+
         public Critter(SpriteEngineDestination spriteEngine)
         {
             CritterBody body = new CritterBody();
@@ -43,6 +70,7 @@ namespace CritterWorld
             frames[0] = Scale(body.GetBody1(), scale);
             frames[1] = Scale(body.GetBody2(), scale);
             sprite = new PolygonSprite(frames);
+            sprite.Data = this;
             sprite.LineWidth = 1;
 
             spriteEngine.AddSprite(sprite);
