@@ -29,49 +29,49 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.spriteSurface1 = new SCG.TurboSprite.SpriteSurface(this.components);
-            this.spriteEngine1 = new SCG.TurboSprite.SpriteEngineDestination(this.components);
+            this.spriteSurfaceMain = new SCG.TurboSprite.SpriteSurface(this.components);
+            this.spriteEngineMain = new SCG.TurboSprite.SpriteEngineDestination(this.components);
             this.SuspendLayout();
             // 
             // spriteSurface1
             // 
-            this.spriteSurface1.Active = false;
-            this.spriteSurface1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.spriteSurfaceMain.Active = false;
+            this.spriteSurfaceMain.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.spriteSurface1.AutoBlank = true;
-            this.spriteSurface1.AutoBlankColor = System.Drawing.Color.Black;
-            this.spriteSurface1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.spriteSurface1.CausesValidation = false;
-            this.spriteSurface1.DesiredFPS = 30;
-            this.spriteSurface1.Location = new System.Drawing.Point(0, 0);
-            this.spriteSurface1.Margin = new System.Windows.Forms.Padding(0);
-            this.spriteSurface1.Name = "spriteSurface1";
-            this.spriteSurface1.OffsetX = 0;
-            this.spriteSurface1.OffsetY = 0;
-            this.spriteSurface1.Size = new System.Drawing.Size(1626, 994);
-            this.spriteSurface1.TabIndex = 0;
-            this.spriteSurface1.Text = "spriteSurface1";
-            this.spriteSurface1.ThreadPriority = System.Threading.ThreadPriority.Normal;
-            this.spriteSurface1.UseVirtualSize = false;
-            this.spriteSurface1.VirtualHeight = 994;
-            this.spriteSurface1.VirtualSize = new System.Drawing.Size(1626, 994);
-            this.spriteSurface1.VirtualWidth = 0;
-            this.spriteSurface1.WraparoundEdges = true;
+            this.spriteSurfaceMain.AutoBlank = true;
+            this.spriteSurfaceMain.AutoBlankColor = System.Drawing.Color.Black;
+            this.spriteSurfaceMain.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.spriteSurfaceMain.CausesValidation = false;
+            this.spriteSurfaceMain.DesiredFPS = 30;
+            this.spriteSurfaceMain.Location = new System.Drawing.Point(0, 0);
+            this.spriteSurfaceMain.Margin = new System.Windows.Forms.Padding(0);
+            this.spriteSurfaceMain.Name = "spriteSurface1";
+            this.spriteSurfaceMain.OffsetX = 0;
+            this.spriteSurfaceMain.OffsetY = 0;
+            this.spriteSurfaceMain.Size = new System.Drawing.Size(1626, 994);
+            this.spriteSurfaceMain.TabIndex = 0;
+            this.spriteSurfaceMain.Text = "spriteSurface1";
+            this.spriteSurfaceMain.ThreadPriority = System.Threading.ThreadPriority.Normal;
+            this.spriteSurfaceMain.UseVirtualSize = false;
+            this.spriteSurfaceMain.VirtualHeight = 994;
+            this.spriteSurfaceMain.VirtualSize = new System.Drawing.Size(1626, 994);
+            this.spriteSurfaceMain.VirtualWidth = 0;
+            this.spriteSurfaceMain.WraparoundEdges = true;
             // 
             // spriteEngine1
             // 
-            this.spriteEngine1.DetectCollisionSelf = true;
-            this.spriteEngine1.DetectCollisionTag = 0;
-            this.spriteEngine1.Priority = 1;
-            this.spriteEngine1.Surface = this.spriteSurface1;
+            this.spriteEngineMain.DetectCollisionSelf = true;
+            this.spriteEngineMain.DetectCollisionTag = 0;
+            this.spriteEngineMain.Priority = 1;
+            this.spriteEngineMain.Surface = this.spriteSurfaceMain;
             // 
             // Arena
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1626, 994);
-            this.Controls.Add(this.spriteSurface1);
+            this.Controls.Add(this.spriteSurfaceMain);
             this.Name = "Arena";
             this.Text = "CritterWorld";
             this.ResumeLayout(false);
@@ -80,8 +80,8 @@
 
         #endregion
 
-        private SCG.TurboSprite.SpriteSurface spriteSurface1;
-        private SCG.TurboSprite.SpriteEngineDestination spriteEngine1;
+        private SCG.TurboSprite.SpriteSurface spriteSurfaceMain;
+        private SCG.TurboSprite.SpriteEngineDestination spriteEngineMain;
     }
 }
 
