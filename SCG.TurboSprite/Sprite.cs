@@ -84,25 +84,20 @@ namespace SCG.TurboSprite
         }
 
         // Get a random color byte value
-        private static byte rndByte(byte b1, byte b2)
+        private static byte RndByte(byte b1, byte b2)
         {
             if (b1 > b2)
-            {
-                byte temp = b1;
-                b1 = b2;
-                b2 = temp;
-            }
-            byte diff = (byte)(b2 - b1);
-            return (byte)(RND.Next(diff) + b1);
+                return (byte)(RND.Next(b1 - b2) + b2);
+            return (byte)(RND.Next(b2 - b1) + b1);
         }
 
         // Obtain a random color within start to end range
         public static Color RandomColorFromRange(Color startColor, Color endColor)
         {
-            byte a = rndByte(startColor.A, endColor.A);
-            byte r = rndByte(startColor.R, endColor.R);
-            byte g = rndByte(startColor.G, endColor.G);
-            byte b = rndByte(startColor.B, endColor.B);
+            byte a = RndByte(startColor.A, endColor.A);
+            byte r = RndByte(startColor.R, endColor.R);
+            byte g = RndByte(startColor.G, endColor.G);
+            byte b = RndByte(startColor.B, endColor.B);
             return Color.FromArgb(a, r, g, b);
         }
 
