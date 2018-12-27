@@ -44,7 +44,7 @@ namespace SCG.TurboSprite
             while (waves > 0)
             {
                 Wave wave = new Wave();
-                wave.Color = Sprite.ColorFromRange(startColor, endColor);
+                wave.Color = Sprite.RandomColorFromRange(startColor, endColor);
                 wave.Radius = radius;
                 _waves.Add(wave);
                 waves--;

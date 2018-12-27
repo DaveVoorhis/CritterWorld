@@ -45,7 +45,7 @@ namespace SCG.TurboSprite
             while (particles > 0)
             {
                 Particle p = new Particle();
-                p.Color = Sprite.ColorFromRange(startColor, endColor);
+                p.Color = Sprite.RandomColorFromRange(startColor, endColor);
                 p.DirectionX = Sprite.RND.NextDouble() * 4 - 2;
                 p.DirectionY = Sprite.RND.NextDouble() * 4 - 2;
                 p.Diameter = Sprite.RND.Next(endDiam - startDiam) + startDiam;

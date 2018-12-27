@@ -65,7 +65,7 @@ namespace CritterWorld
             for (int i = 0; i < critterCount; i++)
             {
                 Critter critter = new Critter(spriteEngineMain);
-                critter.GetSprite().Color = Sprite.ColorFromRange(Color.Aqua, Color.Red);
+                critter.GetSprite().Color = Sprite.RandomColor(64);
                 critter.GetSprite().LineWidth = 2;
 
                 critter.GetSprite().Position = new Point(startX, startY);

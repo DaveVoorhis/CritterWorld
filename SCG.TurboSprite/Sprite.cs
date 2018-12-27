@@ -83,14 +83,36 @@ namespace SCG.TurboSprite
             return _cos[degree];
         }
 
+        // Get a random color byte value
+        private static byte rndByte(byte b1, byte b2)
+        {
+            if (b1 > b2)
+            {
+                byte temp = b1;
+                b1 = b2;
+                b2 = temp;
+            }
+            byte diff = (byte)(b2 - b1);
+            return (byte)(RND.Next(diff) + b1);
+        }
+
         // Obtain a random color within start to end range
-        public static Color ColorFromRange(Color startColor, Color endColor)
+        public static Color RandomColorFromRange(Color startColor, Color endColor)
         {
             byte a = rndByte(startColor.A, endColor.A);
             byte r = rndByte(startColor.R, endColor.R);
             byte g = rndByte(startColor.G, endColor.G);
             byte b = rndByte(startColor.B, endColor.B);
             return Color.FromArgb(a, r, g, b);
+        }
+
+        // Obtain a random color given a minimum luminance value.
+        public static Color RandomColor(int minimumLuminance)
+        {
+            byte r = (byte)RND.Next(minimumLuminance, 256);
+            byte g = (byte)RND.Next(minimumLuminance, 256);
+            byte b = (byte)RND.Next(minimumLuminance, 256);
+            return Color.FromArgb(255, r, g, b);
         }
 
         // This can be used to associate user data with the Sprite.
@@ -299,19 +321,6 @@ namespace SCG.TurboSprite
             {
                 processor.Invoke(this);
             }
-        }
-
-        // Get a random color byte value
-        private static byte rndByte(byte b1, byte b2)
-        {
-            if (b1 > b2)
-            {
-                byte temp = b1;
-                b1 = b2;
-                b2 = temp;
-            }
-            byte diff = (byte)(b2 - b1);
-            return (byte)(RND.Next(diff) + b1);
         }
     }
 
