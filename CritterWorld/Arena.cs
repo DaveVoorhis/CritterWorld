@@ -20,6 +20,7 @@ namespace CritterWorld
 
         private void surface_SpriteCollision(object sender, SpriteCollisionEventArgs e)
         {
+            /*
             DestinationMover dm1 = spriteEngineMain.GetMover(e.Sprite1);
             DestinationMover dm2 = spriteEngineMain.GetMover(e.Sprite2);
             float sx1 = dm1.SpeedX;
@@ -30,6 +31,7 @@ namespace CritterWorld
             dm1.SpeedY = sy2;
             dm2.SpeedX = sx1;
             dm2.SpeedY = sy1;
+            */
         }
 
         private void surface_SpriteReachedDestination(object sender, SpriteEventArgs e)

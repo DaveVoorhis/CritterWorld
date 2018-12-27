@@ -46,17 +46,11 @@ namespace SCG.TurboSprite
         private int _cellHeight;
         private int _cellsX;
         private int _cellsY;
-        private bool _drawGrid;
-        private Color _gridColor;
         private int _offsetCellX;
         private int _offsetCellY;
         private Color _cursorColor;
-        private int _cursorX;
-        private int _cursorY;
-        private bool _cursorVisible;
         private Pen _penCursor;
         private int _cursorWidth = 4;
-        private bool _selectionBand = false;
         private Color _selectionBandColor = Color.Aqua;
         private bool _dragging = false;
         private Rectangle _dragRect = new Rectangle(0, 0, 0, 0);
@@ -144,29 +138,9 @@ namespace SCG.TurboSprite
         }
 
         // Shold the grid be drawn?
-        public bool GridVisible
-        {
-            get
-            {
-                return _drawGrid;
-            }
-            set
-            {
-                _drawGrid = value;
-            }
-        }
+        public bool GridVisible { get; set; }
 
-        public Color GridColor
-        {
-            get
-            {
-                return _gridColor;
-            }
-            set
-            {
-                _gridColor = value;
-            }
-        }
+        public Color GridColor { get; set; }
 
         // Control offset via grid
         public int OffsetCellX
@@ -233,42 +207,12 @@ namespace SCG.TurboSprite
         }
 
         // Position of cursor
-        public int CursorX
-        {
-            get
-            {
-                return _cursorX;
-            }
-            set
-            {
-                _cursorX = value;
-            }
-        }
+        public int CursorX { get; set; }
 
-        public int CursorY
-        {
-            get
-            {
-                return _cursorY;
-            }
-            set
-            {
-                _cursorY = value;
-            }
-        }
+        public int CursorY { get; set; }
 
         // Should we draw the cursor?
-        public bool CursorVisible
-        {
-            get
-            {
-                return _cursorVisible;
-            }
-            set
-            {
-                _cursorVisible = value;
-            }
-        }
+        public bool CursorVisible { get; set; }
 
         // Width of cursor
         public int CursorWidth
@@ -304,17 +248,7 @@ namespace SCG.TurboSprite
         }
 
         // Should there be a selection band?
-        public bool SelectionBand
-        {
-            get
-            {
-                return _selectionBand;
-            }
-            set
-            {
-                _selectionBand = value;
-            }
-        }
+        public bool SelectionBand { get; set; } = false;
 
         // Color of the selection band
         public Color SelectionBandColor
@@ -364,8 +298,8 @@ namespace SCG.TurboSprite
             // Draw the cursor
             if (CursorVisible)
             {
-                int x = _cursorX * CellWidth - OffsetX;
-                int y = _cursorY * CellHeight - OffsetY;
+                int x = CursorX * CellWidth - OffsetX;
+                int y = CursorY * CellHeight - OffsetY;
                 g.DrawRectangle(_penCursor, x, y, CellWidth, CellHeight);
             }
 

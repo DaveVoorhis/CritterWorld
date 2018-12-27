@@ -36,12 +36,19 @@ namespace CritterWorld
             return sprite;
         }
 
+        PolygonSprite destinationMarker = null;
+
         public void AssignRandomDestination(SpriteEngine spriteEngineDebug)
         {
             Random rnd = Sprite.RND;
 
             int destX = rnd.Next(sprite.Surface.Width);
             int destY = rnd.Next(sprite.Surface.Height);
+
+            if (destinationMarker != null)
+            {
+                destinationMarker.Kill();
+            }
 
             PointF[] markerPoly = new PointF[]
             {
@@ -50,11 +57,11 @@ namespace CritterWorld
                 new PointF(2, 2),
                 new PointF(2, -2)
             };
-            PolygonSprite marker = new PolygonSprite(markerPoly);
-            marker.Position = new Point(destX, destY);
-            marker.Color = Color.Red;
+            destinationMarker = new PolygonSprite(markerPoly);
+            destinationMarker.Position = new Point(destX, destY);
+            destinationMarker.Color = Color.Red;
 
-            spriteEngineDebug.AddSprite(marker);
+            spriteEngineDebug.AddSprite(destinationMarker);
 
             SpriteEngineDestination spriteEngine = (SpriteEngineDestination)sprite.Engine;
             DestinationMover mover = spriteEngine.GetMover(sprite);

@@ -38,9 +38,7 @@ namespace SCG.TurboSprite
     {
         private GamePieceBitmapFactory _gpbf;
         private int _row;
-        private int _latency = 10;
         private int _counter = 0;
-        private int _frame = 0;
         private int _widthHalf;
         private int _heightHalf;
 
@@ -69,46 +67,26 @@ namespace SCG.TurboSprite
         }
 
         // The latency, number of cycles to wait before advancing frame
-        public int FrameLatency
-        {
-            get
-            {
-                return _latency;
-            }
-            set
-            {
-                _latency = value;
-            }
-        }
+        public int FrameLatency { get; set; } = 10;
 
         // Allow access to the frame
-        public int Frame
-        {
-            get
-            {
-                return _frame;
-            }
-            set
-            {
-                _frame = value;
-            }
-        }
+        public int Frame { get; set; } = 0;
 
         // Render the sprite
         protected internal override void Render(Graphics g)
         {
             // advance the counter/frame
             _counter++;
-            if (_counter >= _latency)
+            if (_counter >= FrameLatency)
             {
                 _counter = 0;
-                _frame++;
-                if (_frame >= _gpbf.CellsX)
-                    _frame = 0;
+                Frame++;
+                if (Frame >= _gpbf.CellsX)
+                    Frame = 0;
             }
 
             // get the appropriate cell
-            Bitmap bmp = _gpbf.GetGamePieceBitmap(_frame, _row);
+            Bitmap bmp = _gpbf.GetGamePieceBitmap(Frame, _row);
 
             // draw it
             g.DrawImage(bmp, X - _widthHalf - Surface.OffsetX, Y - _heightHalf - Surface.OffsetY);

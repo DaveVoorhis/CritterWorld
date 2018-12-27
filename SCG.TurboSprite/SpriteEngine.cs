@@ -43,8 +43,6 @@ namespace SCG.TurboSprite
         private SpriteSurface _surface;
         private int _priority = 1;
         internal List<Sprite> _spriteList = new List<Sprite>();
-        private bool _detectCollisionSelf;
-        private int _detectCollisionTag;
 
         public SpriteEngine()
         {
@@ -104,30 +102,10 @@ namespace SCG.TurboSprite
         }
 
         // Should the engine detect collisions between its own sprites?
-        public bool DetectCollisionSelf
-        {
-            get
-            {
-                return _detectCollisionSelf;
-            }
-            set
-            {
-                _detectCollisionSelf = value;
-            }
-        }
+        public bool DetectCollisionSelf { get; set; }
 
         // The engine will detect collisions with other engines having the same tag
-        public int DetectCollisionTag
-        {
-            get
-            {
-                return _detectCollisionTag;
-            }
-            set
-            {
-                _detectCollisionTag = value;
-            }
-        }
+        public int DetectCollisionTag { get; set; }
 
         // Add a sprite to the engine
         public void AddSprite(Sprite sprite)

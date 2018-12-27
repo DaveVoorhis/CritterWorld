@@ -42,9 +42,6 @@ namespace SCG.TurboSprite
 {
     public partial class GamePieceBitmapFactory : Component
     {
-        private Bitmap _masterBitmap;
-        private int _cellsX;
-        private int _cellsY;
         private Dictionary<Color, Bitmap> _colorized = new Dictionary<Color, Bitmap>();
         private Dictionary<Bitmap, Bitmap[,]> _mapping = new Dictionary<Bitmap, Bitmap[,]>();
         private Bitmap[,] _cells = null;
@@ -63,42 +60,12 @@ namespace SCG.TurboSprite
         }
 
         // The Master bitmap that contains all of the cells
-        public Bitmap MasterBitmap
-        {
-            get
-            {
-                return _masterBitmap;
-            }
-            set
-            {
-                _masterBitmap = value;
-            }
-        }
+        public Bitmap MasterBitmap { get; set; }
 
         // The number of cells that the master bitmap contains
-        public int CellsX
-        {
-            get
-            {
-                return _cellsX;
-            }
-            set
-            {
-                _cellsX = value;
-            }
-        }
+        public int CellsX { get; set; }
 
-        public int CellsY
-        {
-            get
-            {
-                return _cellsY;
-            }
-            set
-            {
-                _cellsY = value;
-            }
-        }
+        public int CellsY { get; set; }
 
         // Returns the cell width/height
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -106,9 +73,9 @@ namespace SCG.TurboSprite
         {
             get
             {
-                if (_cellsX == 0 || _masterBitmap == null)
+                if (CellsX == 0 || MasterBitmap == null)
                     return 0;
-                return _masterBitmap.Width / _cellsX;
+                return MasterBitmap.Width / CellsX;
             }
         }
 
@@ -117,9 +84,9 @@ namespace SCG.TurboSprite
         {
             get
             {
-                if (_cellsY == 0 || _masterBitmap == null)
+                if (CellsY == 0 || MasterBitmap == null)
                     return 0;
-                return _masterBitmap.Height / _cellsY;
+                return MasterBitmap.Height / CellsY;
             }
         }
 
@@ -129,11 +96,11 @@ namespace SCG.TurboSprite
             if (_cells == null)
             {
                 // break up the bitmap into cells
-                Bitmap copied = new Bitmap(_masterBitmap.Width, _masterBitmap.Height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+                Bitmap copied = new Bitmap(MasterBitmap.Width, MasterBitmap.Height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
                 Graphics g = Graphics.FromImage(copied);
                 using (g)
                 {
-                    g.DrawImage(_masterBitmap, new Rectangle(0, 0, _masterBitmap.Width, _masterBitmap.Height));
+                    g.DrawImage(MasterBitmap, new Rectangle(0, 0, MasterBitmap.Width, MasterBitmap.Height));
                 }
 
                 _cells = new Bitmap[CellsX, CellsY];
@@ -165,11 +132,11 @@ namespace SCG.TurboSprite
                 float blue = color.B;
                 byte newRed, newGreen, newBlue;
                 float pct;
-                Bitmap colorized = new Bitmap(_masterBitmap.Width, _masterBitmap.Height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+                Bitmap colorized = new Bitmap(MasterBitmap.Width, MasterBitmap.Height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
                 Graphics g = Graphics.FromImage(colorized);
                 using (g)
                 {
-                    g.DrawImage(_masterBitmap, new Rectangle(0, 0, _masterBitmap.Width, _masterBitmap.Height));
+                    g.DrawImage(MasterBitmap, new Rectangle(0, 0, MasterBitmap.Width, MasterBitmap.Height));
                 }
                 for (int x = 0; x < colorized.Width; x++)
                     for (int y = 0; y < colorized.Height; y++)

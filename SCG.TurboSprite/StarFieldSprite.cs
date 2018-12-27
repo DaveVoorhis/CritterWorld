@@ -39,9 +39,9 @@ namespace SCG.TurboSprite
         private int _numStars;
         private int _speed;
         private Star[] _starArray;
-        private int _q1;
-        private int _q2;
-        private int _q3;
+        private readonly int _q1;
+        private readonly int _q2;
+        private readonly int _q3;
 
         public StarFieldSprite(int numStars, int width, int height, int speed)
         {
@@ -88,10 +88,10 @@ namespace SCG.TurboSprite
         }
 
         // Four quadrant colors
-        private static Color _color1 = Color.FromArgb(255, 255, 255);
-        private static Color _color2 = Color.FromArgb(204, 204, 204);
-        private static Color _color3 = Color.FromArgb(163, 163, 163);
-        private static Color _color4 = Color.FromArgb(131, 131, 131);
+        private static readonly Color _color1 = Color.FromArgb(255, 255, 255);
+        private static readonly Color _color2 = Color.FromArgb(204, 204, 204);
+        private static readonly Color _color3 = Color.FromArgb(163, 163, 163);
+        private static readonly Color _color4 = Color.FromArgb(131, 131, 131);
 
         // Random Number Generator
         private static Random _rnd = new Random(DateTime.Now.Millisecond);

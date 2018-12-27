@@ -41,12 +41,8 @@ namespace SCG.TurboSprite
     public class DestinationMover
     {
         private Sprite _sprite;
-        private float _speed;
         private float _destX;
         private float _destY;
-        private float _speedX;
-        private float _speedY;
-        private bool _stopAtDestination = true;
 
         // Constructor
         public DestinationMover(Sprite sprite)
@@ -55,41 +51,11 @@ namespace SCG.TurboSprite
         }
 
         // Sprite's speed
-        public float Speed
-        {
-            get
-            {
-                return _speed;
-            }
-            set
-            {
-                _speed = value;
-            }
-        }
+        public float Speed { get; set; }
 
-        public float SpeedX
-        {
-            get
-            {
-                return _speedX;
-            }
-            set
-            {
-                _speedX = value;
-            }
-        }
+        public float SpeedX { get; set; }
 
-        public float SpeedY
-        {
-            get
-            {
-                return _speedY;
-            }
-            set
-            {
-                _speedY = value;
-            }
-        }
+        public float SpeedY { get; set; }
 
         // Sprite's destination
         public float DestX
@@ -147,17 +113,7 @@ namespace SCG.TurboSprite
         }
 
         // Should the sprite stop moving once it reaches its destination?
-        public bool StopAtDestination
-        {
-            get
-            {
-                return _stopAtDestination;
-            }
-            set
-            {
-                _stopAtDestination = value;
-            }
-        }
+        public bool StopAtDestination { get; set; } = true;
 
         // Calculate X/Y movement vectors based on speed and destination
         private void CalculateVectors()
@@ -167,48 +123,48 @@ namespace SCG.TurboSprite
             {
                 float PctX = Math.Abs(DestinationF.X - _sprite.PositionF.X) / Dist;
                 float PctY = Math.Abs(DestinationF.Y - _sprite.PositionF.Y) / Dist;
-                _speedX = _speed * PctX;
-                _speedY = _speed * PctY;
+                SpeedX = Speed * PctX;
+                SpeedY = Speed * PctY;
                 if (DestinationF.X < _sprite.PositionF.X)
-                    _speedX = -_speedX;
+                    SpeedX = -SpeedX;
                 if (DestinationF.Y < _sprite.PositionF.Y)
-                    _speedY = -_speedY;
+                    SpeedY = -SpeedY;
             }
             else
             {
-                _speedX = _speed / 2;
-                _speedY = _speedX;
+                SpeedX = Speed / 2;
+                SpeedY = SpeedX;
             }
         }
 
         // Move the sprite, called by SpriteEngine's MoveSprite method
         internal void MoveSprite()
         {
-            if (_speedX == 0 && _speedY == 0)
+            if (SpeedX == 0 && SpeedY == 0)
                 return;
             // Do not check destination, just move the sprite
-            if (!_stopAtDestination)
+            if (!StopAtDestination)
             {
-                _sprite.X += _speedX;
-                _sprite.Y += _speedY;
+                _sprite.X += SpeedX;
+                _sprite.Y += SpeedY;
             }
             // Check to see if it stopped at its destination
             else
             {
                 float Temp;
                 // Check X-Axis movement
-                Temp = _sprite.PositionF.X + _speedX;
-                if (_speedX > 0 && Temp > DestinationF.X)
+                Temp = _sprite.PositionF.X + SpeedX;
+                if (SpeedX > 0 && Temp > DestinationF.X)
                     _sprite.X = DestX;
-                else if (_speedX < 0 && Temp < DestinationF.X)
+                else if (SpeedX < 0 && Temp < DestinationF.X)
                     _sprite.X = DestX;
                 else
                     _sprite.X += SpeedX;
                 // Check Y-Axis movement
-                Temp = _sprite.PositionF.Y + _speedY;
-                if (_speedY > 0 && Temp > DestinationF.Y)
+                Temp = _sprite.PositionF.Y + SpeedY;
+                if (SpeedY > 0 && Temp > DestinationF.Y)
                     _sprite.Y = DestY;
-                else if (_speedY < 0 && Temp < DestinationF.Y)
+                else if (SpeedY < 0 && Temp < DestinationF.Y)
                     _sprite.Y = DestY;
                 else
                     _sprite.Y += SpeedY;

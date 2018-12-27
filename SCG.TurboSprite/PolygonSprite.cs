@@ -37,16 +37,11 @@ namespace SCG.TurboSprite
     public class PolygonSprite : Sprite
     {
         private int _frame = 0;
-        private PointF[][] _points;
-        private PointF[][] _drawnPoints;
-        private PointF[][] _unrotated;
-        private Color _color = Color.Red;
-        private int _width;
-        private bool _filled;
-        private Color _fillColor = Color.Empty;
+        private readonly PointF[][] _points;
+        private readonly PointF[][] _drawnPoints;
+        private readonly PointF[][] _unrotated;
         private int _lastAngle;
-        private int _nextFrame;
-        private int _frameCount;
+        private readonly int _frameCount;
 
         // Construct a polygon-based sprite with 1 or more arrays of points that can be selected.
         public PolygonSprite(PointF[][] points)
@@ -72,17 +67,7 @@ namespace SCG.TurboSprite
         public PolygonSprite(PointF[] points) : this(new PointF[][] { points }) {}
 
         // Select the specific Points collection to display.
-        public int NextFrame
-        {
-            get
-            {
-                return _nextFrame;
-            }
-            set
-            {
-                _nextFrame = value;
-            }
-        }
+        public int NextFrame { get; set; }
 
         override public void NotifyMoved()
         {
@@ -114,65 +99,25 @@ namespace SCG.TurboSprite
         }
 
         // Access line color
-        public Color Color
-        {
-            get
-            {
-                return _color;
-            }
-            set
-            {
-                _color = value;
-            }
-        }
+        public Color Color { get; set; } = Color.Red;
 
         // Access line width
-        public int LineWidth
-        {
-            get
-            {
-                return _width;
-            }
-            set
-            {
-                _width = value;
-            }
-        }
+        public int LineWidth { get; set; }
 
         // Determine whether the Sprite is filled
-        public bool IsFilled
-        {
-            get
-            {
-                return _filled;
-            }
-            set
-            {
-                _filled = value;
-            }
-        }
+        public bool IsFilled { get; set; }
 
         // Access the fill color
-        public Color FillColor
-        {
-            get
-            {
-                return _fillColor;
-            }
-            set
-            {
-                _fillColor = value;
-            }
-        }
+        public Color FillColor { get; set; } = Color.Empty;
 
         // Render the sprite - draw the polygon
         protected internal override void Render(System.Drawing.Graphics g)
         {
             // Process rotation and animation
-            if (FacingAngle != _lastAngle || _nextFrame != _frame)
+            if (FacingAngle != _lastAngle || NextFrame != _frame)
             {
                 _lastAngle = FacingAngle;
-                _frame = _nextFrame;
+                _frame = NextFrame;
                 float sin = Sprite.Sin(FacingAngle);
                 float cos = Sprite.Cos(FacingAngle);
                 for (int p = 0; p < _points[_frame].Length; p++)
@@ -194,9 +139,9 @@ namespace SCG.TurboSprite
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
             // Fill it?
-            if (_filled)
+            if (IsFilled)
             {
-                Brush brush = new SolidBrush(_fillColor);
+                Brush brush = new SolidBrush(FillColor);
                 using (brush)
                 {
                     g.FillPolygon(brush, _drawnPoints[_frame]);
@@ -204,7 +149,7 @@ namespace SCG.TurboSprite
             }
 
             // Draw outline
-            Pen pen = new Pen(_color, _width);
+            Pen pen = new Pen(Color, LineWidth);
             using(pen)
             {
                 g.DrawPolygon(pen, _drawnPoints[_frame]);

@@ -46,21 +46,15 @@ namespace SCG.TurboSprite
         private Thread _thrdAnimate;       
         private int _lastSecond = -1;
         private int _compareSecond;
-        private int _actualFPS;
         private DateTime _dtStamp;
         private int _frames = 0;
         private DateTime _nextFrameTime;
         private TimeSpan _animationSpan = new TimeSpan(0, 0, 0, 0, 100);
-        private bool _autoBlank;
         private Bitmap _buffer = new Bitmap(1, 1);
         private List<SpriteEngine> _engineList = new List<SpriteEngine>();
-        private bool _wraparoundEdges;
-        private Color _autoBlankColor;
-        private bool _useVirtualSize;
         private Size _virtualSize = new Size();
         private int _offsetX;
         private int _offsetY;
-        private ThreadPriority _tp = ThreadPriority.Normal;
 
         public SpriteSurface()
         {
@@ -100,13 +94,7 @@ namespace SCG.TurboSprite
         // The actual frames per second the control is animating at
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public int ActualFPS
-        {
-            get
-            {
-                return _actualFPS;
-            }
-        }
+        public int ActualFPS { get; private set; }
 
         // "Active" property turns animation on and off
         public bool Active
@@ -141,75 +129,25 @@ namespace SCG.TurboSprite
         }
 
         // Priority of the animation thread
-        public ThreadPriority ThreadPriority
-        {
-            get
-            {
-                return _tp;
-            }
-            set
-            {
-                _tp = value;
-            }
-        }
+        public ThreadPriority ThreadPriority { get; set; } = ThreadPriority.Normal;
 
         // AutoBlank property determines if background will be filled before rendering frame
-        public bool AutoBlank
-        {
-            get
-            {
-                return _autoBlank;
-            }
-            set
-            {
-                _autoBlank = value;
-            }
-        }
+        public bool AutoBlank { get; set; }
 
         // Color to fill for AutoBlank
-        public Color AutoBlankColor
-        {
-            get
-            {
-                return _autoBlankColor;
-            }
-            set
-            {
-                _autoBlankColor = value;
-            }
-        }
+        public Color AutoBlankColor { get; set; }
 
         // Should sprites wrap around the edge if they move beyond it?
-        public bool WraparoundEdges
-        {
-            get
-            {
-                return _wraparoundEdges;
-            }
-            set
-            {
-                _wraparoundEdges = value;
-            }
-        }
+        public bool WraparoundEdges { get; set; }
 
         // Virtual size
-        public bool UseVirtualSize
-        {
-            get
-            {
-                return _useVirtualSize;
-            }
-            set
-            {
-                _useVirtualSize = value;
-            }
-        }
+        public bool UseVirtualSize { get; set; }
 
         public Size VirtualSize
         {
             get
             {
-                if (_useVirtualSize)
+                if (UseVirtualSize)
                     return _virtualSize;
                 else
                     return Size;
@@ -310,7 +248,7 @@ namespace SCG.TurboSprite
                             SpriteEngine se = _engineList[i];
                             se.MoveSprites();
                             // Handle wrapping around edges
-                            if (_wraparoundEdges)
+                            if (WraparoundEdges)
                                 se.WrapSprites();
                             // Handle collision detection with itself
                             if (se.DetectCollisionSelf && SpriteCollision != null)
@@ -397,7 +335,7 @@ namespace SCG.TurboSprite
                     {
                         // Yes, update the number of actual frames per second we animated
                         if (_lastSecond != -1)
-                            _actualFPS = _frames;
+                            ActualFPS = _frames;
                         _frames = 1;
                         _lastSecond = _compareSecond;
                     }

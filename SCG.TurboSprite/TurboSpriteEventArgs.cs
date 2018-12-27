@@ -37,66 +37,35 @@ namespace SCG.TurboSprite
     // EventArgs that contains Sprite parameter
     public class SpriteEventArgs : EventArgs
     {
-        private Sprite _sprite;
-
         public SpriteEventArgs(Sprite sprite)
         {
-            _sprite = sprite;
+            Sprite = sprite;
         }
 
-        public Sprite Sprite
-        {
-            get
-            {
-                return _sprite;
-            }
-        }
+        public Sprite Sprite { get; }
     }
 
     public class SpriteClickEventArgs : SpriteEventArgs
     {
-        private MouseButtons _mb;
-
-        public SpriteClickEventArgs(Sprite sprite, MouseButtons button)
-            : base(sprite)
+        public SpriteClickEventArgs(Sprite sprite, MouseButtons button) : base(sprite)
         {
-            _mb = button;
+            Button = button;
         }
 
-        public MouseButtons Button
-        {
-            get
-            {
-                return _mb;
-            }
-        }
+        public MouseButtons Button { get; }
     }
 
     // Collision detection event
     public class SpriteCollisionEventArgs : EventArgs
     {
-        private Sprite _sprite1;
-        private Sprite _sprite2;
-
         public SpriteCollisionEventArgs(Sprite sprite1, Sprite sprite2)
         {
-            _sprite1 = sprite1;
-            _sprite2 = sprite2;
+            Sprite1 = sprite1;
+            Sprite2 = sprite2;
         }
 
-        public Sprite Sprite1
-        {
-            get
-            {
-                return _sprite1;
-            }
-        }
-        public Sprite Sprite2
-        {
-            get
-            {
-                return _sprite2;
-            }
-        }
+        public Sprite Sprite1 { get; }
+
+        public Sprite Sprite2 { get; }
     }
 }

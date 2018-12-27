@@ -38,8 +38,8 @@ namespace SCG.TurboSprite
     public abstract class Sprite
     {
         // Lookup table to degree to radian conversion
-        private static float[] _sin = new float[360];
-        private static float[] _cos = new float[360];
+        private static readonly float[] _sin = new float[360];
+        private static readonly float[] _cos = new float[360];
 
         private int _facingAngle;
         private RectangleF _shape = new RectangleF(-1, -1, -1, -1);
