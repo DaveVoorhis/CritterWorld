@@ -20,18 +20,11 @@ namespace CritterWorld
 
         private void surface_SpriteCollision(object sender, SpriteCollisionEventArgs e)
         {
-            /*
-            DestinationMover dm1 = spriteEngineMain.GetMover(e.Sprite1);
-            DestinationMover dm2 = spriteEngineMain.GetMover(e.Sprite2);
-            float sx1 = dm1.SpeedX;
-            float sy1 = dm1.SpeedY;
-            float sx2 = dm2.SpeedX;
-            float sy2 = dm2.SpeedY;
-            dm1.SpeedX = sx2;
-            dm1.SpeedY = sy2;
-            dm2.SpeedX = sx1;
-            dm2.SpeedY = sy1;
-            */
+            Critter critter1 = (Critter)e.Sprite1.Data;
+            Critter critter2 = (Critter)e.Sprite2.Data;
+
+            critter1.AssignRandomDestination(spriteEngineDebug);
+            critter2.AssignRandomDestination(spriteEngineDebug);
         }
 
         private void surface_SpriteReachedDestination(object sender, SpriteEventArgs e)
@@ -42,7 +35,7 @@ namespace CritterWorld
 
         public Arena()
         {
-            float critterCount = 3;
+            float critterCount = 30;
 
             InitializeComponent();
 

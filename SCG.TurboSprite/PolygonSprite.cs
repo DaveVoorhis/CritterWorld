@@ -36,31 +36,29 @@ namespace SCG.TurboSprite
 {
     public class PolygonSprite : Sprite
     {
-        private int _frame = 0;
-        private readonly PointF[][] _points;
-        private readonly PointF[][] _drawnPoints;
-        private readonly PointF[][] _unrotated;
+        private int _lastFrame = 0;
         private int _lastAngle;
         private readonly int _frameCount;
+        private readonly PointF[][] _rotatedPoints;
+        private readonly PointF[][] _drawnPoints;
+        private readonly PointF[][] _model;
 
-        // Construct a polygon-based sprite with 1 or more arrays of points that can be selected.
-        public PolygonSprite(PointF[][] points)
+        // Construct a polygon-based sprite with 1 or more arrays of points that can be selected to create animation.
+        public PolygonSprite(PointF[][] model)
         {
-            _frame = 0;
-            _frameCount = points.Length;
-            _points = new PointF[_frameCount][];
+            _model = model;
+            _lastAngle = -1;
+            _lastFrame = 0;
+            _frameCount = model.Length;
+            _rotatedPoints = new PointF[_frameCount][];
             _drawnPoints = new PointF[_frameCount][];
-            _unrotated = new PointF[_frameCount][];
             for (int i = 0; i < _frameCount; i++)
             {
-                int polySize = points[i].Length;
+                int polySize = model[i].Length;
                 _drawnPoints[i] = new PointF[polySize];
-                _unrotated[i] = new PointF[polySize];
-                _points[i] = new PointF[polySize];
-                points[i].CopyTo(_unrotated[i], 0);
-                points[i].CopyTo(_points[i], 0);
+                _rotatedPoints[i] = new PointF[polySize];
             }
-            obtainShape();
+            RotateAndAnimate();
         }
 
         // Construct a non-animated polygon-based sprite.
@@ -77,14 +75,14 @@ namespace SCG.TurboSprite
             NextFrame = nextFrame;
         }
 
-        private void obtainShape()
+        private void ObtainShape()
         {
             // Set the shape of the sprite based on largest dimension from center
             float x1 = 0;
             float y1 = 0;
             float x2 = 0;
             float y2 = 0;
-            foreach (PointF pt in _points[_frame])
+            foreach (PointF pt in _rotatedPoints[_lastFrame])
             {
                 if (pt.X < x1)
                     x1 = pt.X;
@@ -110,29 +108,34 @@ namespace SCG.TurboSprite
         // Access the fill color
         public Color FillColor { get; set; } = Color.Empty;
 
+        private void RotateAndAnimate()
+        {
+            // Process rotation and animation
+            if (FacingAngle != _lastAngle || NextFrame != _lastFrame)
+            {
+                _lastAngle = FacingAngle;
+                _lastFrame = NextFrame;
+                float sin = Sprite.Sin(FacingAngle);
+                float cos = Sprite.Cos(FacingAngle);
+                for (int p = 0; p < _rotatedPoints[_lastFrame].Length; p++)
+                {
+                    _rotatedPoints[_lastFrame][p].X = _model[_lastFrame][p].X * cos - _model[_lastFrame][p].Y * sin;
+                    _rotatedPoints[_lastFrame][p].Y = _model[_lastFrame][p].Y * cos + _model[_lastFrame][p].X * sin;
+                }
+                ObtainShape();
+            }
+        }
+
         // Render the sprite - draw the polygon
         protected internal override void Render(System.Drawing.Graphics g)
         {
-            // Process rotation and animation
-            if (FacingAngle != _lastAngle || NextFrame != _frame)
-            {
-                _lastAngle = FacingAngle;
-                _frame = NextFrame;
-                float sin = Sprite.Sin(FacingAngle);
-                float cos = Sprite.Cos(FacingAngle);
-                for (int p = 0; p < _points[_frame].Length; p++)
-                {
-                    _points[_frame][p].X = _unrotated[_frame][p].X * cos - _unrotated[_frame][p].Y * sin;
-                    _points[_frame][p].Y = _unrotated[_frame][p].Y * cos + _unrotated[_frame][p].X * sin;
-                }
-                obtainShape();
-            }
+            RotateAndAnimate();
 
             // Transform polygon into viewport coordinates
-            for (int pt = 0; pt < _points[_frame].Length; pt++)
+            for (int pt = 0; pt < _rotatedPoints[_lastFrame].Length; pt++)
             {
-                _drawnPoints[_frame][pt].X = _points[_frame][pt].X + X - Surface.OffsetX;
-                _drawnPoints[_frame][pt].Y = _points[_frame][pt].Y + Y - Surface.OffsetY;
+                _drawnPoints[_lastFrame][pt].X = _rotatedPoints[_lastFrame][pt].X + X - Surface.OffsetX;
+                _drawnPoints[_lastFrame][pt].Y = _rotatedPoints[_lastFrame][pt].Y + Y - Surface.OffsetY;
             }
 
             // Make pretty
@@ -144,7 +147,7 @@ namespace SCG.TurboSprite
                 Brush brush = new SolidBrush(FillColor);
                 using (brush)
                 {
-                    g.FillPolygon(brush, _drawnPoints[_frame]);
+                    g.FillPolygon(brush, _drawnPoints[_lastFrame]);
                 }
             }
 
@@ -152,7 +155,7 @@ namespace SCG.TurboSprite
             Pen pen = new Pen(Color, LineWidth);
             using(pen)
             {
-                g.DrawPolygon(pen, _drawnPoints[_frame]);
+                g.DrawPolygon(pen, _drawnPoints[_lastFrame]);
             }
         }
     }
