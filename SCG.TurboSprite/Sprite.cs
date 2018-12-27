@@ -203,6 +203,7 @@ namespace SCG.TurboSprite
             set
             {
                 _facingAngle = value;
+                // TODO - kidding, right?  Surely just a modulus will do?
                 while (_facingAngle >= 360)
                     _facingAngle -= 360;
                 while (_facingAngle < 0)
