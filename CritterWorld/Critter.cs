@@ -102,6 +102,7 @@ namespace CritterWorld
 
             Thread processThread = new Thread(() =>
             {
+                // TODO - only notify movement when visible movement occurs
                 // TODO - this thread needs to end when the game ends
                 while (!sprite.Dead && spriteEngine.Surface.Active)
                 {
