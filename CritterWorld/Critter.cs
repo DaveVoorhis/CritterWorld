@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Drawing;
 using SCG.TurboSprite;
 using System.Windows.Forms;
+using System.Threading;
 
 namespace CritterWorld
 {
@@ -70,6 +71,11 @@ namespace CritterWorld
             mover.StopAtDestination = true;
         }
 
+        protected internal void Think()
+        {
+            Console.WriteLine("Think");
+        }
+
         public Critter(SpriteEngineDestination spriteEngine)
         {
             CritterBody body = new CritterBody();
@@ -93,6 +99,18 @@ namespace CritterWorld
                 double theta = Sprite.RadToDeg((float)Math.Atan2(destinationMover.SpeedY, destinationMover.SpeedX));
                 sprite.FacingAngle = (int)theta + 90;
             });
+
+            Thread processThread = new Thread(() =>
+            {
+                // TODO - this thread needs to end when the game ends
+                while (!sprite.Dead && spriteEngine.Surface.Active)
+                {
+                    Think();
+                    Thread.Yield();
+                }
+            });
+            processThread.Start();
+
         }
     }
 }

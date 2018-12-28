@@ -9,6 +9,7 @@ using System.Timers;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using SCG.TurboSprite;
+using System.Threading;
 
 namespace CritterWorld
 {
@@ -25,6 +26,10 @@ namespace CritterWorld
 
             critter1.AssignRandomDestination(spriteEngineDebug);
             critter2.AssignRandomDestination(spriteEngineDebug);
+
+            Sprite fight = new ParticleExplosionSprite(10, Color.DarkRed, Color.Red, 1, 10, 10);
+            fight.Position = new Point((e.Sprite1.Position.X + e.Sprite2.Position.X) / 2, (e.Sprite1.Position.Y + e.Sprite2.Position.Y) / 2);
+            spriteEngineDebug.AddSprite(fight);
         }
 
         private void surface_SpriteReachedDestination(object sender, SpriteEventArgs e)
@@ -35,7 +40,7 @@ namespace CritterWorld
 
         public Arena()
         {
-            float critterCount = 5;
+            float critterCount = 15;
 
             InitializeComponent();
 
@@ -75,6 +80,17 @@ namespace CritterWorld
 
             spriteSurfaceMain.Active = true;
             spriteSurfaceMain.WraparoundEdges = true;
+
+            Thread fpsMonitor = new Thread(() =>
+            {
+                while (!labelFPS.Disposing && !labelFPS.IsDisposed)
+                {
+                    if (labelFPS != null)
+                        labelFPS.Invoke(new Action(() => labelFPS.Text = spriteSurfaceMain.ActualFPS + " fps"));
+                    Thread.Sleep(1000);
+                }
+            });
+            fpsMonitor.Start();
         }
     }
 }
