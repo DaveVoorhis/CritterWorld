@@ -66,10 +66,16 @@ namespace SCG.TurboSprite
         // A random number generator anyone can use
         public static Random RND = new Random();
 
-        // Utility function to quickly convert degrees to Radians
-        public static float DegToRad(int degree)
+        // Utility function to convert degrees to radians.
+        public static float DegToRad(float degree)
         {
-            return (float)((Math.PI / 180) * degree);
+            return (float)(Math.PI / 180 * degree);
+        }
+
+        // Utility function to convert radians to degrees.
+        public static float RadToDeg(float rad)
+        {
+            return (float)(rad * 180 / Math.PI);
         }
 
         // Static properties return the Sin/Cos for specified degree values
@@ -202,12 +208,11 @@ namespace SCG.TurboSprite
             }
             set
             {
-                _facingAngle = value;
-                // TODO - kidding, right?  Surely just a modulus will do?
-                while (_facingAngle >= 360)
-                    _facingAngle -= 360;
-                while (_facingAngle < 0)
+                _facingAngle = value % 360;
+                if (_facingAngle < 0)
+                {
                     _facingAngle += 360;
+                }
             }
         }
 

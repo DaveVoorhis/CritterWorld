@@ -35,7 +35,7 @@ namespace CritterWorld
 
         public Arena()
         {
-            float critterCount = 30;
+            float critterCount = 5;
 
             InitializeComponent();
 

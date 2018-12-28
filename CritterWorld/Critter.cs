@@ -90,7 +90,7 @@ namespace CritterWorld
                 {
                     return;
                 }
-                double theta = Math.Atan2(destinationMover.SpeedY, destinationMover.SpeedX) * 180 / Math.PI;
+                double theta = Sprite.RadToDeg((float)Math.Atan2(destinationMover.SpeedY, destinationMover.SpeedX));
                 sprite.FacingAngle = (int)theta + 90;
             });
         }
