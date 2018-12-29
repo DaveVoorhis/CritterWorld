@@ -27,7 +27,7 @@ namespace CritterWorld
             critter1.AssignRandomDestination(spriteEngineDebug);
             critter2.AssignRandomDestination(spriteEngineDebug);
 
-            Sprite fight = new ParticleExplosionSprite(10, Color.DarkRed, Color.Red, 1, 10, 10);
+            Sprite fight = new ParticleExplosionSprite(10, Color.DarkRed, Color.Red, 1, 5, 10);
             fight.Position = new Point((e.Sprite1.Position.X + e.Sprite2.Position.X) / 2, (e.Sprite1.Position.Y + e.Sprite2.Position.Y) / 2);
             spriteEngineDebug.AddSprite(fight);
         }
@@ -40,7 +40,7 @@ namespace CritterWorld
 
         public Arena()
         {
-            float critterCount = 15;
+            float critterCount = 20;
 
             InitializeComponent();
 

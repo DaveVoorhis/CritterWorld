@@ -12,6 +12,7 @@ namespace CritterWorld
 {
     class Critter
     {
+        private bool showDestinationMarkers = false;
         private const float scale = 1;
 
         private PolygonSprite sprite;
@@ -33,13 +34,8 @@ namespace CritterWorld
 
         PolygonSprite destinationMarker = null;
 
-        public void AssignRandomDestination(SpriteEngine spriteEngineDebug)
+        private void processDestinationMarker(SpriteEngine spriteEngineDebug, int destX, int destY)
         {
-            Random rnd = Sprite.RND;
-
-            int destX = rnd.Next(sprite.Surface.Width);
-            int destY = rnd.Next(sprite.Surface.Height);
-
             if (destinationMarker != null)
             {
                 destinationMarker.Kill();
@@ -57,6 +53,19 @@ namespace CritterWorld
             destinationMarker.Color = Color.Red;
 
             spriteEngineDebug.AddSprite(destinationMarker);
+        }
+
+        public void AssignRandomDestination(SpriteEngine spriteEngineDebug)
+        {
+            Random rnd = Sprite.RND;
+
+            int destX = rnd.Next(sprite.Surface.Width);
+            int destY = rnd.Next(sprite.Surface.Height);
+
+            if (showDestinationMarkers)
+            {
+                processDestinationMarker(spriteEngineDebug, destX, destY);
+            }
 
             SpriteEngine spriteEngine = sprite.Engine;
             DestinationMover mover = sprite.DestinationMover;
@@ -67,7 +76,7 @@ namespace CritterWorld
 
         protected internal void Think()
         {
-            Console.WriteLine("Think");
+            // Do things here.
         }
 
         public Critter(SpriteEngine spriteEngine)
@@ -103,7 +112,7 @@ namespace CritterWorld
                     {
                         Think();
                     }
-                    Thread.Yield();
+                    Thread.Sleep(5);
                 }
             });
             processThread.Start();
