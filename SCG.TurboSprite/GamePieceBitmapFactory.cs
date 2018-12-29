@@ -74,7 +74,9 @@ namespace SCG.TurboSprite
             get
             {
                 if (CellsX == 0 || MasterBitmap == null)
+                {
                     return 0;
+                }
                 return MasterBitmap.Width / CellsX;
             }
         }
@@ -85,7 +87,9 @@ namespace SCG.TurboSprite
             get
             {
                 if (CellsY == 0 || MasterBitmap == null)
+                {
                     return 0;
+                }
                 return MasterBitmap.Height / CellsY;
             }
         }
@@ -105,6 +109,7 @@ namespace SCG.TurboSprite
 
                 _cells = new Bitmap[CellsX, CellsY];
                 for (int y = 0; y < CellsY; y++)
+                {
                     for (int x = 0; x < CellsX; x++)
                     {
                         Bitmap cellBitmap = new Bitmap(CellWidth, CellHeight, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
@@ -114,7 +119,8 @@ namespace SCG.TurboSprite
                             cellGraphics.DrawImage(copied, 0, 0, new Rectangle(CellWidth * x, CellHeight * y, CellWidth, CellHeight), GraphicsUnit.Pixel);
                         }
                         _cells[x, y] = cellBitmap;
-                    }                
+                    }
+                }
             }
             return _cells[cellx, celly];
         }
@@ -139,6 +145,7 @@ namespace SCG.TurboSprite
                     g.DrawImage(MasterBitmap, new Rectangle(0, 0, MasterBitmap.Width, MasterBitmap.Height));
                 }
                 for (int x = 0; x < colorized.Width; x++)
+                {
                     for (int y = 0; y < colorized.Height; y++)
                     {
                         c = colorized.GetPixel(x, y);
@@ -151,13 +158,15 @@ namespace SCG.TurboSprite
                             colorized.SetPixel(x, y, Color.FromArgb(newRed, newGreen, newBlue));
                         }
                     }
+                }
 
                 // Save colorized source
                 _colorized.Add(color, colorized);
 
                 // Chop colorized source into array of cells
                 Bitmap[,] cells = new Bitmap[CellsX, CellsY];
-                for(int y = 0; y < CellsY; y++)
+                for (int y = 0; y < CellsY; y++)
+                {
                     for (int x = 0; x < CellsX; x++)
                     {
                         Bitmap cellBitmap = new Bitmap(CellWidth, CellHeight, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
@@ -168,6 +177,7 @@ namespace SCG.TurboSprite
                         }
                         cells[x, y] = cellBitmap;
                     }
+                }
 
                 // Save the cell array for reference
                 _mapping.Add(colorized, cells);
@@ -192,7 +202,9 @@ namespace SCG.TurboSprite
             // If we have one already return it
             RotatedBitmap rb = new RotatedBitmap(bmp, rotation);
             if (_rotations.ContainsKey(rb))
+            {
                 return _rotations[rb];
+            }
 
             // create it
             Bitmap rotatedBmp = new Bitmap(bmp);

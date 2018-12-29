@@ -71,7 +71,9 @@ namespace SCG.TurboSprite
         {
             int nextFrame = NextFrame + 1;
             if (nextFrame >= _frameCount)
+            {
                 nextFrame = 0;
+            }
             NextFrame = nextFrame;
         }
 
@@ -85,13 +87,21 @@ namespace SCG.TurboSprite
             foreach (PointF pt in _rotatedPoints[_lastFrame])
             {
                 if (pt.X < x1)
+                {
                     x1 = pt.X;
+                }
                 if (pt.X > x2)
+                {
                     x2 = pt.X;
+                }
                 if (pt.Y < y1)
+                {
                     y1 = pt.Y;
+                }
                 if (pt.Y > y2)
+                {
                     y2 = pt.Y;
+                }
             }
             Shape = new RectangleF(x1, y1, x2 - x1, y2 - y1);
         }

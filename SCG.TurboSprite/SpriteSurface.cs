@@ -38,7 +38,7 @@ using System.Drawing;
 
 namespace SCG.TurboSprite
 {
-    // SpriteSurface - implements an animated surface where sprites can be registered
+    // Implements an animated surface where sprites can be registered
     public partial class SpriteSurface : Control
     {
         private int _desiredFPS = 10;
@@ -148,9 +148,13 @@ namespace SCG.TurboSprite
             get
             {
                 if (UseVirtualSize)
+                {
                     return _virtualSize;
+                }
                 else
+                {
                     return Size;
+                }
             }
             set
             {              
@@ -194,7 +198,9 @@ namespace SCG.TurboSprite
             set
             {
                 if (value > 0 && value < VirtualWidth - Width)
+                {
                     _offsetX = value;
+                }
             }
         }
         public int OffsetY
@@ -206,7 +212,9 @@ namespace SCG.TurboSprite
             set
             {
                 if (value > 0 && value < VirtualHeight - Height)
+                {
                     _offsetY = value;
+                }
             }
         }
 
@@ -214,13 +222,19 @@ namespace SCG.TurboSprite
         public void CenterOn(int x, int y)
         {
             if (!UseVirtualSize)
+            {
                 return;
+            }
             int centerx = x - Width / 2;
             int centery = y - Height / 2;
             if (centerx < 0)
+            {
                 centerx = 0;
+            }
             if (centery < 0)
+            {
                 centery = 0;
+            }
             OffsetX = centerx;
             OffsetY = centery;
         }
@@ -238,38 +252,50 @@ namespace SCG.TurboSprite
 
                     // Trigger event to client
                     if (BeforeAnimationCycle != null)
+                    {
                         BeforeAnimationCycle(this, EventArgs.Empty);
+                    }
 
                     // Process Sprite movement
                     lock (_engineList)
                     {
-                        for(int i = 0; i < _engineList.Count; i++)
+                        for (int i = 0; i < _engineList.Count; i++)
                         {
                             SpriteEngine se = _engineList[i];
                             se.MoveSprites();
                             // Handle wrapping around edges
                             if (WraparoundEdges)
+                            {
                                 se.WrapSprites();
+                            }
                             // Handle collision detection with itself
                             if (se.DetectCollisionSelf && SpriteCollision != null)
-                                se.PerformSelfCollisionDetection();                                                        
+                            {
+                                se.PerformSelfCollisionDetection();
+                            }
                             // Handle collision detection with other engines
                             for (int k = i + 1; k < _engineList.Count; k++)
                             {
                                 SpriteEngine se2 = _engineList[k];
                                 if (se.DetectCollisionTag == se2.DetectCollisionTag)
+                                {
                                     se.PerformCollisionWith(se2);
-                            }                                                        
+                                }
+                            }
                         }
                         // Remove dead sprites from engines
                         foreach (SpriteEngine se in _engineList)
+                        {
                             se.RemoveDeadSprites();
-                    }                   
+                        }
+                    }
                     // Trigger a repaint of surface
                     Invalidate();
                 }
                 else
+                {
                     Thread.Sleep(5);
+                }
             }
         }
 
@@ -277,15 +303,19 @@ namespace SCG.TurboSprite
         protected override void OnPaintBackground(PaintEventArgs pevent)
         {
             if (!Active)
+            {
                 base.OnPaintBackground(pevent);
+            }
         }
 
         // Paint procedure
         protected override void OnPaint(PaintEventArgs e)
-        {           
+        {
             // See if we need to re-size the double buffer
             if (_buffer.Size != Size)
+            {
                 _buffer = new Bitmap(Width, Height);
+            }
 
             try
             {
@@ -298,11 +328,12 @@ namespace SCG.TurboSprite
                 {
                     // Process AutoBlank
                     if (AutoBlank)
+                    {
                         grBuffer.Clear(AutoBlankColor);
+                    }
 
                     // Allow client to hook in before sprites are rendered
-                    if (BeforeSpriteRender != null)
-                        BeforeSpriteRender(this, new PaintEventArgs(grBuffer, e.ClipRectangle));
+                    BeforeSpriteRender?.Invoke(this, new PaintEventArgs(grBuffer, e.ClipRectangle));
 
                     // now give derived classes a chance
                     DoBeforeSpriteRender(grBuffer);
@@ -312,17 +343,23 @@ namespace SCG.TurboSprite
                     lock (_engineList)
                     {
                         foreach (SpriteEngine se in _engineList)
+                        {
                             lock (se._spriteList)
                             {
                                 foreach (Sprite sprite in se.Sprites)
+                                {
                                     if (sprite.Bounds.IntersectsWith(viewport))
+                                    {
                                         sprite.Render(grBuffer);
+                                    }
+                                }
                             }
+                        }
                     }
 
                     // Allow client to hook in after sprites are rendered
-                    if (AfterSpriteRender != null)
-                        AfterSpriteRender(this, new PaintEventArgs(grBuffer, e.ClipRectangle));
+                    AfterSpriteRender?.Invoke(this, new PaintEventArgs(grBuffer, e.ClipRectangle));
+
                     DoAfterSpriteRender(grBuffer);
 
                     // Copy double buffer to primary Graphics object
@@ -340,7 +377,9 @@ namespace SCG.TurboSprite
                         _lastSecond = _compareSecond;
                     }
                     else
+                    {
                         _frames++;
+                    }
                 }
             }
             catch (Exception exception)
@@ -359,15 +398,21 @@ namespace SCG.TurboSprite
         {
             base.OnMouseUp(e);
             if (SpriteClicked == null)
+            {
                 return;
+            }
             Point pt = new Point(e.X, e.Y);
             foreach (SpriteEngine engine in _engineList)
             {
                 lock (engine._spriteList)
                 {
                     foreach (Sprite sprite in engine.Sprites)
+                    {
                         if (sprite.ClickBounds.Contains(pt))
+                        {
                             SpriteClicked(this, new SpriteClickEventArgs(sprite, e.Button));
+                        }
+                    }
                 }
             }
         }
@@ -399,8 +444,7 @@ namespace SCG.TurboSprite
         // Trigger collision detection event - called from SpriteEngine collision detection
         internal void TriggerCollision(Sprite sprite1, Sprite sprite2)
         {
-            if (SpriteCollision != null)
-                SpriteCollision(this, new SpriteCollisionEventArgs(sprite1, sprite2));
+            SpriteCollision?.Invoke(this, new SpriteCollisionEventArgs(sprite1, sprite2));
         }
 
         // Protected methods provide hooks to derived classes

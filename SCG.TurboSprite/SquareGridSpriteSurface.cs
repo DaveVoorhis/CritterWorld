@@ -236,13 +236,21 @@ namespace SCG.TurboSprite
             int leftCell = x - cellsWide / 2;
             int topCell = y - cellsHigh / 2;
             if (leftCell < 0)
+            {
                 leftCell = 0;
+            }
             if (topCell < 0)
+            {
                 topCell = 0;
+            }
             if (leftCell > CellsX - cellsWide)
+            {
                 leftCell = CellsX - cellsWide;
+            }
             if (topCell > CellsY - cellsHigh)
+            {
                 topCell = CellsY - cellsHigh;
+            }
             OffsetCellX = leftCell;
             OffsetCellY = topCell;
         }
@@ -360,16 +368,17 @@ namespace SCG.TurboSprite
                     _dragRect.Y = y;
                     _dragRect.Height = _startY - y + 1;
                 }
-                if (RangeSelected != null)
-                    RangeSelected(this, new RangeSelectedEventArgs(_dragRect));
+                RangeSelected?.Invoke(this, new RangeSelectedEventArgs(_dragRect));
+
                 range = true;
             }
 
             base.OnMouseUp(e);
 
             if (!range)
-                if (CellClicked != null)
-                    CellClicked(this, new CellEventArgs(x, y, e.Button));            
+            {
+                CellClicked?.Invoke(this, new CellEventArgs(x, y, e.Button));
+            }
         }
 
         // if dragging update end coords
@@ -387,61 +396,28 @@ namespace SCG.TurboSprite
     // Event triggered with cell 
     public class CellEventArgs : EventArgs
     {
-        private int _x;
-        private int _y;
-        private MouseButtons _mb;
-
         public CellEventArgs(int x, int y, MouseButtons mb)
         {
-            _x = x;
-            _y = y;
-            _mb = mb;
+            X = x;
+            Y = y;
+            Button = mb;
         }
 
-        // Retrieve coordinates
-        public int X
-        {
-            get
-            {
-                return _x;
-            }
-        }
+        public int X { get; }
 
-        public int Y
-        {
-            get
-            {
-                return _y;
-            }
-        }
+        public int Y { get; }
 
-        public MouseButtons Button
-        {
-            get
-            {
-                return _mb;
-            }
-        }
+        public MouseButtons Button { get; }
     }
 
-    // event that's triggered when a range is selected
+    // Event that's triggered when a range is selected
     public class RangeSelectedEventArgs : EventArgs
     {
-        // private members
-        private Rectangle _selection;
-
         public RangeSelectedEventArgs(Rectangle rect)
         {
-            _selection = rect;
+            SelectedRange = rect;
         }
 
-        //access the selected range
-        public Rectangle SelectedRange
-        {
-            get
-            {
-                return _selection;
-            }
-        }
+        public Rectangle SelectedRange { get; }
     }
 }

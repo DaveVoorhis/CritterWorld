@@ -49,7 +49,7 @@ namespace SCG.TurboSprite
             _numStars = numStars;
             _speed = speed;
             _starArray = new Star[numStars];
-            for(int i = 0; i < numStars; i++)         
+            for (int i = 0; i < numStars; i++)         
             {
                 Star s = new Star();
                 _starArray[i] = s;
@@ -112,13 +112,21 @@ namespace SCG.TurboSprite
                         x = s.X * 256 / s.Z;
                         y = s.Y * 256 / s.Z;
                         if (s.Z >= _q1)
+                        {
                             p = p4;
+                        }
                         else if (s.Z >= _q2)
+                        {
                             p = p3;
+                        }
                         else if (s.Z >= _q1)
+                        {
                             p = p2;
+                        }
                         else
+                        {
                             p = p1;
+                        }
                         g.DrawRectangle(p, x + X - Surface.OffsetX, y + Y - Surface.OffsetY, 1, 1);
                     }
                 }

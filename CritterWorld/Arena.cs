@@ -85,8 +85,7 @@ namespace CritterWorld
             {
                 while (!labelFPS.Disposing && !labelFPS.IsDisposed)
                 {
-                    if (labelFPS != null)
-                        labelFPS.Invoke(new Action(() => labelFPS.Text = spriteSurfaceMain.ActualFPS + " fps"));
+                    labelFPS?.Invoke(new Action(() => labelFPS.Text = spriteSurfaceMain.ActualFPS + " fps"));
                     Thread.Sleep(1000);
                 }
             });

@@ -68,9 +68,13 @@ namespace SCG.TurboSprite
             set
             {
                 if (_surface != null)
+                {
                     _surface.UnRegisterSpriteEngine(this);
+                }
                 if (value != null)
+                {
                     value.RegisterSpriteEngine(this);
+                }
                 _surface = value;
             }
         }
@@ -97,7 +101,9 @@ namespace SCG.TurboSprite
             {
                 _priority = value;
                 if (_surface != null)
+                {
                     _surface.SortEngines();
+                }
             }
         }
 
@@ -111,7 +117,9 @@ namespace SCG.TurboSprite
         public void AddSprite(Sprite sprite)
         {
             if (sprite.Shape.X == -1)
+            {
                 throw new InvalidOperationException("Sprite's Shape must be set before adding to SpriteEngine");
+            }
             sprite._engine = this;
             sprite._surface = _surface;           
             InitializeSprite(sprite);
@@ -131,8 +139,12 @@ namespace SCG.TurboSprite
         public void Clear()
         {
             lock (_spriteList)
+            {
                 foreach (Sprite sprite in _spriteList)
+                {
                     sprite.Kill();
+                }
+            }
         }
 
         // IComparable implementation - allows list of SpriteEngines to be sorted
@@ -145,7 +157,7 @@ namespace SCG.TurboSprite
         // Initialize a sprite's "MoveData" object - default implementation does nothing
         protected virtual void InitializeSprite(Sprite sprite)
         {
-            sprite.MovementData = null;
+            sprite.DestinationMover = null;
         }
 
         // Default Sprite movement logic does nothing

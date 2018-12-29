@@ -61,7 +61,9 @@ namespace SCG.TurboSprite
             {
                 _bitmap = value;
                 if (_bitmap != null)
+                {
                     Shape = new RectangleF(-_bitmap.Width / 2, -_bitmap.Height / 2, _bitmap.Width, _bitmap.Height);
+                }
             }
         }
     }

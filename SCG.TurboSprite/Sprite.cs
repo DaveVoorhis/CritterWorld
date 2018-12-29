@@ -47,7 +47,7 @@ namespace SCG.TurboSprite
         private RectangleF _clickBounds = new RectangleF();
 
         // Internal "MoveData" object used by SpriteEngines to store movement info
-        internal object MovementData;
+        internal object DestinationMover;
 
         // Internal Members
         internal SpriteEngine _engine;
@@ -93,7 +93,9 @@ namespace SCG.TurboSprite
         private static byte RndByte(byte b1, byte b2)
         {
             if (b1 > b2)
+            {
                 return (byte)(RND.Next(b1 - b2) + b2);
+            }
             return (byte)(RND.Next(b2 - b1) + b1);
         }
 

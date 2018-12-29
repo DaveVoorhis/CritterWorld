@@ -58,7 +58,9 @@ namespace SCG.TurboSprite
                 // Decrement life
                 _lifeSpan--;
                 if (_lifeSpan <= 0)
+                {
                     Kill();
+                }
             });
         }
 

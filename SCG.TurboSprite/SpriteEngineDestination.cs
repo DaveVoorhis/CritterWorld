@@ -36,8 +36,7 @@ using System.Drawing;
 
 namespace SCG.TurboSprite
 {
-    // SpriteMoverDestination - implements logic to move sprites toward a specific
-    // X, Y destination, at a specific speed.
+    // Implements logic to move sprites toward a specific X, Y destination at a specific speed.
     public partial class SpriteEngineDestination : SpriteEngine
     {
         // Constructors
@@ -49,7 +48,6 @@ namespace SCG.TurboSprite
         public SpriteEngineDestination(IContainer container)
         {
             container.Add(this);
-
             InitializeComponent();
         }
 
@@ -59,26 +57,26 @@ namespace SCG.TurboSprite
         //  Access a sprite's DestinationMover object
         public DestinationMover GetMover(Sprite sprite)
         {
-            DestinationMover dm = (DestinationMover)sprite.MovementData;
-            return dm;
+            return (DestinationMover)sprite.DestinationMover;
         }
 
         // Create a DestinationMove object and attach it to the sprite
         protected override void InitializeSprite(SCG.TurboSprite.Sprite sprite)
         {
-            sprite.MovementData = new DestinationMover(sprite);
+            sprite.DestinationMover = new DestinationMover(sprite);
         }
 
         // Process movement of a sprite toward its destination
         protected override void MoveSprite(SCG.TurboSprite.Sprite sprite)
         {
             // Allow the mover object to perform the actual movement
-            DestinationMover sd = (DestinationMover)sprite.MovementData;
-            sd.MoveSprite();
+            DestinationMover mover = (DestinationMover)sprite.DestinationMover;
+            mover.MoveSprite();
             // If sprite has reached its target destination, alert the client app
-            if (SpriteReachedDestination != null)
-                if (sprite.Position == sd.Destination)
-                    SpriteReachedDestination(this, new SpriteEventArgs(sprite));
+            if (SpriteReachedDestination != null && sprite.Position == mover.Destination)
+            {
+                SpriteReachedDestination(this, new SpriteEventArgs(sprite));
+            }
         }
     }
 }

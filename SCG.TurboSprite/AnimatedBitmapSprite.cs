@@ -62,7 +62,9 @@ namespace SCG.TurboSprite
             set
             {
                 if (value < _gpbf.CellsY)
+                {
                     _row = value;
+                }
             }
         }
 
@@ -82,7 +84,9 @@ namespace SCG.TurboSprite
                 _counter = 0;
                 Frame++;
                 if (Frame >= _gpbf.CellsX)
+                {
                     Frame = 0;
+                }
             }
 
             // get the appropriate cell
