@@ -27,8 +27,10 @@ namespace CritterWorld
             critter1.AssignRandomDestination(spriteEngineDebug);
             critter2.AssignRandomDestination(spriteEngineDebug);
 
-            Sprite fight = new ParticleExplosionSprite(10, Color.DarkRed, Color.Red, 1, 5, 10);
-            fight.Position = new Point((e.Sprite1.Position.X + e.Sprite2.Position.X) / 2, (e.Sprite1.Position.Y + e.Sprite2.Position.Y) / 2);
+            Sprite fight = new ParticleExplosionSprite(10, Color.DarkRed, Color.Red, 1, 5, 10)
+            {
+                Position = new Point((e.Sprite1.Position.X + e.Sprite2.Position.X) / 2, (e.Sprite1.Position.Y + e.Sprite2.Position.Y) / 2)
+            };
             spriteEngineDebug.AddSprite(fight);
         }
 
@@ -44,10 +46,12 @@ namespace CritterWorld
 
             InitializeComponent();
 
-            spriteEngineDebug = new SpriteEngine(components);
-            spriteEngineDebug.Surface = spriteSurfaceMain;
-            spriteEngineDebug.DetectCollisionSelf = false;
-            spriteEngineDebug.DetectCollisionTag = 50;
+            spriteEngineDebug = new SpriteEngine(components)
+            {
+                Surface = spriteSurfaceMain,
+                DetectCollisionSelf = false,
+                DetectCollisionTag = 50
+            };
 
             spriteSurfaceMain.SpriteCollision += new System.EventHandler<SCG.TurboSprite.SpriteCollisionEventArgs>(this.surface_SpriteCollision);
             spriteEngineMain.SpriteReachedDestination += new System.EventHandler<SCG.TurboSprite.SpriteEventArgs>(this.surface_SpriteReachedDestination);
