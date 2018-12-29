@@ -36,8 +36,7 @@ using System.Threading.Tasks;
 
 namespace SCG.TurboSprite
 {
-    // Contains the information necessary to process the movement of a sprite towards
-    // its destination.
+    // Move a Sprite toward a destination.
     public class DestinationMover
     {
         private Sprite _sprite;
@@ -118,17 +117,21 @@ namespace SCG.TurboSprite
         // Calculate X/Y movement vectors based on speed and destination
         private void CalculateVectors()
         {
-            float Dist = Math.Abs(DestinationF.X - _sprite.PositionF.X) + Math.Abs(DestinationF.Y - _sprite.PositionF.Y);
-            if (Dist > 0)
+            float distance = Math.Abs(DestX - _sprite.X) + Math.Abs(DestY - _sprite.Y);
+            if (distance > 0)
             {
-                float PctX = Math.Abs(DestinationF.X - _sprite.PositionF.X) / Dist;
-                float PctY = Math.Abs(DestinationF.Y - _sprite.PositionF.Y) / Dist;
+                float PctX = Math.Abs(DestX - _sprite.X) / distance;
+                float PctY = Math.Abs(DestY - _sprite.Y) / distance;
                 SpeedX = Speed * PctX;
                 SpeedY = Speed * PctY;
-                if (DestinationF.X < _sprite.PositionF.X)
+                if (DestX < _sprite.X)
+                {
                     SpeedX = -SpeedX;
-                if (DestinationF.Y < _sprite.PositionF.Y)
+                }
+                if (DestY < _sprite.Y)
+                {
                     SpeedY = -SpeedY;
+                }
             }
             else
             {
@@ -142,34 +145,27 @@ namespace SCG.TurboSprite
         {
             if (SpeedX == 0 && SpeedY == 0)
                 return;
+            int oldX = (int)_sprite.X;
+            int oldY = (int)_sprite.Y;
             // Do not check destination, just move the sprite
             if (!StopAtDestination)
             {
                 _sprite.X += SpeedX;
                 _sprite.Y += SpeedY;
             }
-            // Check to see if it stopped at its destination
+            // Check to see if it reached its destination
             else
             {
-                float Temp;
-                // Check X-Axis movement
-                Temp = _sprite.PositionF.X + SpeedX;
-                if (SpeedX > 0 && Temp > DestinationF.X)
-                    _sprite.X = DestX;
-                else if (SpeedX < 0 && Temp < DestinationF.X)
-                    _sprite.X = DestX;
-                else
-                    _sprite.X += SpeedX;
+                float TempX = _sprite.X + SpeedX;
+                _sprite.X = ((SpeedX > 0 && TempX > DestX) || (SpeedX < 0 && TempX < DestX)) ? DestX : _sprite.X + SpeedX;
                 // Check Y-Axis movement
-                Temp = _sprite.PositionF.Y + SpeedY;
-                if (SpeedY > 0 && Temp > DestinationF.Y)
-                    _sprite.Y = DestY;
-                else if (SpeedY < 0 && Temp < DestinationF.Y)
-                    _sprite.Y = DestY;
-                else
-                    _sprite.Y += SpeedY;
+                float TempY = _sprite.Y + SpeedY;
+                _sprite.Y = ((SpeedY > 0 && TempY > DestY) || (SpeedY < 0 && TempY < DestY)) ? DestY : _sprite.Y + SpeedY;
             }
-            _sprite.NotifyMoved();
+            if ((int)_sprite.X != oldX || (int)_sprite.Y != oldY)
+            {
+                _sprite.NotifyMoved();
+            }
         }
     }
 }
