@@ -147,18 +147,17 @@ namespace SCG.TurboSprite
                 return;
             int oldX = (int)_sprite.X;
             int oldY = (int)_sprite.Y;
-            // Do not check destination, just move the sprite
             if (!StopAtDestination)
             {
+                // Do not check destination, just move the sprite
                 _sprite.X += SpeedX;
                 _sprite.Y += SpeedY;
             }
-            // Check to see if it reached its destination
             else
             {
+                // Handle reaching destination
                 float TempX = _sprite.X + SpeedX;
                 _sprite.X = ((SpeedX > 0 && TempX > DestX) || (SpeedX < 0 && TempX < DestX)) ? DestX : _sprite.X + SpeedX;
-                // Check Y-Axis movement
                 float TempY = _sprite.Y + SpeedY;
                 _sprite.Y = ((SpeedY > 0 && TempY > DestY) || (SpeedY < 0 && TempY < DestY)) ? DestY : _sprite.Y + SpeedY;
             }
