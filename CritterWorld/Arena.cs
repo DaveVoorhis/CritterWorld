@@ -24,20 +24,14 @@ namespace CritterWorld
             Critter critter1 = (Critter)e.Sprite1.Data;
             Critter critter2 = (Critter)e.Sprite2.Data;
 
-            critter1.AssignRandomDestination(spriteEngineDebug);
-            critter2.AssignRandomDestination(spriteEngineDebug);
+            critter1.AssignRandomDestination();
+            critter2.AssignRandomDestination();
 
             Sprite fight = new ParticleExplosionSprite(10, Color.DarkRed, Color.Red, 1, 5, 10)
             {
                 Position = new Point((e.Sprite1.Position.X + e.Sprite2.Position.X) / 2, (e.Sprite1.Position.Y + e.Sprite2.Position.Y) / 2)
             };
             spriteEngineDebug.AddSprite(fight);
-        }
-
-        private void surface_SpriteReachedDestination(object sender, SpriteEventArgs e)
-        {
-            Critter critter = (Critter)e.Sprite.Data;
-            critter.AssignRandomDestination(spriteEngineDebug);
         }
 
         public Arena()
@@ -54,8 +48,7 @@ namespace CritterWorld
             };
 
             spriteSurfaceMain.SpriteCollision += new System.EventHandler<SCG.TurboSprite.SpriteCollisionEventArgs>(this.surface_SpriteCollision);
-            spriteEngineMain.SpriteReachedDestination += new System.EventHandler<SCG.TurboSprite.SpriteEventArgs>(this.surface_SpriteReachedDestination);
-
+ 
             CritterBody body = new CritterBody();
             PointF[][] frames = new PointF[2][];
             frames[0] = Critter.Scale(body.GetBody1(), 3);
@@ -66,13 +59,13 @@ namespace CritterWorld
 
             for (int i = 0; i < critterCount; i++)
             {
-                Critter critter = new Critter(spriteEngineMain);
+                Critter critter = new Critter(spriteEngineMain, spriteEngineDebug);
                 critter.GetSprite().Color = Sprite.RandomColor(64);
                 critter.GetSprite().LineWidth = 2;
 
                 critter.GetSprite().Position = new Point(startX, startY);
 
-                critter.AssignRandomDestination(spriteEngineDebug);
+                critter.AssignRandomDestination();
 
                 startY += 30;
                 if (startY >= spriteSurfaceMain.Height - 30) 

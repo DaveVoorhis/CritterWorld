@@ -12,8 +12,10 @@ namespace CritterWorld
 {
     class Critter
     {
-        private bool showDestinationMarkers = false;
+        private readonly bool showDestinationMarkers = false;
         private const float scale = 1;
+
+        private readonly SpriteEngine spriteEngineDebug;
 
         private PolygonSprite sprite;
 
@@ -34,7 +36,7 @@ namespace CritterWorld
 
         PolygonSprite destinationMarker = null;
 
-        private void processDestinationMarker(SpriteEngine spriteEngineDebug, int destX, int destY)
+        private void processDestinationMarker(int destX, int destY)
         {
             if (destinationMarker != null)
             {
@@ -55,7 +57,7 @@ namespace CritterWorld
             spriteEngineDebug.AddSprite(destinationMarker);
         }
 
-        public void AssignRandomDestination(SpriteEngine spriteEngineDebug)
+        public void AssignRandomDestination()
         {
             Random rnd = Sprite.RND;
 
@@ -64,11 +66,11 @@ namespace CritterWorld
 
             if (showDestinationMarkers)
             {
-                processDestinationMarker(spriteEngineDebug, destX, destY);
+                processDestinationMarker(destX, destY);
             }
 
             SpriteEngine spriteEngine = sprite.Engine;
-            DestinationMover mover = sprite.DestinationMover;
+            DestinationMover mover = (DestinationMover)sprite.Mover;
             mover.Speed = rnd.Next(10) + 1;
             mover.Destination = new Point(destX, destY);
             mover.StopAtDestination = true;
@@ -79,20 +81,38 @@ namespace CritterWorld
             // Do things here.
         }
 
-        public Critter(SpriteEngine spriteEngine)
+        private int moveCount = 0;
+
+        private void AnimateSprite()
         {
+            if (moveCount-- == 0)
+            {
+                sprite.IncrementFrame();
+                moveCount = Math.Max(0, 10 - (int)((DestinationMover)sprite.Mover).Speed);
+            }
+        }
+
+        public Critter(SpriteEngine spriteEngine, SpriteEngine spriteEngineDebug)
+        {
+            this.spriteEngineDebug = spriteEngineDebug;
             CritterBody body = new CritterBody();
             PointF[][] frames = new PointF[2][];
             frames[0] = Scale(body.GetBody1(), scale);
             frames[1] = Scale(body.GetBody2(), scale);
-            sprite = new PolygonSprite(frames);
-            sprite.Data = this;
-            sprite.LineWidth = 1;
-            sprite.DestinationMover = new DestinationMover(sprite);
+            sprite = new PolygonSprite(frames)
+            {
+                Data = this,
+                LineWidth = 1
+            };
+
+            DestinationMover spriteMover = new DestinationMover();
+            spriteMover.SpriteReachedDestination += (sender, e) => AssignRandomDestination();
+            spriteMover.SpriteMoved += (sender, e) => AnimateSprite();
+            sprite.Mover = spriteMover;
 
             spriteEngine.AddSprite(sprite);
 
-            DestinationMover destinationMover = sprite.DestinationMover;
+            DestinationMover destinationMover = (DestinationMover)sprite.Mover;
 
             sprite.addProcessHandler(sprite =>
             {
@@ -116,7 +136,6 @@ namespace CritterWorld
                 }
             });
             processThread.Start();
-
         }
     }
 }

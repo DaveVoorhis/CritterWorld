@@ -37,17 +37,11 @@ using System.Threading.Tasks;
 namespace SCG.TurboSprite
 {
     // Move a Sprite toward a destination.
-    public class DestinationMover
+    public class DestinationMover : IMover
     {
         private Sprite _sprite;
         private float _destX;
         private float _destY;
-
-        // Constructor
-        public DestinationMover(Sprite sprite)
-        {
-            _sprite = sprite;
-        }
 
         // Sprite's speed
         public float Speed { get; set; }
@@ -117,6 +111,10 @@ namespace SCG.TurboSprite
         // Calculate X/Y movement vectors based on speed and destination
         private void CalculateVectors()
         {
+            if (_sprite == null)
+            {
+                return;
+            }
             float distance = Math.Abs(DestX - _sprite.X) + Math.Abs(DestY - _sprite.Y);
             if (distance > 0)
             {
@@ -140,11 +138,22 @@ namespace SCG.TurboSprite
             }
         }
 
+        // events
+        public event EventHandler<SpriteEventArgs> SpriteReachedDestination;
+        public event EventHandler<SpriteEventArgs> SpriteMoved;
+
         // Move the sprite, called by SpriteEngine's MoveSprite method
-        internal void MoveSprite()
+        public void MoveSprite(Sprite sprite)
         {
+            if (_sprite == null)
+            {
+                _sprite = sprite;
+                CalculateVectors();
+            }
             if (SpeedX == 0 && SpeedY == 0)
+            {
                 return;
+            }
             int oldX = (int)_sprite.X;
             int oldY = (int)_sprite.Y;
             if (!StopAtDestination)
@@ -161,9 +170,15 @@ namespace SCG.TurboSprite
                 float TempY = _sprite.Y + SpeedY;
                 _sprite.Y = ((SpeedY > 0 && TempY > DestY) || (SpeedY < 0 && TempY < DestY)) ? DestY : _sprite.Y + SpeedY;
             }
-            if ((int)_sprite.X != oldX || (int)_sprite.Y != oldY)
+            // If sprite moved, alert listeners
+            if (SpriteMoved != null && ((int)_sprite.X != oldX || (int)_sprite.Y != oldY))
             {
-                _sprite.NotifyMoved();
+                SpriteMoved(this, new SpriteEventArgs(_sprite));
+            }
+            // If sprite has reached its target destination, alert listeners
+            if (SpriteReachedDestination != null && sprite.Position == Destination)
+            {
+                SpriteReachedDestination(this, new SpriteEventArgs(_sprite));
             }
         }
     }

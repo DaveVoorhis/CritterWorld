@@ -38,7 +38,6 @@ namespace SCG.TurboSprite
     {
         private int _lastFrame = 0;
         private int _lastAngle;
-        private readonly int _frameCount;
         private readonly PointF[][] _rotatedPoints;
         private readonly PointF[][] _drawnPoints;
         private readonly PointF[][] _model;
@@ -49,10 +48,10 @@ namespace SCG.TurboSprite
             _model = model;
             _lastAngle = -1;
             _lastFrame = 0;
-            _frameCount = model.Length;
-            _rotatedPoints = new PointF[_frameCount][];
-            _drawnPoints = new PointF[_frameCount][];
-            for (int i = 0; i < _frameCount; i++)
+            FrameCount = model.Length;
+            _rotatedPoints = new PointF[FrameCount][];
+            _drawnPoints = new PointF[FrameCount][];
+            for (int i = 0; i < FrameCount; i++)
             {
                 int polySize = model[i].Length;
                 _drawnPoints[i] = new PointF[polySize];
@@ -65,16 +64,20 @@ namespace SCG.TurboSprite
         public PolygonSprite(PointF[] points) : this(new PointF[][] { points }) {}
 
         // Select the specific Points collection to display.
-        public int NextFrame { get; set; }
+        public int Frame { get; set; }
 
-        override public void NotifyMoved()
+        // Get the number of animation frames.
+        public int FrameCount { get; internal set; }
+
+        // Switch to next frame.
+        public void IncrementFrame()
         {
-            int nextFrame = NextFrame + 1;
-            if (nextFrame >= _frameCount)
+            int nextFrame = Frame + 1;
+            if (nextFrame >= FrameCount)
             {
                 nextFrame = 0;
             }
-            NextFrame = nextFrame;
+            Frame = nextFrame;
         }
 
         private void ObtainShape()
@@ -121,10 +124,10 @@ namespace SCG.TurboSprite
         private void RotateAndAnimate()
         {
             // Process rotation and animation
-            if (FacingAngle != _lastAngle || NextFrame != _lastFrame)
+            if (FacingAngle != _lastAngle || Frame != _lastFrame)
             {
                 _lastAngle = FacingAngle;
-                _lastFrame = NextFrame;
+                _lastFrame = Frame;
                 float sin = Sprite.Sin(FacingAngle);
                 float cos = Sprite.Cos(FacingAngle);
                 for (int p = 0; p < _rotatedPoints[_lastFrame].Length; p++)

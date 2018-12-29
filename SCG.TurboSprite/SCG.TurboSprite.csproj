@@ -53,6 +53,7 @@
     <Compile Include="GamePieceBitmapFactory.Designer.cs">
       <DependentUpon>GamePieceBitmapFactory.cs</DependentUpon>
     </Compile>
+    <Compile Include="IDestinationMover.cs" />
     <Compile Include="ParticleExplosionSprite.cs" />
     <Compile Include="PolygonSprite.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

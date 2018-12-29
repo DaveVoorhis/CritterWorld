@@ -273,12 +273,7 @@ namespace SCG.TurboSprite
         public int SpinSpeed { get; set; }
 
         // The sprite's mover.
-        public DestinationMover DestinationMover { get; set; }
-
-        // DestinationMover will invoke this when the sprite is moved.
-        virtual public void NotifyMoved()
-        {
-        }
+        public IMover Mover { get; set; }
 
         // Kill a sprite - it will be removed after next processing cycle
         public void Kill()

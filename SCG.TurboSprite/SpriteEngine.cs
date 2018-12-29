@@ -152,26 +152,6 @@ namespace SCG.TurboSprite
             return e2.Priority - Priority;
         }
 
-        // events
-        public event EventHandler<SpriteEventArgs> SpriteReachedDestination;
-
-        // Process movement of a sprite toward its destination
-        protected void MoveSprite(SCG.TurboSprite.Sprite sprite)
-        {
-            // Allow the mover object to perform the actual movement
-            DestinationMover mover = (DestinationMover)sprite.DestinationMover;
-            if (mover == null)
-            {
-                return;
-            }
-            mover.MoveSprite();
-            // If sprite has reached its target destination, alert the client app
-            if (SpriteReachedDestination != null && sprite.Position == mover.Destination)
-            {
-                SpriteReachedDestination(this, new SpriteEventArgs(sprite));
-            }
-        }
-
         // Internal methods - called by SpriteSurface
         internal void MoveSprites()
         {
@@ -182,7 +162,7 @@ namespace SCG.TurboSprite
                 {
                     sprite.PreProcess();
                     sprite.launchProcess();
-                    MoveSprite(sprite);
+                    sprite.Mover?.MoveSprite(sprite);
                 }
             }
         }
@@ -220,7 +200,9 @@ namespace SCG.TurboSprite
                     {
                         Sprite s2 = Sprites[k];
                         if (s1.Bounds.IntersectsWith(s2.Bounds))
+                        {
                             _surface.TriggerCollision(s1, s2);
+                        }
                     }
                 }
             }
@@ -234,9 +216,15 @@ namespace SCG.TurboSprite
                 lock (se._spriteList)
                 {
                     foreach (Sprite s1 in Sprites)
+                    {
                         foreach (Sprite s2 in se.Sprites)
+                        {
                             if (s1.Bounds.IntersectsWith(s2.Bounds))
+                            {
                                 _surface.TriggerCollision(s1, s2);
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -252,8 +240,7 @@ namespace SCG.TurboSprite
                     if (s.Dead)
                     {
                         DeleteSprite(s);
-                        if (SpriteRemoved != null)
-                            SpriteRemoved(this, new SpriteEventArgs(s));
+                        SpriteRemoved?.Invoke(this, new SpriteEventArgs(s));
                     }
                 }
             }
