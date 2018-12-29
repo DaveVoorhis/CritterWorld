@@ -5,11 +5,11 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Timers;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using SCG.TurboSprite;
 using System.Threading;
+using Timer = System.Windows.Forms.Timer;
 
 namespace CritterWorld
 {
@@ -81,15 +81,10 @@ namespace CritterWorld
             spriteSurfaceMain.Active = true;
             spriteSurfaceMain.WraparoundEdges = true;
 
-            Thread fpsMonitor = new Thread(() =>
-            {
-                while (!labelFPS.Disposing && !labelFPS.IsDisposed)
-                {
-                    labelFPS?.Invoke(new Action(() => labelFPS.Text = spriteSurfaceMain.ActualFPS + " fps"));
-                    Thread.Sleep(1000);
-                }
-            });
-            fpsMonitor.Start();
+            Timer fpsDisplayTimer = new Timer();
+            fpsDisplayTimer.Interval = 1000;
+            fpsDisplayTimer.Tick += (sender, e) => labelFPS.Text = spriteSurfaceMain.ActualFPS + " fps";
+            fpsDisplayTimer.Start();
         }
     }
 }
