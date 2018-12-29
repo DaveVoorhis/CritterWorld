@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.spriteSurfaceMain = new SCG.TurboSprite.SpriteSurface(this.components);
-            this.spriteEngineMain = new SCG.TurboSprite.SpriteEngineDestination(this.components);
+            this.spriteEngineMain = new SCG.TurboSprite.SpriteEngine(this.components);
             this.labelFPS = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
@@ -98,7 +98,7 @@
         #endregion
 
         private SCG.TurboSprite.SpriteSurface spriteSurfaceMain;
-        private SCG.TurboSprite.SpriteEngineDestination spriteEngineMain;
+        private SCG.TurboSprite.SpriteEngine spriteEngineMain;
         private System.Windows.Forms.Label labelFPS;
     }
 }

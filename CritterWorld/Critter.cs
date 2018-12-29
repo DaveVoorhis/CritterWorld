@@ -14,7 +14,6 @@ namespace CritterWorld
     {
         private const float scale = 1;
 
-        private DestinationMover destinationMover;
         private PolygonSprite sprite;
 
         public static PointF[] Scale(PointF[] array, float scale)
@@ -25,11 +24,6 @@ namespace CritterWorld
                 scaledArray[i] = new PointF(array[i].X * scale, array[i].Y * scale);
             }
             return scaledArray;
-        }
-
-        public DestinationMover GetMover()
-        {
-            return destinationMover;
         }
 
         public PolygonSprite GetSprite()
@@ -64,8 +58,8 @@ namespace CritterWorld
 
             spriteEngineDebug.AddSprite(destinationMarker);
 
-            SpriteEngineDestination spriteEngine = (SpriteEngineDestination)sprite.Engine;
-            DestinationMover mover = spriteEngine.GetMover(sprite);
+            SpriteEngine spriteEngine = sprite.Engine;
+            DestinationMover mover = sprite.DestinationMover;
             mover.Speed = rnd.Next(10) + 1;
             mover.Destination = new Point(destX, destY);
             mover.StopAtDestination = true;
@@ -76,7 +70,7 @@ namespace CritterWorld
             Console.WriteLine("Think");
         }
 
-        public Critter(SpriteEngineDestination spriteEngine)
+        public Critter(SpriteEngine spriteEngine)
         {
             CritterBody body = new CritterBody();
             PointF[][] frames = new PointF[2][];
@@ -85,10 +79,11 @@ namespace CritterWorld
             sprite = new PolygonSprite(frames);
             sprite.Data = this;
             sprite.LineWidth = 1;
+            sprite.DestinationMover = new DestinationMover(sprite);
 
             spriteEngine.AddSprite(sprite);
 
-            destinationMover = spriteEngine.GetMover(sprite);
+            DestinationMover destinationMover = sprite.DestinationMover;
 
             sprite.addProcessHandler(sprite =>
             {
@@ -102,11 +97,12 @@ namespace CritterWorld
 
             Thread processThread = new Thread(() =>
             {
-                // TODO - only notify movement when visible movement occurs
-                // TODO - this thread needs to end when the game ends
-                while (!sprite.Dead && spriteEngine.Surface.Active)
+                while (!sprite.Dead && !sprite.Surface.Disposing && !sprite.Surface.IsDisposed)
                 {
-                    Think();
+                    if (sprite.Surface.Active)
+                    {
+                        Think();
+                    }
                     Thread.Yield();
                 }
             });

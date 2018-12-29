@@ -46,9 +46,6 @@ namespace SCG.TurboSprite
         private RectangleF _bounds = new RectangleF();
         private RectangleF _clickBounds = new RectangleF();
 
-        // Internal "MoveData" object used by SpriteEngines to store movement info
-        internal object DestinationMover;
-
         // Internal Members
         internal SpriteEngine _engine;
         internal SpriteSurface _surface;
@@ -275,14 +272,18 @@ namespace SCG.TurboSprite
 
         public int SpinSpeed { get; set; }
 
+        // The sprite's mover.
+        public DestinationMover DestinationMover { get; set; }
+
+        // DestinationMover will invoke this when the sprite is moved.
+        virtual public void NotifyMoved()
+        {
+        }
+
         // Kill a sprite - it will be removed after next processing cycle
         public void Kill()
         {
             Dead = true;
-        }
-
-        virtual public void NotifyMoved()
-        {
         }
 
         // Process the internal logic a sprite may require during each animation cycle

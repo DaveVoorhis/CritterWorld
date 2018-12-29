@@ -64,12 +64,6 @@
     <Compile Include="SpriteEngine.Designer.cs">
       <DependentUpon>SpriteEngine.cs</DependentUpon>
     </Compile>
-    <Compile Include="SpriteEngineDestination.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="SpriteEngineDestination.Designer.cs">
-      <DependentUpon>SpriteEngineDestination.cs</DependentUpon>
-    </Compile>
     <Compile Include="SpriteSurface.cs">
       <SubType>Component</SubType>
     </Compile>

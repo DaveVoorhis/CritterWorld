@@ -36,8 +36,7 @@ using System.Drawing;
 
 namespace SCG.TurboSprite
 {
-    // SpriteEngine component - manages a collection of sprites
-    // Provides sprite movement logic
+    // Manages a collection of sprites
     public partial class SpriteEngine : Component, IComparable
     {
         private SpriteSurface _surface;
@@ -122,7 +121,6 @@ namespace SCG.TurboSprite
             }
             sprite._engine = this;
             sprite._surface = _surface;           
-            InitializeSprite(sprite);
             lock (_spriteList)
             {
                 _spriteList.Add(sprite);
@@ -154,15 +152,24 @@ namespace SCG.TurboSprite
             return e2.Priority - Priority;
         }
 
-        // Initialize a sprite's "MoveData" object - default implementation does nothing
-        protected virtual void InitializeSprite(Sprite sprite)
-        {
-            sprite.DestinationMover = null;
-        }
+        // events
+        public event EventHandler<SpriteEventArgs> SpriteReachedDestination;
 
-        // Default Sprite movement logic does nothing
-        protected virtual void MoveSprite(Sprite sprite)
+        // Process movement of a sprite toward its destination
+        protected void MoveSprite(SCG.TurboSprite.Sprite sprite)
         {
+            // Allow the mover object to perform the actual movement
+            DestinationMover mover = (DestinationMover)sprite.DestinationMover;
+            if (mover == null)
+            {
+                return;
+            }
+            mover.MoveSprite();
+            // If sprite has reached its target destination, alert the client app
+            if (SpriteReachedDestination != null && sprite.Position == mover.Destination)
+            {
+                SpriteReachedDestination(this, new SpriteEventArgs(sprite));
+            }
         }
 
         // Internal methods - called by SpriteSurface
