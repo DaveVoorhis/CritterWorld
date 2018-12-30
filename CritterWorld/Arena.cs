@@ -29,11 +29,11 @@ namespace CritterWorld
             spriteEngineDebug.AddSprite(fight);
         }
 
-        private void Collide(object sender, SpriteCollisionEventArgs e)
+        private void Collide(object sender, SpriteCollisionEventArgs collision)
         {
-            if (e.Sprite1.Data is Critter && e.Sprite2.Data is Critter)
+            if (collision.Sprite1.Data is Critter && collision.Sprite2.Data is Critter)
             {
-                Collide((Critter)e.Sprite1.Data, (Critter)e.Sprite2.Data);
+                Collide((Critter)collision.Sprite1.Data, (Critter)collision.Sprite2.Data);
             }
         }
 
