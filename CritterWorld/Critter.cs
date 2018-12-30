@@ -65,10 +65,10 @@ namespace CritterWorld
             }
 
             SpriteEngine spriteEngine = sprite.Engine;
-            DestinationMover mover = (DestinationMover)sprite.Mover;
+            TargetMover mover = (TargetMover)sprite.Mover;
             mover.Speed = rnd.Next(10) + 1;
-            mover.Destination = new Point(destX, destY);
-            mover.StopAtDestination = true;
+            mover.Target = new Point(destX, destY);
+            mover.StopAtTarget = true;
         }
 
         public Point Position
@@ -103,11 +103,12 @@ namespace CritterWorld
                 Data = this,
                 LineWidth = 1,
                 Color = Sprite.RandomColor(127),
-                Position = new Point(startX, startY)
+                Position = new Point(startX, startY),
+                FacingAngle = 90
             };
 
-            DestinationMover spriteMover = new DestinationMover();
-            spriteMover.SpriteReachedDestination += (sender, spriteEvent) => AssignRandomDestination();
+            TargetMover spriteMover = new TargetMover();
+            spriteMover.SpriteReachedTarget += (sender, spriteEvent) => AssignRandomDestination();
             spriteMover.SpriteMoved += (sender, spriteEvent) =>
             {
                 if (moveCount-- == 0)
@@ -127,7 +128,7 @@ namespace CritterWorld
                     return;
                 }
                 double theta = Sprite.RadToDeg((float)Math.Atan2(spriteMover.SpeedY, spriteMover.SpeedX));
-                sprite.FacingAngle = (int)theta + 90;
+                spriteMover.TargetFacingAngle = (int)theta + 90;
             });
 
             Thread processThread = new Thread(() =>

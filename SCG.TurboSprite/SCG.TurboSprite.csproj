@@ -46,14 +46,14 @@
   <ItemGroup>
     <Compile Include="AnimatedBitmapSprite.cs" />
     <Compile Include="BitmapSprite.cs" />
-    <Compile Include="DestinationMover.cs" />
+    <Compile Include="TargetMover.cs" />
     <Compile Include="GamePieceBitmapFactory.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="GamePieceBitmapFactory.Designer.cs">
       <DependentUpon>GamePieceBitmapFactory.cs</DependentUpon>
     </Compile>
-    <Compile Include="IDestinationMover.cs" />
+    <Compile Include="IMover.cs" />
     <Compile Include="ParticleExplosionSprite.cs" />
     <Compile Include="PolygonSprite.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

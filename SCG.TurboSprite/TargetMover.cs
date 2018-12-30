@@ -36,12 +36,13 @@ using System.Threading.Tasks;
 
 namespace SCG.TurboSprite
 {
-    // Move a Sprite toward a destination.
-    public class DestinationMover : IMover
+    // Move a Sprite toward a target.
+    public class TargetMover : IMover
     {
         private Sprite _sprite;
-        private float _destX;
-        private float _destY;
+        private float _targetX;
+        private float _targetY;
+        private int _targetFacingAngle;
 
         // Sprite's speed
         public float Speed { get; set; }
@@ -50,63 +51,76 @@ namespace SCG.TurboSprite
 
         public float SpeedY { get; set; }
 
+        // Desired orientation. Sprite's FacingAngle will be smoothly updated on each movement to eventually face this way.
+        public int TargetFacingAngle
+        {
+            get
+            {
+                return _targetFacingAngle;
+            }
+            set
+            {
+                _targetFacingAngle = Sprite.NormaliseAngle(value);
+            }
+        }
+
         // Sprite's destination
-        public float DestX
+        public float TargetX
         {
             get
             {
-                return _destX;
+                return _targetX;
             }
             set
             {
-                _destX = value;
+                _targetX = value;
                 CalculateVectors();
             }
         }
 
-        public float DestY
+        public float TargetY
         {
             get
             {
-                return _destY;
+                return _targetY;
             }
             set
             {
-                _destY = value;
+                _targetY = value;
                 CalculateVectors();
             }
         }
 
-        public PointF DestinationF
+        public PointF TargetF
         {
             get
             {
-                return new PointF(_destX, _destY);
+                return new PointF(_targetX, _targetY);
             }
             set
             {
-                _destX = value.X;
-                _destY = value.Y;
+                _targetX = value.X;
+                _targetY = value.Y;
                 CalculateVectors();
             }
         }
 
-        public Point Destination
+        public Point Target
         {
             get
             {
-                return new Point((int)_destX, (int)_destY);
+                return new Point((int)_targetX, (int)_targetY);
             }
             set
             {
-                _destX = value.X;
-                _destY = value.Y;
+                _targetX = value.X;
+                _targetY = value.Y;
                 CalculateVectors();
             }
         }
 
         // Should the sprite stop moving once it reaches its destination?
-        public bool StopAtDestination { get; set; } = true;
+        public bool StopAtTarget { get; set; } = true;
 
         // Calculate X/Y movement vectors based on speed and destination
         private void CalculateVectors()
@@ -115,18 +129,18 @@ namespace SCG.TurboSprite
             {
                 return;
             }
-            float distance = Math.Abs(DestX - _sprite.X) + Math.Abs(DestY - _sprite.Y);
+            float distance = Math.Abs(TargetX - _sprite.X) + Math.Abs(TargetY - _sprite.Y);
             if (distance > 0)
             {
-                float PctX = Math.Abs(DestX - _sprite.X) / distance;
-                float PctY = Math.Abs(DestY - _sprite.Y) / distance;
+                float PctX = Math.Abs(TargetX - _sprite.X) / distance;
+                float PctY = Math.Abs(TargetY - _sprite.Y) / distance;
                 SpeedX = Speed * PctX;
                 SpeedY = Speed * PctY;
-                if (DestX < _sprite.X)
+                if (TargetX < _sprite.X)
                 {
                     SpeedX = -SpeedX;
                 }
-                if (DestY < _sprite.Y)
+                if (TargetY < _sprite.Y)
                 {
                     SpeedY = -SpeedY;
                 }
@@ -139,7 +153,7 @@ namespace SCG.TurboSprite
         }
 
         // events
-        public event EventHandler<SpriteEventArgs> SpriteReachedDestination;
+        public event EventHandler<SpriteEventArgs> SpriteReachedTarget;
         public event EventHandler<SpriteEventArgs> SpriteMoved;
 
         // Move the sprite, called by SpriteEngine's MoveSprite method
@@ -150,13 +164,20 @@ namespace SCG.TurboSprite
                 _sprite = sprite;
                 CalculateVectors();
             }
+            if (_sprite.FacingAngle != TargetFacingAngle)
+            {
+                int distance = Math.Abs(_sprite.FacingAngle - TargetFacingAngle);
+                int step = distance / 4;
+                int turn = (_sprite.FacingAngle < TargetFacingAngle) ? step : -step;
+                _sprite.FacingAngle += (distance < 180) ? turn : -turn;
+            }
             if (SpeedX == 0 && SpeedY == 0)
             {
                 return;
             }
             int oldX = (int)_sprite.X;
             int oldY = (int)_sprite.Y;
-            if (!StopAtDestination)
+            if (!StopAtTarget)
             {
                 // Do not check destination, just move the sprite
                 _sprite.X += SpeedX;
@@ -166,19 +187,19 @@ namespace SCG.TurboSprite
             {
                 // Handle reaching destination
                 float TempX = _sprite.X + SpeedX;
-                _sprite.X = ((SpeedX > 0 && TempX > DestX) || (SpeedX < 0 && TempX < DestX)) ? DestX : _sprite.X + SpeedX;
+                _sprite.X = ((SpeedX > 0 && TempX > TargetX) || (SpeedX < 0 && TempX < TargetX)) ? TargetX : _sprite.X + SpeedX;
                 float TempY = _sprite.Y + SpeedY;
-                _sprite.Y = ((SpeedY > 0 && TempY > DestY) || (SpeedY < 0 && TempY < DestY)) ? DestY : _sprite.Y + SpeedY;
+                _sprite.Y = ((SpeedY > 0 && TempY > TargetY) || (SpeedY < 0 && TempY < TargetY)) ? TargetY : _sprite.Y + SpeedY;
             }
             // If sprite moved, alert listeners
             if (SpriteMoved != null && ((int)_sprite.X != oldX || (int)_sprite.Y != oldY))
             {
                 SpriteMoved(this, new SpriteEventArgs(_sprite));
             }
-            // If sprite has reached its target destination, alert listeners
-            if (SpriteReachedDestination != null && sprite.Position == Destination)
+            // If sprite has reached its target, alert listeners
+            if (SpriteReachedTarget != null && sprite.Position == Target)
             {
-                SpriteReachedDestination(this, new SpriteEventArgs(_sprite));
+                SpriteReachedTarget(this, new SpriteEventArgs(_sprite));
             }
         }
     }

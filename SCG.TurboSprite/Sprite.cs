@@ -75,6 +75,13 @@ namespace SCG.TurboSprite
             return (float)(rad * 180 / Math.PI);
         }
 
+        // Given an arbitrary angle in degrees, return it normalised to 0 - 359
+        public static int NormaliseAngle(int angle)
+        {
+            int tmp = angle % 360;
+            return (tmp < 0) ? angle + 360 : tmp;
+        }
+
         // Static properties return the Sin/Cos for specified degree values
         public static float Sin(int degree)
         {
@@ -207,11 +214,7 @@ namespace SCG.TurboSprite
             }
             set
             {
-                _facingAngle = value % 360;
-                if (_facingAngle < 0)
-                {
-                    _facingAngle += 360;
-                }
+                _facingAngle = NormaliseAngle(value);
             }
         }
 
