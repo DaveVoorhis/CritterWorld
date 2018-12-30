@@ -55,7 +55,7 @@
             this.spriteSurfaceMain.Text = "spriteSurface1";
             this.spriteSurfaceMain.ThreadPriority = System.Threading.ThreadPriority.Normal;
             this.spriteSurfaceMain.UseVirtualSize = false;
-            this.spriteSurfaceMain.VirtualHeight = 994;
+            this.spriteSurfaceMain.VirtualHeight = 517;
             this.spriteSurfaceMain.VirtualSize = new System.Drawing.Size(813, 517);
             this.spriteSurfaceMain.VirtualWidth = 0;
             this.spriteSurfaceMain.WraparoundEdges = true;
@@ -73,11 +73,11 @@
             this.labelFPS.AutoSize = true;
             this.labelFPS.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.labelFPS.ForeColor = System.Drawing.SystemColors.Window;
-            this.labelFPS.Location = new System.Drawing.Point(778, 504);
+            this.labelFPS.Location = new System.Drawing.Point(746, 504);
             this.labelFPS.Name = "labelFPS";
-            this.labelFPS.Size = new System.Drawing.Size(27, 13);
+            this.labelFPS.Size = new System.Drawing.Size(67, 13);
             this.labelFPS.TabIndex = 1;
-            this.labelFPS.Text = "FPS";
+            this.labelFPS.Text = "FPSFPSFPS";
             this.labelFPS.TextAlign = System.Drawing.ContentAlignment.BottomRight;
             // 
             // Arena
@@ -87,7 +87,7 @@
             this.ClientSize = new System.Drawing.Size(813, 517);
             this.Controls.Add(this.labelFPS);
             this.Controls.Add(this.spriteSurfaceMain);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Arena";
             this.Text = "CritterWorld";
             this.ResumeLayout(false);

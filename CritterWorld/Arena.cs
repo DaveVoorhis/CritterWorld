@@ -37,6 +37,17 @@ namespace CritterWorld
             }
         }
 
+        int tickCount = 0;
+
+        private String TickShow()
+        {
+            if (tickCount++ > 5)
+            {
+                tickCount = 0;
+            }
+            return new string('.', tickCount);
+        }
+
         public Arena()
         {
             int critterCount = 25;
@@ -72,8 +83,8 @@ namespace CritterWorld
             spriteSurfaceMain.WraparoundEdges = true;
 
             Timer fpsDisplayTimer = new Timer();
-            fpsDisplayTimer.Interval = 1000;
-            fpsDisplayTimer.Tick += (sender, e) => labelFPS.Text = spriteSurfaceMain.ActualFPS + " fps";
+            fpsDisplayTimer.Interval = 500;
+            fpsDisplayTimer.Tick += (sender, e) => labelFPS.Text = spriteSurfaceMain.ActualFPS + " fps" + TickShow();
             fpsDisplayTimer.Start();
         }
     }
