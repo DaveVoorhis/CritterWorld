@@ -15,28 +15,31 @@ namespace CritterWorld
 {
     public partial class Arena : Form
     {
-        Random rnd = Sprite.RND;
+        private SpriteEngine spriteEngineDebug;
 
-        SpriteEngine spriteEngineDebug;
-
-        private void Collide(object sender, SpriteCollisionEventArgs e)
+        private void Collide(Critter critter1, Critter critter2)
         {
-            Critter critter1 = (Critter)e.Sprite1.Data;
-            Critter critter2 = (Critter)e.Sprite2.Data;
-
             critter1.AssignRandomDestination();
             critter2.AssignRandomDestination();
 
             Sprite fight = new ParticleExplosionSprite(10, Color.DarkRed, Color.Red, 1, 5, 10)
             {
-                Position = new Point((e.Sprite1.Position.X + e.Sprite2.Position.X) / 2, (e.Sprite1.Position.Y + e.Sprite2.Position.Y) / 2)
+                Position = new Point((critter1.Position.X + critter2.Position.X) / 2, (critter1.Position.Y + critter2.Position.Y) / 2)
             };
             spriteEngineDebug.AddSprite(fight);
         }
 
+        private void Collide(object sender, SpriteCollisionEventArgs e)
+        {
+            if (e.Sprite1.Data is Critter && e.Sprite2.Data is Critter)
+            {
+                Collide((Critter)e.Sprite1.Data, (Critter)e.Sprite2.Data);
+            }
+        }
+
         public Arena()
         {
-            float critterCount = 20;
+            int critterCount = 20;
 
             InitializeComponent();
 
@@ -54,8 +57,7 @@ namespace CritterWorld
 
             for (int i = 0; i < critterCount; i++)
             {
-                Critter critter = new Critter(spriteEngineMain, spriteEngineDebug);
-                critter.GetSprite().Position = new Point(startX, startY);
+                Critter critter = new Critter(spriteEngineMain, spriteEngineDebug, startX, startY);
                 critter.AssignRandomDestination();
 
                 startY += 30;

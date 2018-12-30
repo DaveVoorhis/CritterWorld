@@ -28,15 +28,10 @@ namespace CritterWorld
             }
             return scaledArray;
         }
-
-        public PolygonSprite GetSprite()
-        {
-            return sprite;
-        }
-
+        
         PolygonSprite destinationMarker = null;
 
-        private void processDestinationMarker(int destX, int destY)
+        private void CreateDestinationMarker(int destX, int destY)
         {
             if (destinationMarker != null)
             {
@@ -66,7 +61,7 @@ namespace CritterWorld
 
             if (showDestinationMarkers)
             {
-                processDestinationMarker(destX, destY);
+                CreateDestinationMarker(destX, destY);
             }
 
             SpriteEngine spriteEngine = sprite.Engine;
@@ -76,6 +71,18 @@ namespace CritterWorld
             mover.StopAtDestination = true;
         }
 
+        public Point Position
+        {
+            get
+            {
+                return sprite.Position;
+            }
+            set
+            {
+                sprite.Position = value;
+            }
+        }
+
         protected internal void Think()
         {
             // Do things here.
@@ -83,16 +90,7 @@ namespace CritterWorld
 
         private int moveCount = 0;
 
-        private void AnimateSprite()
-        {
-            if (moveCount-- == 0)
-            {
-                sprite.IncrementFrame();
-                moveCount = Math.Max(0, 10 - (int)((DestinationMover)sprite.Mover).Speed);
-            }
-        }
-
-        public Critter(SpriteEngine spriteEngine, SpriteEngine spriteEngineDebug)
+        public Critter(SpriteEngine spriteEngine, SpriteEngine spriteEngineDebug, int startX, int startY)
         {
             _spriteEngineDebug = spriteEngineDebug;
 
@@ -104,25 +102,31 @@ namespace CritterWorld
             {
                 Data = this,
                 LineWidth = 1,
-                Color = Sprite.RandomColor(64),
+                Color = Sprite.RandomColor(127),
+                Position = new Point(startX, startY)
             };
 
             DestinationMover spriteMover = new DestinationMover();
             spriteMover.SpriteReachedDestination += (sender, e) => AssignRandomDestination();
-            spriteMover.SpriteMoved += (sender, e) => AnimateSprite();
+            spriteMover.SpriteMoved += (sender, e) =>
+            {
+                if (moveCount-- == 0)
+                {
+                    sprite.IncrementFrame();
+                    moveCount = Math.Max(0, 10 - (int)spriteMover.Speed);
+                }
+            };
             sprite.Mover = spriteMover;
 
             spriteEngine.AddSprite(sprite);
 
-            DestinationMover destinationMover = (DestinationMover)sprite.Mover;
-
             sprite.addProcessHandler(sprite =>
             {
-                if (destinationMover.SpeedX == 0 && destinationMover.SpeedY == 0)
+                if (spriteMover.SpeedX == 0 && spriteMover.SpeedY == 0)
                 {
                     return;
                 }
-                double theta = Sprite.RadToDeg((float)Math.Atan2(destinationMover.SpeedY, destinationMover.SpeedX));
+                double theta = Sprite.RadToDeg((float)Math.Atan2(spriteMover.SpeedY, spriteMover.SpeedX));
                 sprite.FacingAngle = (int)theta + 90;
             });
 
