@@ -8,7 +8,7 @@ namespace CritterWorld
     class CritterBody
     {
         /* Return a random value near the given value with a specified range of values. */
-        public static int Fuzzy(int nearThis, int range) 
+        public static int Fuzzy(int nearThis, int range)
         {
             return nearThis + Sprite.RND.Next(-range, range);
         }
@@ -100,7 +100,7 @@ namespace CritterWorld
 
             rightBody.Reverse();
 
-            for (int i = 0; i < 3; i++) 
+            for (int i = 0; i < 3; i++)
             {
                 rightBody[legIndex[i] + 1] = new Point(rightBody[legIndex[i] + 1].X, rightBody[legIndex[i] + 1].Y + 2);
                 rightBody[legIndex[i] + 2] = new Point(rightBody[legIndex[i] + 2].X, rightBody[legIndex[i] + 2].Y + 5);
@@ -119,6 +119,20 @@ namespace CritterWorld
             }
 
             body2 = outvector.ToArray();
+
+            // Cross-leg tripod movement is more realistically bug-like.
+            for (int i = 0; i < 5; i++)
+            {            
+                PointF tmp = body1[legIndex[0] + i - 1];
+                body1[legIndex[0] + i - 1] = body2[legIndex[0] + i - 1];
+                body2[legIndex[0] + i - 1] = tmp;
+                tmp = body1[legIndex[2] + i - 1];
+                body1[legIndex[2] + i - 1] = body2[legIndex[2] + i - 1];
+                body2[legIndex[2] + i - 1] = tmp;
+                tmp = body1[body1.Length - legIndex[1] - i];
+                body1[body1.Length - legIndex[1] - i] = body2[body2.Length - legIndex[1] - i];
+                body2[body2.Length - legIndex[1] - i] = tmp;
+            }
         }
 
         public PointF[] GetBody1()
