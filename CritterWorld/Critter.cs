@@ -107,13 +107,13 @@ namespace CritterWorld
             };
 
             DestinationMover spriteMover = new DestinationMover();
-            spriteMover.SpriteReachedDestination += (sender, e) => AssignRandomDestination();
-            spriteMover.SpriteMoved += (sender, e) =>
+            spriteMover.SpriteReachedDestination += (sender, spriteEvent) => AssignRandomDestination();
+            spriteMover.SpriteMoved += (sender, spriteEvent) =>
             {
                 if (moveCount-- == 0)
                 {
                     sprite.IncrementFrame();
-                    moveCount = Math.Max(0, 10 - (int)spriteMover.Speed);
+                    moveCount = 5 - Math.Min(5, (int)spriteMover.Speed);
                 }
             };
             sprite.Mover = spriteMover;

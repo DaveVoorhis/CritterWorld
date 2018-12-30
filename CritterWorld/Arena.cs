@@ -50,7 +50,7 @@ namespace CritterWorld
                 DetectCollisionTag = 50
             };
 
-            spriteSurfaceMain.SpriteCollision += (sender, e) => Collide(sender, e);
+            spriteSurfaceMain.SpriteCollision += (sender, collisionEvent) => Collide(sender, collisionEvent);
 
             int startX = 30;
             int startY = 30;
