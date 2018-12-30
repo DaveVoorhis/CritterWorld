@@ -19,7 +19,7 @@ namespace CritterWorld
 
         SpriteEngine spriteEngineDebug;
 
-        private void surface_SpriteCollision(object sender, SpriteCollisionEventArgs e)
+        private void Collide(object sender, SpriteCollisionEventArgs e)
         {
             Critter critter1 = (Critter)e.Sprite1.Data;
             Critter critter2 = (Critter)e.Sprite2.Data;
@@ -47,12 +47,7 @@ namespace CritterWorld
                 DetectCollisionTag = 50
             };
 
-            spriteSurfaceMain.SpriteCollision += new System.EventHandler<SCG.TurboSprite.SpriteCollisionEventArgs>(this.surface_SpriteCollision);
- 
-            CritterBody body = new CritterBody();
-            PointF[][] frames = new PointF[2][];
-            frames[0] = Critter.Scale(body.GetBody1(), 3);
-            frames[1] = Critter.Scale(body.GetBody2(), 3);
+            spriteSurfaceMain.SpriteCollision += (sender, e) => Collide(sender, e);
 
             int startX = 30;
             int startY = 30;
@@ -60,11 +55,7 @@ namespace CritterWorld
             for (int i = 0; i < critterCount; i++)
             {
                 Critter critter = new Critter(spriteEngineMain, spriteEngineDebug);
-                critter.GetSprite().Color = Sprite.RandomColor(64);
-                critter.GetSprite().LineWidth = 2;
-
                 critter.GetSprite().Position = new Point(startX, startY);
-
                 critter.AssignRandomDestination();
 
                 startY += 30;

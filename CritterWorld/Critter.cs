@@ -15,7 +15,7 @@ namespace CritterWorld
         private readonly bool showDestinationMarkers = false;
         private const float scale = 1;
 
-        private readonly SpriteEngine spriteEngineDebug;
+        private readonly SpriteEngine _spriteEngineDebug;
 
         private PolygonSprite sprite;
 
@@ -54,7 +54,7 @@ namespace CritterWorld
             destinationMarker.Position = new Point(destX, destY);
             destinationMarker.Color = Color.Red;
 
-            spriteEngineDebug.AddSprite(destinationMarker);
+            _spriteEngineDebug.AddSprite(destinationMarker);
         }
 
         public void AssignRandomDestination()
@@ -94,7 +94,8 @@ namespace CritterWorld
 
         public Critter(SpriteEngine spriteEngine, SpriteEngine spriteEngineDebug)
         {
-            this.spriteEngineDebug = spriteEngineDebug;
+            _spriteEngineDebug = spriteEngineDebug;
+
             CritterBody body = new CritterBody();
             PointF[][] frames = new PointF[2][];
             frames[0] = Scale(body.GetBody1(), scale);
@@ -102,7 +103,8 @@ namespace CritterWorld
             sprite = new PolygonSprite(frames)
             {
                 Data = this,
-                LineWidth = 1
+                LineWidth = 1,
+                Color = Sprite.RandomColor(64),
             };
 
             DestinationMover spriteMover = new DestinationMover();
