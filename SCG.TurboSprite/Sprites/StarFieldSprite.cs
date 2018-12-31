@@ -97,37 +97,35 @@ namespace SCG.TurboSprite
         private static Random _rnd = new Random(DateTime.Now.Millisecond);
 
         // Render
-        protected internal override void Render(Graphics g)
+        protected internal override void Render(Graphics graphics)
         {
-            int x;
-            int y;
-            Pen p;
-            using (Pen p1 = new Pen(_color1), p2 = new Pen(_color2), p3 = new Pen(_color3), p4 = new Pen(_color4))
+            using (Pen pen1 = new Pen(_color1), pen2 = new Pen(_color2), pen3 = new Pen(_color3), pen4 = new Pen(_color4))
             {
                 for (int i = 0; i < _numStars; i++)
                 {
                     Star s = _starArray[i];
                     if (s.Z != 0)
                     {
-                        x = s.X * 256 / s.Z;
-                        y = s.Y * 256 / s.Z;
+                        Pen pen;
+                        int x = s.X * 256 / s.Z;
+                        int y = s.Y * 256 / s.Z;
                         if (s.Z >= _q1)
                         {
-                            p = p4;
+                            pen = pen4;
                         }
                         else if (s.Z >= _q2)
                         {
-                            p = p3;
+                            pen = pen3;
                         }
                         else if (s.Z >= _q1)
                         {
-                            p = p2;
+                            pen = pen2;
                         }
                         else
                         {
-                            p = p1;
+                            pen = pen1;
                         }
-                        g.DrawRectangle(p, x + X - Surface.OffsetX, y + Y - Surface.OffsetY, 1, 1);
+                        graphics.DrawRectangle(pen, x + X - Surface.OffsetX, y + Y - Surface.OffsetY, 1, 1);
                     }
                 }
             }

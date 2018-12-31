@@ -34,36 +34,66 @@ using System.Drawing;
 
 namespace SCG.TurboSprite
 {
-    public class BitmapSprite : Sprite
+    public class AnimatedBitmapSprite : Sprite
     {
-        private Bitmap _bitmap;           
+        private GamePieceBitmapFactory _gpbf;
+        private int _row;
+        private int _counter = 0;
+        private int _widthHalf;
+        private int _heightHalf;
 
-        // Constructor - Bitmap must be supplied
-        public BitmapSprite(Bitmap bitmap)
+        // Constructor - pass a GPSF, and desired row to use
+        public AnimatedBitmapSprite(GamePieceBitmapFactory gpbf, int row)
         {
-            Bitmap = bitmap;          
+            _gpbf = gpbf;
+            _widthHalf = gpbf.CellWidth / 2;
+            _heightHalf = gpbf.CellHeight / 2;
+            _row = row;
+            Shape = new System.Drawing.RectangleF(-gpbf.CellWidth / 2, -gpbf.CellHeight / 2, gpbf.CellWidth, gpbf.CellHeight);
         }
 
-        // Render it on the sprite surface
-        protected internal override void Render(Graphics g)
-        {
-            g.DrawImage(Bitmap, X - WidthHalf - Surface.OffsetX, Y - HeightHalf - Surface.OffsetY);
-        }
-
-        // The bitmap used to render the sprite
-        public Bitmap Bitmap
+        // The row to use
+        public int Row
         {
             get
             {
-                return _bitmap;
+                return _row;
             }
             set
             {
-                _bitmap = value;
-                if (_bitmap != null)
+                if (value < _gpbf.CellsY)
                 {
-                    Shape = new RectangleF(-_bitmap.Width / 2, -_bitmap.Height / 2, _bitmap.Width, _bitmap.Height);
+                    _row = value;
                 }
+            }
+        }
+
+        // The latency, number of cycles to wait before advancing frame
+        public int FrameLatency { get; set; } = 10;
+
+        // Allow access to the frame
+        public int Frame { get; set; } = 0;
+
+        // Render the sprite
+        protected internal override void Render(Graphics graphics)
+        {
+            // advance the counter/frame
+            _counter++;
+            if (_counter >= FrameLatency)
+            {
+                _counter = 0;
+                Frame++;
+                if (Frame >= _gpbf.CellsX)
+                {
+                    Frame = 0;
+                }
+            }
+
+            // get the appropriate cell
+            using (Bitmap bmp = _gpbf.GetGamePieceBitmap(Frame, _row))
+            {
+                // draw it
+                graphics.DrawImage(bmp, X - _widthHalf - Surface.OffsetX, Y - _heightHalf - Surface.OffsetY);
             }
         }
     }

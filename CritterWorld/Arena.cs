@@ -50,7 +50,8 @@ namespace CritterWorld
 
         public Arena()
         {
-            int critterCount = 25;
+            const int critterCount = 25;
+            const int scale = 1;
 
             InitializeComponent();
 
@@ -68,7 +69,7 @@ namespace CritterWorld
 
             for (int i = 0; i < critterCount; i++)
             {
-                Critter critter = new Critter(spriteEngineMain, spriteEngineDebug, startX, startY);
+                Critter critter = new Critter(spriteEngineMain, spriteEngineDebug, startX, startY, scale);
                 critter.AssignRandomDestination();
 
                 startY += 30;

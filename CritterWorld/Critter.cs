@@ -13,11 +13,13 @@ namespace CritterWorld
     class Critter
     {
         private readonly bool showDestinationMarkers = false;
-        private const float scale = 1;
 
+        private readonly SpriteEngine _spriteEngine;
         private readonly SpriteEngine _spriteEngineDebug;
 
         private PolygonSprite sprite;
+
+        private static Random rnd = new Random();
 
         public static PointF[] Scale(PointF[] array, float scale)
         {
@@ -54,8 +56,6 @@ namespace CritterWorld
 
         public void AssignRandomDestination()
         {
-            Random rnd = Sprite.RND;
-
             int destX = rnd.Next(sprite.Surface.Width);
             int destY = rnd.Next(sprite.Surface.Height);
 
@@ -85,14 +85,23 @@ namespace CritterWorld
 
         protected internal void Think()
         {
+            int rand = rnd.Next(0, 250);
+            if (rand == 1)
+            {
+                Sprite shockwave = new ShockWaveSprite(5, 20, 10, Color.DarkBlue, Color.LightBlue);
+                shockwave.Position = sprite.Position;
+                shockwave.Mover = new SlaveMover(sprite);
+                _spriteEngine.AddSprite(shockwave);
+            }
             // Do things here.
         }
 
         private int moveCount = 0;
 
-        public Critter(SpriteEngine spriteEngine, SpriteEngine spriteEngineDebug, int startX, int startY)
+        public Critter(SpriteEngine spriteEngine, SpriteEngine spriteEngineDebug, int startX, int startY, int scale)
         {
             _spriteEngineDebug = spriteEngineDebug;
+            _spriteEngine = spriteEngine;
 
             CritterBody body = new CritterBody();
             PointF[][] frames = new PointF[2][];

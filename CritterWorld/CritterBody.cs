@@ -7,10 +7,12 @@ namespace CritterWorld
 {
     class CritterBody
     {
+        private static Random rnd = new Random();
+
         /* Return a random value near the given value with a specified range of values. */
         public static int Fuzzy(int nearThis, int range)
         {
-            return nearThis + Sprite.RND.Next(-range, range);
+            return nearThis + rnd.Next(-range, range);
         }
 
         /* Return a random value near the given value. */

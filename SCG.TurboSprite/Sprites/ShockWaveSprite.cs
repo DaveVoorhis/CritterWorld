@@ -38,6 +38,8 @@ namespace SCG.TurboSprite
         private List<Wave> _waves = new List<Wave>();
         private int _lifeSpan;
 
+        internal static Random rnd = new Random();
+
         public ShockWaveSprite(int waves, float radius, int lifeSpan, Color startColor, Color endColor)
         {
             _lifeSpan = lifeSpan;
@@ -62,25 +64,30 @@ namespace SCG.TurboSprite
         }
 
         // Render the sprite
-        protected internal override void Render(System.Drawing.Graphics g)
+        protected internal override void Render(Graphics graphics)
         {
-            Pen pen = new Pen(Color.Black);
-            foreach (Wave wave in _waves)
+            // Make pretty
+            graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+
+            using (Pen pen = new Pen(Color.Black))
             {
-                wave.Radius += wave.ExpansionRate;
-                float w = wave.Radius * 2 + Sprite.RND.Next(6) - 3;
-                float h = wave.Radius * 2 + Sprite.RND.Next(6) - 3;
-                float x = X - wave.Radius + Sprite.RND.Next(6) - 3;
-                float y = Y - wave.Radius + Sprite.RND.Next(6) - 3;
-                pen.Color = wave.Color;
-                g.DrawEllipse(pen, x - Surface.OffsetX, y - Surface.OffsetY, w, h);
+                foreach (Wave wave in _waves)
+                {
+                    wave.Radius += wave.ExpansionRate;
+                    float w = wave.Radius * 2 + rnd.Next(6) - 3;
+                    float h = wave.Radius * 2 + rnd.Next(6) - 3;
+                    float x = X - wave.Radius + rnd.Next(6) - 3;
+                    float y = Y - wave.Radius + rnd.Next(6) - 3;
+                    pen.Color = wave.Color;
+                    graphics.DrawEllipse(pen, x - Surface.OffsetX, y - Surface.OffsetY, w, h);
+                }
             }
         }
     }
 
     internal class Wave
     {
-        internal float ExpansionRate = (float)(Sprite.RND.NextDouble() * Sprite.RND.NextDouble() * Sprite.RND.NextDouble() * 6);
+        internal float ExpansionRate = (float)(ShockWaveSprite.rnd.NextDouble() * ShockWaveSprite.rnd.NextDouble() * ShockWaveSprite.rnd.NextDouble() * 6);
         internal Color Color;
         internal float Radius;
     }

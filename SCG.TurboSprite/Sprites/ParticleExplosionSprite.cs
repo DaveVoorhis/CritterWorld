@@ -39,6 +39,8 @@ namespace SCG.TurboSprite
         private List<Particle> _particles = new List<Particle>();
         private int _lifeSpan;
 
+        private static Random rnd = new Random();
+
         public ParticleExplosionSprite(int particles, Color startColor, Color endColor, int startDiam, int endDiam, int lifeSpan)
         {
             _lifeSpan = lifeSpan;
@@ -46,9 +48,9 @@ namespace SCG.TurboSprite
             {
                 Particle p = new Particle();
                 p.Color = Sprite.RandomColorFromRange(startColor, endColor);
-                p.DirectionX = Sprite.RND.NextDouble() * 4 - 2;
-                p.DirectionY = Sprite.RND.NextDouble() * 4 - 2;
-                p.Diameter = Sprite.RND.Next(endDiam - startDiam) + startDiam;
+                p.DirectionX = rnd.NextDouble() * 4 - 2;
+                p.DirectionY = rnd.NextDouble() * 4 - 2;
+                p.Diameter = rnd.Next(endDiam - startDiam) + startDiam;
                 _particles.Add(p);
                 particles--;
             }
@@ -65,17 +67,18 @@ namespace SCG.TurboSprite
         }
 
         // Render the sprite
-        protected internal override void Render(Graphics g)
+        protected internal override void Render(Graphics graphics)
         {
-            Brush b;
-            foreach (Particle p in _particles)
+            foreach (Particle particle in _particles)
             {
-                int x = (int)(X - Surface.OffsetX + p.X - p.Diameter / 2);
-                int y = (int)(Y - Surface.OffsetY + p.Y - p.Diameter / 2);
-                p.X += p.DirectionX;
-                p.Y += p.DirectionY;
-                b = new SolidBrush(p.Color);
-                g.FillEllipse(b, x, y, p.Diameter * 2, p.Diameter * 2);
+                int x = (int)(X - Surface.OffsetX + particle.X - particle.Diameter / 2);
+                int y = (int)(Y - Surface.OffsetY + particle.Y - particle.Diameter / 2);
+                particle.X += particle.DirectionX;
+                particle.Y += particle.DirectionY;
+                using (Brush brush = new SolidBrush(particle.Color))
+                {
+                    graphics.FillEllipse(brush, x, y, particle.Diameter * 2, particle.Diameter * 2);
+                }
             }
         }
     }

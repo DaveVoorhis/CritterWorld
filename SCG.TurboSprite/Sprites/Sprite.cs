@@ -61,7 +61,7 @@ namespace SCG.TurboSprite
         }
 
         // A random number generator anyone can use
-        public static Random RND = new Random();
+        private static Random rnd = new Random();
 
         // Utility function to convert degrees to radians.
         public static float DegToRad(float degree)
@@ -98,9 +98,9 @@ namespace SCG.TurboSprite
         {
             if (b1 > b2)
             {
-                return (byte)(RND.Next(b1 - b2) + b2);
+                return (byte)(rnd.Next(b1 - b2) + b2);
             }
-            return (byte)(RND.Next(b2 - b1) + b1);
+            return (byte)(rnd.Next(b2 - b1) + b1);
         }
 
         // Obtain a random color within start to end range
@@ -116,9 +116,9 @@ namespace SCG.TurboSprite
         // Obtain a random color given a minimum luminance value.
         public static Color RandomColor(int minimumLuminance)
         {
-            byte r = (byte)RND.Next(minimumLuminance, 256);
-            byte g = (byte)RND.Next(minimumLuminance, 256);
-            byte b = (byte)RND.Next(minimumLuminance, 256);
+            byte r = (byte)rnd.Next(minimumLuminance, 256);
+            byte g = (byte)rnd.Next(minimumLuminance, 256);
+            byte b = (byte)rnd.Next(minimumLuminance, 256);
             return Color.FromArgb(255, r, g, b);
         }
 

@@ -87,23 +87,23 @@ namespace SCG.TurboSprite
             float y1 = 0;
             float x2 = 0;
             float y2 = 0;
-            foreach (PointF pt in _rotatedPoints[_lastFrame])
+            foreach (PointF point in _rotatedPoints[_lastFrame])
             {
-                if (pt.X < x1)
+                if (point.X < x1)
                 {
-                    x1 = pt.X;
+                    x1 = point.X;
                 }
-                if (pt.X > x2)
+                if (point.X > x2)
                 {
-                    x2 = pt.X;
+                    x2 = point.X;
                 }
-                if (pt.Y < y1)
+                if (point.Y < y1)
                 {
-                    y1 = pt.Y;
+                    y1 = point.Y;
                 }
-                if (pt.Y > y2)
+                if (point.Y > y2)
                 {
-                    y2 = pt.Y;
+                    y2 = point.Y;
                 }
             }
             Shape = new RectangleF(x1, y1, x2 - x1, y2 - y1);
@@ -130,45 +130,43 @@ namespace SCG.TurboSprite
                 _lastFrame = Frame;
                 float sin = Sprite.Sin(FacingAngle);
                 float cos = Sprite.Cos(FacingAngle);
-                for (int p = 0; p < _rotatedPoints[_lastFrame].Length; p++)
+                for (int point = 0; point < _rotatedPoints[_lastFrame].Length; point++)
                 {
-                    _rotatedPoints[_lastFrame][p].X = _model[_lastFrame][p].X * cos - _model[_lastFrame][p].Y * sin;
-                    _rotatedPoints[_lastFrame][p].Y = _model[_lastFrame][p].Y * cos + _model[_lastFrame][p].X * sin;
+                    _rotatedPoints[_lastFrame][point].X = _model[_lastFrame][point].X * cos - _model[_lastFrame][point].Y * sin;
+                    _rotatedPoints[_lastFrame][point].Y = _model[_lastFrame][point].Y * cos + _model[_lastFrame][point].X * sin;
                 }
                 ObtainShape();
             }
         }
 
         // Render the sprite - draw the polygon
-        protected internal override void Render(System.Drawing.Graphics g)
+        protected internal override void Render(Graphics graphics)
         {
             RotateAndAnimate();
 
             // Transform polygon into viewport coordinates
-            for (int pt = 0; pt < _rotatedPoints[_lastFrame].Length; pt++)
+            for (int point = 0; point < _rotatedPoints[_lastFrame].Length; point++)
             {
-                _drawnPoints[_lastFrame][pt].X = _rotatedPoints[_lastFrame][pt].X + X - Surface.OffsetX;
-                _drawnPoints[_lastFrame][pt].Y = _rotatedPoints[_lastFrame][pt].Y + Y - Surface.OffsetY;
+                _drawnPoints[_lastFrame][point].X = _rotatedPoints[_lastFrame][point].X + X - Surface.OffsetX;
+                _drawnPoints[_lastFrame][point].Y = _rotatedPoints[_lastFrame][point].Y + Y - Surface.OffsetY;
             }
 
             // Make pretty
-            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+            graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
             // Fill it?
             if (IsFilled)
             {
-                Brush brush = new SolidBrush(FillColor);
-                using (brush)
+                using (Brush brush = new SolidBrush(FillColor))
                 {
-                    g.FillPolygon(brush, _drawnPoints[_lastFrame]);
+                    graphics.FillPolygon(brush, _drawnPoints[_lastFrame]);
                 }
             }
 
             // Draw outline
-            Pen pen = new Pen(Color, LineWidth);
-            using(pen)
+            using (Pen pen = new Pen(Color, LineWidth))
             {
-                g.DrawPolygon(pen, _drawnPoints[_lastFrame]);
+                graphics.DrawPolygon(pen, _drawnPoints[_lastFrame]);
             }
         }
     }

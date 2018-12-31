@@ -1,4 +1,4 @@
-#region copyright
+﻿#region copyright
 /*
 * Copyright (c) 2008, Dion Kurczek
 * Modifications copyright (c) 2018, Dave Voorhis
@@ -29,71 +29,41 @@
 #endregion
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace SCG.TurboSprite
 {
-    public class AnimatedBitmapSprite : Sprite
+    // A sprite mover slaved to a given Sprite.
+    public class SlaveMover : IMover
     {
-        private GamePieceBitmapFactory _gpbf;
-        private int _row;
-        private int _counter = 0;
-        private int _widthHalf;
-        private int _heightHalf;
+        private Sprite _master;
+        private Sprite _slave;
+        private float offsetX;
+        private float offsetY;
+        private int offsetFacingAngle;
 
-        // Constructor - pass a GPSF, and desired row to use
-        public AnimatedBitmapSprite(GamePieceBitmapFactory gpbf, int row)
+        public SlaveMover(Sprite master)
         {
-            _gpbf = gpbf;
-            _widthHalf = gpbf.CellWidth / 2;
-            _heightHalf = gpbf.CellHeight / 2;
-            _row = row;
-            Shape = new System.Drawing.RectangleF(-gpbf.CellWidth / 2, -gpbf.CellHeight / 2, gpbf.CellWidth, gpbf.CellHeight);
+            _master = master;
         }
 
-        // The row to use
-        public int Row
+        // Move the sprite, called by SpriteEngine's MoveSprite method
+        public void MoveSprite(Sprite sprite)
         {
-            get
+            // whatever offsets are in place at creation time, preserve them.
+            if (_slave == null)
             {
-                return _row;
+                _slave = sprite;
+                offsetX = _master.X - _slave.X;
+                offsetY = _master.Y - _slave.Y;
+                offsetFacingAngle = _master.FacingAngle - _slave.FacingAngle;
             }
-            set
-            {
-                if (value < _gpbf.CellsY)
-                {
-                    _row = value;
-                }
-            }
-        }
-
-        // The latency, number of cycles to wait before advancing frame
-        public int FrameLatency { get; set; } = 10;
-
-        // Allow access to the frame
-        public int Frame { get; set; } = 0;
-
-        // Render the sprite
-        protected internal override void Render(Graphics g)
-        {
-            // advance the counter/frame
-            _counter++;
-            if (_counter >= FrameLatency)
-            {
-                _counter = 0;
-                Frame++;
-                if (Frame >= _gpbf.CellsX)
-                {
-                    Frame = 0;
-                }
-            }
-
-            // get the appropriate cell
-            Bitmap bmp = _gpbf.GetGamePieceBitmap(Frame, _row);
-
-            // draw it
-            g.DrawImage(bmp, X - _widthHalf - Surface.OffsetX, Y - _heightHalf - Surface.OffsetY);
+            _slave.X = _master.X + offsetX;
+            _slave.Y = _master.Y + offsetY;
+            _slave.FacingAngle = _master.FacingAngle + offsetFacingAngle;
         }
     }
 }

@@ -44,21 +44,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AnimatedBitmapSprite.cs" />
-    <Compile Include="BitmapSprite.cs" />
-    <Compile Include="TargetMover.cs" />
+    <Compile Include="Sprites\AnimatedBitmapSprite.cs" />
+    <Compile Include="Sprites\BitmapSprite.cs" />
+    <Compile Include="SpriteMovers\SlaveMover.cs" />
+    <Compile Include="SpriteMovers\TargetMover.cs" />
     <Compile Include="GamePieceBitmapFactory.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="GamePieceBitmapFactory.Designer.cs">
       <DependentUpon>GamePieceBitmapFactory.cs</DependentUpon>
     </Compile>
-    <Compile Include="IMover.cs" />
-    <Compile Include="ParticleExplosionSprite.cs" />
-    <Compile Include="PolygonSprite.cs" />
+    <Compile Include="SpriteMovers\IMover.cs" />
+    <Compile Include="Sprites\ParticleExplosionSprite.cs" />
+    <Compile Include="Sprites\PolygonSprite.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ShockWaveSprite.cs" />
-    <Compile Include="Sprite.cs" />
+    <Compile Include="Sprites\ShockWaveSprite.cs" />
+    <Compile Include="Sprites\Sprite.cs" />
     <Compile Include="SpriteEngine.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -77,8 +78,8 @@
     <Compile Include="SquareGridSpriteSurface.Designer.cs">
       <DependentUpon>SquareGridSpriteSurface.cs</DependentUpon>
     </Compile>
-    <Compile Include="StarFieldSprite.cs" />
-    <Compile Include="TurboSpriteEventArgs.cs" />
+    <Compile Include="Sprites\StarFieldSprite.cs" />
+    <Compile Include="SpriteEventArgs.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
