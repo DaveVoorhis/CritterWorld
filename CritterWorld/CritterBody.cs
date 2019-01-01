@@ -38,17 +38,17 @@ namespace CritterWorld
             antenna[2] = new Point(Fuzzy(12, 4), Fuzzy(-8, 4));
 
             Point[,] leg = new Point[3, 3];
-            leg[0, 0] = FuzzyPoint(4, -3);
-            leg[0, 1] = FuzzyPoint(7, -3);
-            leg[0, 2] = FuzzyPoint(10, -3);
+            leg[0, 0] = FuzzyPoint(4, -5);
+            leg[0, 1] = FuzzyPoint(7, -5);
+            leg[0, 2] = FuzzyPoint(10, -5);
 
             leg[1, 0] = FuzzyPoint(4, 0);
             leg[1, 1] = FuzzyPoint(7, 0);
             leg[1, 2] = FuzzyPoint(10, 0);
 
-            leg[2, 0] = FuzzyPoint(4, 3);
-            leg[2, 1] = FuzzyPoint(7, 3);
-            leg[2, 2] = FuzzyPoint(10, 3);
+            leg[2, 0] = FuzzyPoint(4, 5);
+            leg[2, 1] = FuzzyPoint(7, 5);
+            leg[2, 2] = FuzzyPoint(10, 5);
 
             List<Point> rightBody = new List<Point>();
 
