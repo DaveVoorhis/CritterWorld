@@ -7,11 +7,19 @@ using System.Drawing;
 using SCG.TurboSprite;
 using System.Windows.Forms;
 using System.Threading;
+using System.Diagnostics;
 
 namespace CritterWorld
 {
     class Critter
     {
+        public const int maxThinkTimeMilliseconds = 1000;
+        public const int maxThinkTimeOverrunViolations = 5;
+
+        public int thinkTimeOverrunViolations = 0;
+        public long thinkCount = 0;
+        public long totalThinkTime = 0;
+
         private readonly bool showDestinationMarkers = false;
 
         private readonly SpriteEngine _spriteEngine;
@@ -22,16 +30,6 @@ namespace CritterWorld
         private static Random rnd = new Random();
 
         private PolygonSprite destinationMarker = null;
-
-        public static PointF[] Scale(PointF[] array, float scale)
-        {
-            PointF[] scaledArray = new PointF[array.Length];
-            for (int i = 0; i < array.Length; i++)
-            {
-                scaledArray[i] = new PointF(array[i].X * scale, array[i].Y * scale);
-            }
-            return scaledArray;
-        }
 
         private void CreateDestinationMarker(int destX, int destY)
         {
@@ -83,6 +81,22 @@ namespace CritterWorld
             }
         }
 
+        public long TotalThinkTime
+        {
+            get
+            {
+                return totalThinkTime;
+            }
+        }
+
+        public long ThinkCount
+        {
+            get
+            {
+                return thinkCount;
+            }
+        }
+
         protected internal void Think(Random random)
         {
             // Do things here.
@@ -104,10 +118,7 @@ namespace CritterWorld
             _spriteEngine = spriteEngine;
 
             CritterBody body = new CritterBody();
-            PointF[][] frames = new PointF[2][];
-            frames[0] = Scale(body.GetBody1(), scale);
-            frames[1] = Scale(body.GetBody2(), scale);
-            sprite = new PolygonSprite(frames)
+            sprite = new PolygonSprite(body.GetBody(scale))
             {
                 Data = this,
                 LineWidth = 1,
@@ -142,14 +153,32 @@ namespace CritterWorld
 
             Thread processThread = new Thread(() =>
             {
+                Stopwatch stopwatch = new Stopwatch();
                 Random rnd = new Random();
-                while (true)
+                while (!sprite.Surface.IsDisposed && !sprite.Surface.Disposing && !sprite.Dead)
                 {
                     if (sprite.Surface.Active)
                     {
                         try
                         {
+                            stopwatch.Start();
                             Think(rnd);
+                            stopwatch.Stop();
+                            long elapsed = stopwatch.ElapsedMilliseconds;
+                            if (elapsed > 1000)
+                            {
+                                if (thinkTimeOverrunViolations >= maxThinkTimeOverrunViolations)
+                                {
+                                    Console.WriteLine("You were warned " + thinkTimeOverrunViolations + " times about thinking for too long. Now you may not think again.");
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Warning #" + (++thinkTimeOverrunViolations) + " you have exceeded the maximum think time of " + maxThinkTimeMilliseconds + " by " + (elapsed - maxThinkTimeMilliseconds) + " milliseconds.");
+                                }
+                            }
+                            totalThinkTime += elapsed;
+                            stopwatch.Reset();
+                            thinkCount++;
                         }
                         catch (Exception e)
                         {
@@ -158,8 +187,6 @@ namespace CritterWorld
                         }
                     }
                     Thread.Sleep(5);
-
-                  //  processThread.Suspend
                 }
             });
             processThread.Start();

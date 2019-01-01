@@ -27,6 +27,17 @@ namespace CritterWorld
             return new Point(Fuzzy(x), Fuzzy(y));
         }
 
+        /* Return a model, scaled. */
+        public static PointF[] Scale(PointF[] array, float scale)
+        {
+            PointF[] scaledArray = new PointF[array.Length];
+            for (int i = 0; i < array.Length; i++)
+            {
+                scaledArray[i] = new PointF(array[i].X * scale, array[i].Y * scale);
+            }
+            return scaledArray;
+        }
+
         private PointF[] body1;
         private PointF[] body2;
 
@@ -137,14 +148,12 @@ namespace CritterWorld
             }
         }
 
-        public PointF[] GetBody1()
+        public PointF[][] GetBody(float scale = 1)
         {
-            return body1;
-        }
-
-        public PointF[] GetBody2()
-        {
-            return body2;
+            PointF[][] frames = new PointF[2][];
+            frames[0] = Scale(body1, scale);
+            frames[1] = Scale(body2, scale);
+            return frames;
         }
     }
 }
