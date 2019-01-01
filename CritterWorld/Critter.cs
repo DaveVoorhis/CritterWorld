@@ -21,6 +21,8 @@ namespace CritterWorld
 
         private static Random rnd = new Random();
 
+        private PolygonSprite destinationMarker = null;
+
         public static PointF[] Scale(PointF[] array, float scale)
         {
             PointF[] scaledArray = new PointF[array.Length];
@@ -30,8 +32,6 @@ namespace CritterWorld
             }
             return scaledArray;
         }
-        
-        PolygonSprite destinationMarker = null;
 
         private void CreateDestinationMarker(int destX, int destY)
         {
@@ -83,9 +83,9 @@ namespace CritterWorld
             }
         }
 
-        protected internal void Think()
+        protected internal void Think(Random random)
         {
-            int rand = rnd.Next(0, 250);
+            int rand = random.Next(0, 250);
             if (rand == 1)
             {
                 Sprite shockwave = new ShockWaveSprite(5, 20, 10, Color.DarkBlue, Color.LightBlue);
@@ -142,11 +142,13 @@ namespace CritterWorld
 
             Thread processThread = new Thread(() =>
             {
+                Random rnd = new Random();
                 while (!sprite.Dead && !sprite.Surface.Disposing && !sprite.Surface.IsDisposed)
                 {
                     if (sprite.Surface.Active)
                     {
-                        Think();
+                    
+                        Think(rnd);
                     }
                     Thread.Sleep(5);
                 }

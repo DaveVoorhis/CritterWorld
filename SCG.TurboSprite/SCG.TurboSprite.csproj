@@ -44,42 +44,42 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Sprites\AnimatedBitmapSprite.cs" />
-    <Compile Include="Sprites\BitmapSprite.cs" />
-    <Compile Include="SpriteMovers\SlaveMover.cs" />
-    <Compile Include="SpriteMovers\TargetMover.cs" />
-    <Compile Include="GamePieceBitmapFactory.cs">
+    <Compile Include="Sprite\AnimatedBitmapSprite.cs" />
+    <Compile Include="Sprite\BitmapSprite.cs" />
+    <Compile Include="SpriteMover\SlaveMover.cs" />
+    <Compile Include="SpriteMover\TargetMover.cs" />
+    <Compile Include="Sprite\GamePieceBitmapFactory.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="GamePieceBitmapFactory.Designer.cs">
+    <Compile Include="Sprite\GamePieceBitmapFactory.Designer.cs">
       <DependentUpon>GamePieceBitmapFactory.cs</DependentUpon>
     </Compile>
-    <Compile Include="SpriteMovers\IMover.cs" />
-    <Compile Include="Sprites\ParticleExplosionSprite.cs" />
-    <Compile Include="Sprites\PolygonSprite.cs" />
+    <Compile Include="SpriteMover\IMover.cs" />
+    <Compile Include="Sprite\ParticleExplosionSprite.cs" />
+    <Compile Include="Sprite\PolygonSprite.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Sprites\ShockWaveSprite.cs" />
-    <Compile Include="Sprites\Sprite.cs" />
-    <Compile Include="SpriteEngine.cs">
+    <Compile Include="Sprite\ShockWaveSprite.cs" />
+    <Compile Include="Sprite\Sprite.cs" />
+    <Compile Include="Engine\SpriteEngine.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="SpriteEngine.Designer.cs">
+    <Compile Include="Engine\SpriteEngine.Designer.cs">
       <DependentUpon>SpriteEngine.cs</DependentUpon>
     </Compile>
-    <Compile Include="SpriteSurface.cs">
+    <Compile Include="Surface\SpriteSurface.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="SpriteSurface.Designer.cs">
+    <Compile Include="Surface\SpriteSurface.Designer.cs">
       <DependentUpon>SpriteSurface.cs</DependentUpon>
     </Compile>
-    <Compile Include="SquareGridSpriteSurface.cs">
+    <Compile Include="Surface\SquareGridSpriteSurface.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="SquareGridSpriteSurface.Designer.cs">
+    <Compile Include="Surface\SquareGridSpriteSurface.Designer.cs">
       <DependentUpon>SquareGridSpriteSurface.cs</DependentUpon>
     </Compile>
-    <Compile Include="Sprites\StarFieldSprite.cs" />
-    <Compile Include="SpriteEventArgs.cs" />
+    <Compile Include="Sprite\StarFieldSprite.cs" />
+    <Compile Include="Sprite\SpriteEventArgs.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
