@@ -43,6 +43,8 @@ namespace SCG.TurboSprite
         private int _priority = 1;
         internal List<Sprite> _spriteList = new List<Sprite>();
 
+        public event EventHandler<SpriteEventArgs> SpriteRemoved;
+
         public SpriteEngine()
         {
             InitializeComponent();
@@ -53,9 +55,6 @@ namespace SCG.TurboSprite
             container.Add(this);
             InitializeComponent();            
         }
-
-        // Events
-        public event EventHandler<SpriteEventArgs> SpriteRemoved;
 
         // The SpriteSurface this SpriteEngine is associated with
         public SpriteSurface Surface

@@ -39,9 +39,6 @@ namespace SCG.TurboSprite
 {
     public partial class SquareGridSpriteSurface : SpriteSurface
     {
-        public event EventHandler<CellEventArgs> CellClicked;
-        public event EventHandler<RangeSelectedEventArgs> RangeSelected;
-
         private int _cellWidth;
         private int _cellHeight;
         private int _cellsX;
@@ -59,6 +56,9 @@ namespace SCG.TurboSprite
         private int _dragX = 0;
         private int _dragY = 0;
         private Pen _penSelectionBand = Pens.Aqua;
+
+        public event EventHandler<CellEventArgs> CellClicked;
+        public event EventHandler<RangeSelectedEventArgs> RangeSelected;
 
         public SquareGridSpriteSurface()
         {

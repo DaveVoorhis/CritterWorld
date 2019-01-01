@@ -85,6 +85,7 @@ namespace CritterWorld
 
         protected internal void Think(Random random)
         {
+            // Do things here.
             int rand = random.Next(0, 250);
             if (rand == 1)
             {
@@ -93,7 +94,6 @@ namespace CritterWorld
                 shockwave.Mover = new SlaveMover(sprite);
                 _spriteEngine.AddSprite(shockwave);
             }
-            // Do things here.
         }
 
         private int moveCount = 0;
@@ -143,17 +143,28 @@ namespace CritterWorld
             Thread processThread = new Thread(() =>
             {
                 Random rnd = new Random();
-                while (!sprite.Dead && !sprite.Surface.Disposing && !sprite.Surface.IsDisposed)
+                while (true)
                 {
                     if (sprite.Surface.Active)
                     {
-                    
-                        Think(rnd);
+                        try
+                        {
+                            Think(rnd);
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine("Critter thinking crashed due to " + e);
+                            break;
+                        }
                     }
                     Thread.Sleep(5);
+
+                  //  processThread.Suspend
                 }
             });
             processThread.Start();
+            sprite.Surface.Disposed += (e, evt) => processThread.Abort();
+            sprite.Died += (e, evt) => processThread.Abort();
         }
     }
 }

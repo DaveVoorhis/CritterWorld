@@ -56,6 +56,12 @@ namespace SCG.TurboSprite
         private int _offsetX;
         private int _offsetY;
 
+        public event EventHandler<EventArgs> BeforeAnimationCycle;
+        public event EventHandler<PaintEventArgs> BeforeSpriteRender;
+        public event EventHandler<PaintEventArgs> AfterSpriteRender;
+        public event EventHandler<SpriteCollisionEventArgs> SpriteCollision;
+        public event EventHandler<SpriteClickEventArgs> SpriteClicked;
+
         public SpriteSurface()
         {
             InitializeComponent();
@@ -67,12 +73,6 @@ namespace SCG.TurboSprite
 
             InitializeComponent();
         }
-
-        public event EventHandler<EventArgs> BeforeAnimationCycle;
-        public event EventHandler<PaintEventArgs> BeforeSpriteRender;
-        public event EventHandler<PaintEventArgs> AfterSpriteRender;
-        public event EventHandler<SpriteCollisionEventArgs> SpriteCollision;
-        public event EventHandler<SpriteClickEventArgs> SpriteClicked;
 
         // The frames per second desired by the user
         public int DesiredFPS

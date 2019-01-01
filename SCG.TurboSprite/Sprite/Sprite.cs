@@ -46,7 +46,8 @@ namespace SCG.TurboSprite
         private RectangleF _bounds = new RectangleF();
         private RectangleF _clickBounds = new RectangleF();
 
-        // Internal Members
+        public event EventHandler<SpriteEventArgs> Died;
+
         internal SpriteEngine _engine;
         internal SpriteSurface _surface;
 
@@ -281,6 +282,7 @@ namespace SCG.TurboSprite
         // Kill a sprite - it will be removed after next processing cycle
         public void Kill()
         {
+            Died?.Invoke(this, new SpriteEventArgs(this));
             Dead = true;
         }
 

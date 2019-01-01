@@ -44,6 +44,9 @@ namespace SCG.TurboSprite
         private float _targetY;
         private int _targetFacingAngle;
 
+        public event EventHandler<SpriteEventArgs> SpriteReachedTarget;
+        public event EventHandler<SpriteEventArgs> SpriteMoved;
+
         // Sprite's speed
         public float Speed { get; set; }
 
@@ -151,10 +154,6 @@ namespace SCG.TurboSprite
                 SpeedY = SpeedX;
             }
         }
-
-        // events
-        public event EventHandler<SpriteEventArgs> SpriteReachedTarget;
-        public event EventHandler<SpriteEventArgs> SpriteMoved;
 
         // Move the sprite, called by SpriteEngine's MoveSprite method
         public void MoveSprite(Sprite sprite)
