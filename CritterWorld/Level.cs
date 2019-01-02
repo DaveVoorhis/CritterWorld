@@ -51,6 +51,7 @@ namespace CritterWorld
             set
             {
                 _terrainMask = value;
+                SetupMask();
             }
         }
 
