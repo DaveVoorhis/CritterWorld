@@ -97,6 +97,21 @@ namespace CritterWorld
             }
         }
 
+        public double AverageThinkTime
+        {
+            get
+            {
+                if (ThinkCount == 0)
+                {
+                    return double.NaN;
+                }
+                else
+                {
+                    return (double)TotalThinkTime / (double)ThinkCount;
+                }
+            }
+        }
+
         protected internal void Think(Random random)
         {
             // Do things here.
@@ -161,6 +176,7 @@ namespace CritterWorld
                     {
                         try
                         {
+                            stopwatch.Reset();
                             stopwatch.Start();
                             Think(rnd);
                             stopwatch.Stop();
@@ -170,6 +186,7 @@ namespace CritterWorld
                                 if (thinkTimeOverrunViolations >= maxThinkTimeOverrunViolations)
                                 {
                                     Console.WriteLine("You were warned " + thinkTimeOverrunViolations + " times about thinking for too long. Now you may not think again.");
+                                    break;
                                 }
                                 else
                                 {
@@ -177,7 +194,6 @@ namespace CritterWorld
                                 }
                             }
                             totalThinkTime += elapsed;
-                            stopwatch.Reset();
                             thinkCount++;
                         }
                         catch (Exception e)
