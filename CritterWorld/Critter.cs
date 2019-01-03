@@ -31,12 +31,22 @@ namespace CritterWorld
 
         private PolygonSprite destinationMarker = null;
 
-        private void CreateDestinationMarker(int destX, int destY)
+        private void ClearDestinationMarker()
         {
             if (destinationMarker != null)
             {
                 destinationMarker.Kill();
             }
+        }
+
+        public void ClearDestination()
+        {
+            AssignDestination((int)sprite.X, (int)sprite.Y);
+        }
+
+        private void CreateDestinationMarker(int destX, int destY)
+        {
+            ClearDestinationMarker();
 
             PointF[] markerPoly = new PointF[]
             {
@@ -52,21 +62,31 @@ namespace CritterWorld
             _spriteEngineDebug.AddSprite(destinationMarker);
         }
 
-        public void AssignRandomDestination()
+        public void AssignDestination(int destX, int destY)
         {
-            int destX = rnd.Next(sprite.Surface.Width);
-            int destY = rnd.Next(sprite.Surface.Height);
-
             if (showDestinationMarkers)
             {
                 CreateDestinationMarker(destX, destY);
             }
-
-            SpriteEngine spriteEngine = sprite.Engine;
             TargetMover mover = (TargetMover)sprite.Mover;
             mover.Speed = rnd.Next(10) + 1;
             mover.Target = new Point(destX, destY);
             mover.StopAtTarget = true;
+        }
+
+        public void AssignRandomDestination()
+        {
+            int destX = rnd.Next(sprite.Surface.Width);
+            int destY = rnd.Next(sprite.Surface.Height);
+            AssignDestination(destX, destY);
+        }
+
+        public void Reverse()
+        {
+            ClearDestinationMarker();
+            TargetMover mover = (TargetMover)sprite.Mover;
+            mover.TargetFacingAngle = sprite.FacingAngle - 180;
+            mover.StopAtTarget = false;
         }
 
         public Point Position
