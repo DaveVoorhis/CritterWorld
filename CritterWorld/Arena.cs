@@ -29,11 +29,30 @@ namespace CritterWorld
             spriteEngineDebug.AddSprite(fight);
         }
 
+        private void Collide(Critter critter, Terrain terrain)
+        {
+            critter.AssignRandomDestination();
+
+            Sprite bump = new ParticleExplosionSprite(10, Color.Gray, Color.LightGray, 1, 2, 5)
+            {
+                Position = new Point((critter.Position.X + terrain.Position.X) / 2, (critter.Position.Y + terrain.Position.Y) / 2)
+            };
+            spriteEngineDebug.AddSprite(bump);
+        }
+
         private void Collide(object sender, SpriteCollisionEventArgs collision)
         {
             if (collision.Sprite1.Data is Critter && collision.Sprite2.Data is Critter)
             {
                 Collide((Critter)collision.Sprite1.Data, (Critter)collision.Sprite2.Data);
+            }
+            else if (collision.Sprite1.Data is Critter && collision.Sprite2 is Terrain)
+            {
+                Collide((Critter)collision.Sprite1.Data, (Terrain)collision.Sprite2);
+            }
+            else if (collision.Sprite1 is Terrain && collision.Sprite2.Data is Critter)
+            {
+                Collide((Critter)collision.Sprite2.Data, (Terrain)collision.Sprite1);
             }
         }
 
@@ -48,9 +67,14 @@ namespace CritterWorld
             return new string('.', tickCount);
         }
 
+        public void AddSprite(Sprite sprite)
+        {
+            spriteEngineMain.AddSprite(sprite);
+        }
+
         public Arena()
         {
-            const int critterCount = 25;
+            const int critterCount = 5;
             const int scale = 1;
 
             InitializeComponent();
@@ -64,9 +88,11 @@ namespace CritterWorld
 
             spriteSurfaceMain.SpriteCollision += (sender, collisionEvent) => Collide(sender, collisionEvent);
 
+            Level testLevel = new Level(this);
+            testLevel.TerrainMask = (Bitmap)Image.FromFile("Images/TerrainMasks/Background00.png");
+
             int startX = 30;
             int startY = 30;
-
             for (int i = 0; i < critterCount; i++)
             {
                 Critter critter = new Critter(spriteEngineMain, spriteEngineDebug, startX, startY, scale);

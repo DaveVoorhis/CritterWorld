@@ -7,7 +7,7 @@ namespace CritterWorld
 {
     class CritterBody
     {
-        private static Random rnd = new Random();
+        private static Random rnd = new Random(Guid.NewGuid().GetHashCode());
 
         /* Return a random value near the given value with a specified range of values. */
         public static int Fuzzy(int nearThis, int range)

@@ -27,7 +27,7 @@ namespace CritterWorld
 
         private PolygonSprite sprite;
 
-        private static Random rnd = new Random();
+        private static Random rnd = new Random(Guid.NewGuid().GetHashCode());
 
         private PolygonSprite destinationMarker = null;
 
@@ -169,7 +169,7 @@ namespace CritterWorld
             Thread processThread = new Thread(() =>
             {
                 Stopwatch stopwatch = new Stopwatch();
-                Random rnd = new Random();
+                Random rnd = new Random(Guid.NewGuid().GetHashCode());
                 while (!sprite.Surface.IsDisposed && !sprite.Surface.Disposing && !sprite.Dead)
                 {
                     if (sprite.Surface.Active)

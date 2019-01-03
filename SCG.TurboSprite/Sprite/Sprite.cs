@@ -51,6 +51,8 @@ namespace SCG.TurboSprite
         internal SpriteEngine _engine;
         internal SpriteSurface _surface;
 
+        private static Random rnd = new Random(Guid.NewGuid().GetHashCode());
+
         // Static constructor populates the sin/cos lookup tables
         static Sprite()
         {
@@ -60,9 +62,6 @@ namespace SCG.TurboSprite
                 _cos[degree] = (float)Math.Cos(DegToRad(degree));
             }
         }
-
-        // A random number generator anyone can use
-        private static Random rnd = new Random();
 
         // Utility function to convert degrees to radians.
         public static float DegToRad(float degree)

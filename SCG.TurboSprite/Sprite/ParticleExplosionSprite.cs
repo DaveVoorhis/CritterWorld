@@ -39,7 +39,7 @@ namespace SCG.TurboSprite
         private List<Particle> _particles = new List<Particle>();
         private int _lifeSpan;
 
-        private static Random rnd = new Random();
+        private static Random rnd = new Random(Guid.NewGuid().GetHashCode());
 
         public ParticleExplosionSprite(int particles, Color startColor, Color endColor, int startDiam, int endDiam, int lifeSpan)
         {

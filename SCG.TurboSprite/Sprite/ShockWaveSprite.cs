@@ -38,7 +38,7 @@ namespace SCG.TurboSprite
         private List<Wave> _waves = new List<Wave>();
         private int _lifeSpan;
 
-        internal static Random rnd = new Random();
+        internal static Random rnd = new Random(Guid.NewGuid().GetHashCode());
 
         public ShockWaveSprite(int waves, float radius, int lifeSpan, Color startColor, Color endColor)
         {
