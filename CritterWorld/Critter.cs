@@ -83,6 +83,7 @@ namespace CritterWorld
 
         public void Reverse()
         {
+            // TODO - fix.
             ClearDestinationMarker();
             TargetMover mover = (TargetMover)sprite.Mover;
             mover.TargetFacingAngle = sprite.FacingAngle - 180;

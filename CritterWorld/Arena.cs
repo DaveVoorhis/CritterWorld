@@ -31,7 +31,7 @@ namespace CritterWorld
 
         private void Collide(Critter critter, Terrain terrain)
         {
-            critter.Reverse();
+            critter.AssignRandomDestination();
 
             Sprite bump = new ParticleExplosionSprite(10, Color.Gray, Color.LightGray, 1, 2, 5)
             {
