@@ -86,8 +86,7 @@ namespace CritterWorld
         // creeping through obstacles when a collision is detected.
         public void Bounceback()
         {
-            TargetMover mover = (TargetMover)sprite.Mover;
-            sprite.PositionF = mover.LastPosition;
+            ((TargetMover)sprite.Mover).Bounceback();
         }
 
         public Point Position

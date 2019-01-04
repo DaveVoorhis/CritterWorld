@@ -47,22 +47,19 @@ namespace SCG.TurboSprite
         public event EventHandler<SpriteEventArgs> SpriteReachedTarget;
         public event EventHandler<SpriteEventArgs> SpriteMoved;
 
-        // Sprite's speed
         public float Speed { get; set; }
-
         public float SpeedX { get; set; }
-
         public float SpeedY { get; set; }
 
         // Last position before movement.
-        public float OldX { get; set; }
-        public float OldY { get; set; }
+        public float LastPositionX { get; private set; }
+        public float LastPositionY { get; private set; }
 
         public PointF LastPosition
         {
             get
             {
-                return new PointF(OldX, OldY);
+                return new PointF(LastPositionX, LastPositionY);
             }
         }
 
@@ -106,11 +103,11 @@ namespace SCG.TurboSprite
             }
         }
 
-        public Point Target
+        public PointF Target
         {
             get
             {
-                return new Point((int)_targetX, (int)_targetY);
+                return new PointF(_targetX, _targetY);
             }
             set
             {
@@ -122,6 +119,14 @@ namespace SCG.TurboSprite
 
         // Should the sprite stop moving once it reaches its destination?
         public bool StopAtTarget { get; set; } = true;
+
+        // Bounce back to position before most recent move. 
+        // Invoke after a collision to prevent "embedding" or slowly 
+        // creeping through obstacles when a collision is detected.
+        public void Bounceback()
+        {
+            _sprite.PositionF = LastPosition;
+        }
 
         // Calculate X/Y movement vectors based on speed and destination
         private void CalculateVectors()
@@ -172,8 +177,8 @@ namespace SCG.TurboSprite
             {
                 return;
             }
-            OldX = _sprite.X;
-            OldY = _sprite.Y;
+            LastPositionX = _sprite.X;
+            LastPositionY = _sprite.Y;
             if (!StopAtTarget)
             {
                 // Do not check destination, just move the sprite
@@ -189,7 +194,7 @@ namespace SCG.TurboSprite
                 _sprite.Y = ((SpeedY > 0 && TempY > TargetY) || (SpeedY < 0 && TempY < TargetY)) ? TargetY : _sprite.Y + SpeedY;
             }
             // If sprite moved, alert listeners
-            if (SpriteMoved != null && (_sprite.X != OldX || _sprite.Y != OldY))
+            if (SpriteMoved != null && (_sprite.X != LastPositionX || _sprite.Y != LastPositionY))
             {
                 SpriteMoved(this, new SpriteEventArgs(_sprite));
             }
