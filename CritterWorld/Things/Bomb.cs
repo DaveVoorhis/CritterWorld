@@ -20,8 +20,8 @@ namespace CritterWorld
             int y;
             do
             {
-                x = rnd.Next(50, arena.Width - 50);
-                y = rnd.Next(50, arena.Height - 50);
+                x = rnd.Next(50, arena.Surface.Width - 50);
+                y = rnd.Next(50, arena.Surface.Height - 50);
                 bomb.Position = new Point(x, y);
             }
             while (arena.WillCollide(bomb));

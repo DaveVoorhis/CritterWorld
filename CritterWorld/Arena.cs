@@ -17,6 +17,11 @@ namespace CritterWorld
     {
         private SpriteEngine spriteEngineDebug;
 
+        public SpriteSurface Surface
+        {
+            get { return spriteSurfaceMain; }
+        }
+
         private void Collide(Critter critter1, Critter critter2)
         {
             critter1.Bounceback();
@@ -85,7 +90,7 @@ namespace CritterWorld
 
         public Arena()
         {
-            const int critterCount = 5;
+            const int critterCount = 25;
             const int scale = 1;
 
             InitializeComponent();
@@ -99,7 +104,7 @@ namespace CritterWorld
 
             spriteSurfaceMain.SpriteCollision += (sender, collisionEvent) => Collide(sender, collisionEvent);
 
-            Level testLevel = new Level(this, (Bitmap)Image.FromFile("Images/TerrainMasks/Background05.png"));
+            Level testLevel = new Level(this, (Bitmap)Image.FromFile("Images/TerrainMasks/Background06.png"));
 
             int startX = 30;
             int startY = 30;
@@ -129,9 +134,9 @@ namespace CritterWorld
             spriteSurfaceMain.Active = true;
             spriteSurfaceMain.WraparoundEdges = true;
 
-            Timer fpsDisplayTimer = new Timer();
-            fpsDisplayTimer.Interval = 500;
-            fpsDisplayTimer.Tick += (sender, e) => labelFPS.Text = spriteSurfaceMain.ActualFPS + " fps" + TickShow();
+            System.Timers.Timer fpsDisplayTimer = new System.Timers.Timer();
+            fpsDisplayTimer.Interval = 250;
+            fpsDisplayTimer.Elapsed += (sender, e) => labelFPS.Invoke(new Action(() => labelFPS.Text = spriteSurfaceMain.ActualFPS + " fps" + TickShow()));
             fpsDisplayTimer.Start();
         }
     }
