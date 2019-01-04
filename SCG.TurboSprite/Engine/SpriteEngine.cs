@@ -111,15 +111,36 @@ namespace SCG.TurboSprite
         // The engine will detect collisions with other engines having the same tag
         public int DetectCollisionTag { get; set; }
 
-        // Add a sprite to the engine
-        public void AddSprite(Sprite sprite)
+        private void ThrowExceptionIfShapeless(Sprite sprite)
         {
             if (sprite.Shape.X == -1)
             {
                 throw new InvalidOperationException("Sprite's Shape must be set before adding to SpriteEngine");
             }
+        }
+
+        // Return true if a new Sprite we wish to add will be in collision on being added.
+        // If this is run on a Sprite that has been added, it will always return true.
+        public bool WillCollide(Sprite sprite)
+        {
+            ThrowExceptionIfShapeless(sprite);
+            for (int k = 0; k < Sprites.Count; k++)
+            {
+                Sprite other = Sprites[k];
+                if (sprite.Bounds.IntersectsWith(other.Bounds))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        // Add a sprite to the engine
+        public void AddSprite(Sprite sprite)
+        {
+            ThrowExceptionIfShapeless(sprite);
             sprite._engine = this;
-            sprite._surface = _surface;           
+            sprite._surface = _surface;    
             lock (_spriteList)
             {
                 _spriteList.Add(sprite);

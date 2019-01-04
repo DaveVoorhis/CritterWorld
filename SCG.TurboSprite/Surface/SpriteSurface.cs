@@ -106,13 +106,14 @@ namespace SCG.TurboSprite
             set
             {
                 _active = value;
-                // Set Active to true
                 if (Active)
                 {
                     // Create animation thread, set to background to app to close while running
-                    _thrdAnimate = new Thread(AnimateProc);
-                    _thrdAnimate.IsBackground = true;
-                    _thrdAnimate.Priority = ThreadPriority;
+                    _thrdAnimate = new Thread(AnimateProc)
+                    {
+                        IsBackground = true,
+                        Priority = ThreadPriority
+                    };
 
                     // We need an animation update right away
                     _nextFrameTime = DateTime.Now;
@@ -120,7 +121,6 @@ namespace SCG.TurboSprite
                     // Activate thread
                     _thrdAnimate.Start();
                 }
-                // Set Active to false
                 else
                 {
                     _lastSecond = -1;
@@ -203,6 +203,7 @@ namespace SCG.TurboSprite
                 }
             }
         }
+
         public int OffsetY
         {
             get
@@ -251,10 +252,7 @@ namespace SCG.TurboSprite
                     _nextFrameTime = DateTime.Now + _animationSpan;
 
                     // Trigger event to client
-                    if (BeforeAnimationCycle != null)
-                    {
-                        BeforeAnimationCycle(this, EventArgs.Empty);
-                    }
+                    BeforeAnimationCycle?.Invoke(this, EventArgs.Empty);
 
                     // Process Sprite movement
                     lock (_engineList)

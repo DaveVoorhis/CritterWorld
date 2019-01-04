@@ -57,6 +57,7 @@
     <Compile Include="Level.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Terrain.cs" />
     <EmbeddedResource Include="Arena.resx">
       <DependentUpon>Arena.cs</DependentUpon>
     </EmbeddedResource>

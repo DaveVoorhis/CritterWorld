@@ -87,20 +87,4 @@ namespace CritterWorld
         }
     }
 
-    internal class Terrain : PolygonSprite
-    {
-        public Terrain(int X1, int X2, int Y1, int Y2) : 
-            base(new PointF[]
-            {
-                new PointF(0, 0),
-                new PointF(X2 - X1, 0),
-                new PointF(X2 - X1, Y2 - Y1),
-                new PointF(0, Y2 - Y1)
-            })
-        {
-            Position = new Point(X1, Y1);
-            Color = Color.DarkGreen;
-        }
-    }
-
 }

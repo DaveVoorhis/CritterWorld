@@ -37,6 +37,8 @@ namespace CritterWorld
             critter.Bounceback();
             critter.AssignRandomDestination();
 
+            terrain.Nudge();
+
             Sprite bump = new ParticleExplosionSprite(10, Color.Gray, Color.LightGray, 1, 2, 5)
             {
                 Position = new Point((critter.Position.X + terrain.Position.X) / 2, (critter.Position.Y + terrain.Position.Y) / 2)
@@ -93,21 +95,31 @@ namespace CritterWorld
             spriteSurfaceMain.SpriteCollision += (sender, collisionEvent) => Collide(sender, collisionEvent);
 
             Level testLevel = new Level(this);
-            testLevel.TerrainMask = (Bitmap)Image.FromFile("Images/TerrainMasks/Background02.png");
+            testLevel.TerrainMask = (Bitmap)Image.FromFile("Images/TerrainMasks/Background05.png");
 
             int startX = 30;
             int startY = 30;
             for (int i = 0; i < critterCount; i++)
             {
-                Critter critter = new Critter(spriteEngineMain, spriteEngineDebug, startX, startY, scale);
-                critter.AssignRandomDestination();
-
-                startY += 30;
-                if (startY >= spriteSurfaceMain.Height - 30) 
+                Critter critter = null;
+                do
                 {
-                    startY = 30;
-                    startX += 100;
-                }
+                    try
+                    {
+                        critter = new Critter(spriteEngineMain, spriteEngineDebug, startX, startY, scale);
+                        critter.AssignRandomDestination();
+                    }
+                    catch (InvalidOperationException)
+                    {
+                        Console.WriteLine("Note: Critter relocated to avoid terrain.");
+                    }
+                    startY += 30;
+                    if (startY >= spriteSurfaceMain.Height - 30)
+                    {
+                        startY = 30;
+                        startX += 100;
+                    }
+                } while (critter == null);
             }
 
             spriteSurfaceMain.Active = true;

@@ -176,6 +176,10 @@ namespace CritterWorld
             };
             sprite.Mover = spriteMover;
 
+            if (spriteEngine.WillCollide(sprite))
+            {
+                throw new InvalidOperationException("Attempting to add Critter that will collide with other SpriteS in the same SpriteEngine.");
+            }
             spriteEngine.AddSprite(sprite);
 
             sprite.addProcessHandler(sprite =>
