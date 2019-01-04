@@ -52,15 +52,15 @@
     <Compile Include="Arena.Designer.cs">
       <DependentUpon>Arena.cs</DependentUpon>
     </Compile>
-    <Compile Include="Critter.cs" />
-    <Compile Include="CritterBody.cs" />
-    <Compile Include="Bomb.cs" />
-    <Compile Include="Gift.cs" />
+    <Compile Include="Things\Critter.cs" />
+    <Compile Include="Things\CritterBody.cs" />
+    <Compile Include="Things\Bomb.cs" />
+    <Compile Include="Things\Gift.cs" />
     <Compile Include="Level.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Food.cs" />
-    <Compile Include="Terrain.cs" />
+    <Compile Include="Things\Food.cs" />
+    <Compile Include="Things\Terrain.cs" />
     <EmbeddedResource Include="Arena.resx">
       <DependentUpon>Arena.cs</DependentUpon>
     </EmbeddedResource>
