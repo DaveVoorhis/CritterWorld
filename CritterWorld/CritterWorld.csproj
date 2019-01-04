@@ -54,6 +54,8 @@
     </Compile>
     <Compile Include="Critter.cs" />
     <Compile Include="CritterBody.cs" />
+    <Compile Include="Bomb.cs" />
+    <Compile Include="Gift.cs" />
     <Compile Include="Level.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

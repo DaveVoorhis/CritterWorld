@@ -15,6 +15,8 @@ namespace CritterWorld
         private Arena _arena;
         private Bitmap _terrainMask;
 
+        private Random rnd = new Random(Guid.NewGuid().GetHashCode());
+
         public Level() { }
 
         public Level(Arena arena)
@@ -28,12 +30,8 @@ namespace CritterWorld
             TerrainMask = terrainMask;
         }
 
-        private void SetupMask()
+        private void SetupTerrain()
         {
-            if (_arena == null || _terrainMask == null)
-            {
-                return;
-            }
             int mapWidth = terrainDensity;
             int mapHeight = (int)(terrainDensity * (float)_arena.Height / (float)_arena.Width);
             for (int y = 0; y < mapHeight; y++)
@@ -56,6 +54,53 @@ namespace CritterWorld
             }
         }
 
+        private void Setup()
+        {
+            if (_arena == null || _terrainMask == null)
+            {
+                return;
+            }
+
+            Console.WriteLine("Loading terrain...");
+            SetupTerrain();
+
+            Console.WriteLine("Loading food...");
+            for (int i = 0; i < 5; i++)
+            {
+                Food food;
+                do
+                {
+                    int x = rnd.Next(50, _arena.Width - 50);
+                    int y = rnd.Next(50, _arena.Height - 50);
+                    food = new Food(x, y);
+                }
+                while (_arena.WillCollide(food));
+                _arena.AddSprite(food);
+            }
+
+            Console.WriteLine("Loading bombs...");
+            for (int i = 0; i < 5; i++)
+            {
+                new Bomb(_arena);
+            }
+
+            Console.WriteLine("Loading gifts...");
+            for (int i = 0; i < 5; i++)
+            {
+                Gift gift;
+                do
+                {
+                    int x = rnd.Next(50, _arena.Width - 50);
+                    int y = rnd.Next(50, _arena.Height - 50);
+                    gift = new Gift(x, y);
+                }
+                while (_arena.WillCollide(gift));
+                _arena.AddSprite(gift);
+            }
+
+            Console.WriteLine("Level loaded.");
+        }
+
         public Arena Arena
         {
             get
@@ -65,7 +110,7 @@ namespace CritterWorld
             set
             {
                 _arena = value;
-                SetupMask();
+                Setup();
             }
         }
 
@@ -78,7 +123,7 @@ namespace CritterWorld
             set
             {
                 _terrainMask = value;
-                SetupMask();
+                Setup();
             }
         }
     }

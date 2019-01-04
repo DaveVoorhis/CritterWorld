@@ -55,6 +55,8 @@
       <DependentUpon>GamePieceBitmapFactory.cs</DependentUpon>
     </Compile>
     <Compile Include="SpriteMover\IMover.cs" />
+    <Compile Include="Sprite\Particle.cs" />
+    <Compile Include="Sprite\ParticleFountainSprite.cs" />
     <Compile Include="Sprite\ParticleExplosionSprite.cs" />
     <Compile Include="Sprite\PolygonSprite.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

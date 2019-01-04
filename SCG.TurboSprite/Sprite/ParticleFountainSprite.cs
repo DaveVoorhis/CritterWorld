@@ -34,37 +34,48 @@ using System.Drawing;
 
 namespace SCG.TurboSprite
 {
-    public class ParticleExplosionSprite : Sprite
+    public class ParticleFountainSprite : Sprite
     {
         private List<Particle> _particles = new List<Particle>();
-        private int _lifeSpan;
 
         private static Random rnd = new Random(Guid.NewGuid().GetHashCode());
 
-        public ParticleExplosionSprite(int particles, Color startColor, Color endColor, int startDiam, int endDiam, int lifeSpan)
+        public int Radius { get; private set; }
+        public Color StartColor { get; private set; }
+        public Color EndColor { get; private set; }
+        public int StartDiameter { get; private set; }
+        public int EndDiameter { get; private set; }
+
+        public static double GetDistance(double x1, double y1, double x2, double y2)
         {
-            _lifeSpan = lifeSpan;
+            return Math.Sqrt(Math.Pow((x2 - x1), 2) + Math.Pow((y2 - y1), 2));
+        }
+
+        public ParticleFountainSprite(int particles, Color startColor, Color endColor, int startDiam, int endDiam, int radius)
+        {
+            Radius = radius;
+            StartColor = startColor;
+            EndColor = endColor;
+            StartDiameter = startDiam;
+            EndDiameter = endDiam;
             while (particles > 0)
             {
-                Particle p = new Particle
-                {
-                    Color = Sprite.RandomColorFromRange(startColor, endColor),
-                    DirectionX = rnd.NextDouble() * 4 - 2,
-                    DirectionY = rnd.NextDouble() * 4 - 2,
-                    Diameter = rnd.Next(endDiam - startDiam) + startDiam
-                };
-                _particles.Add(p);
+                Particle particle = new Particle();
+                InitialiseParticle(particle);
+                _particles.Add(particle);
                 particles--;
             }
-            Shape = new RectangleF(-15, -15, 30, 30);
-            addProcessHandler(sprite =>
-            {
-                _lifeSpan--;
-                if (_lifeSpan <= 0)
-                {
-                    Kill();
-                }
-            });
+            Shape = new RectangleF(-radius, -radius, radius, radius);
+        }
+
+        private void InitialiseParticle(Particle particle)
+        {
+            particle.X = 0;
+            particle.Y = 0;
+            particle.Color = Sprite.RandomColorFromRange(StartColor, EndColor);
+            particle.DirectionX = rnd.NextDouble() * 4 - 2;
+            particle.DirectionY = rnd.NextDouble() * 4 - 2;
+            particle.Diameter = rnd.Next(EndDiameter - StartDiameter) + StartDiameter;
         }
 
         // Render the sprite
@@ -74,8 +85,15 @@ namespace SCG.TurboSprite
             {
                 int x = (int)(X - Surface.OffsetX + particle.X - particle.Diameter / 2);
                 int y = (int)(Y - Surface.OffsetY + particle.Y - particle.Diameter / 2);
-                particle.X += particle.DirectionX;
-                particle.Y += particle.DirectionY;
+                if (GetDistance(x, y, X, Y) > Radius)
+                {
+                    InitialiseParticle(particle);
+                }
+                else
+                {
+                    particle.X += particle.DirectionX;
+                    particle.Y += particle.DirectionY;
+                }
                 using (Brush brush = new SolidBrush(particle.Color))
                 {
                     graphics.FillEllipse(brush, x, y, particle.Diameter * 2, particle.Diameter * 2);

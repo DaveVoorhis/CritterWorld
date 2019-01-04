@@ -73,6 +73,11 @@ namespace CritterWorld
             return new string('.', tickCount);
         }
 
+        public bool WillCollide(Sprite sprite)
+        {
+            return spriteEngineMain.WillCollide(sprite);
+        }
+
         public void AddSprite(Sprite sprite)
         {
             spriteEngineMain.AddSprite(sprite);
@@ -80,7 +85,7 @@ namespace CritterWorld
 
         public Arena()
         {
-            const int critterCount = 25;
+            const int critterCount = 5;
             const int scale = 1;
 
             InitializeComponent();
