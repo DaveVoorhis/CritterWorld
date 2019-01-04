@@ -135,7 +135,6 @@ namespace CritterWorld
         protected internal void Think(Random random)
         {
             // Do things here.
-            /*
             int rand = random.Next(0, 250);
             if (rand == 1)
             {
@@ -144,7 +143,6 @@ namespace CritterWorld
                 shockwave.Mover = new SlaveMover(sprite);
                 _spriteEngine.AddSprite(shockwave);
             }
-            */
         }
 
         private int moveCount = 0;
