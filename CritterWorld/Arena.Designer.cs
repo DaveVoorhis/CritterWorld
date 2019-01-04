@@ -50,13 +50,13 @@
             this.spriteSurfaceMain.Name = "spriteSurfaceMain";
             this.spriteSurfaceMain.OffsetX = 0;
             this.spriteSurfaceMain.OffsetY = 0;
-            this.spriteSurfaceMain.Size = new System.Drawing.Size(813, 517);
+            this.spriteSurfaceMain.Size = new System.Drawing.Size(1430, 686);
             this.spriteSurfaceMain.TabIndex = 0;
             this.spriteSurfaceMain.Text = "spriteSurface1";
             this.spriteSurfaceMain.ThreadPriority = System.Threading.ThreadPriority.Normal;
             this.spriteSurfaceMain.UseVirtualSize = false;
-            this.spriteSurfaceMain.VirtualHeight = 517;
-            this.spriteSurfaceMain.VirtualSize = new System.Drawing.Size(813, 517);
+            this.spriteSurfaceMain.VirtualHeight = 611;
+            this.spriteSurfaceMain.VirtualSize = new System.Drawing.Size(1430, 686);
             this.spriteSurfaceMain.VirtualWidth = 0;
             this.spriteSurfaceMain.WraparoundEdges = true;
             // 
@@ -73,7 +73,7 @@
             this.labelFPS.AutoSize = true;
             this.labelFPS.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.labelFPS.ForeColor = System.Drawing.SystemColors.Window;
-            this.labelFPS.Location = new System.Drawing.Point(746, 504);
+            this.labelFPS.Location = new System.Drawing.Point(1363, 673);
             this.labelFPS.Name = "labelFPS";
             this.labelFPS.Size = new System.Drawing.Size(67, 13);
             this.labelFPS.TabIndex = 1;
@@ -84,7 +84,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(813, 517);
+            this.ClientSize = new System.Drawing.Size(1430, 686);
             this.Controls.Add(this.labelFPS);
             this.Controls.Add(this.spriteSurfaceMain);
             this.Margin = new System.Windows.Forms.Padding(2);

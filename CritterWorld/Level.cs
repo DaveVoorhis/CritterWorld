@@ -10,8 +10,7 @@ namespace CritterWorld
 {
     public class Level
     {
-        private const int mapWidth = 60;
-        private const int mapHeight = 60;
+        private const int terrainDensity = 80;
 
         private Arena _arena;
         private Bitmap _terrainMask;
@@ -35,6 +34,8 @@ namespace CritterWorld
             {
                 return;
             }
+            int mapWidth = terrainDensity;
+            int mapHeight = (int)(terrainDensity * (float)_arena.Height / (float)_arena.Width);
             for (int y = 0; y < mapHeight; y++)
             {
                 for (int x = 0; x < mapWidth; x++)
@@ -79,11 +80,6 @@ namespace CritterWorld
                 _terrainMask = value;
                 SetupMask();
             }
-        }
-
-        public void ObtainTerrainMaskFromFile(string fileName)
-        {
-            TerrainMask = (Bitmap)Image.FromFile(fileName);
         }
     }
 

@@ -94,8 +94,7 @@ namespace CritterWorld
 
             spriteSurfaceMain.SpriteCollision += (sender, collisionEvent) => Collide(sender, collisionEvent);
 
-            Level testLevel = new Level(this);
-            testLevel.TerrainMask = (Bitmap)Image.FromFile("Images/TerrainMasks/Background05.png");
+            Level testLevel = new Level(this, (Bitmap)Image.FromFile("Images/TerrainMasks/Background05.png"));
 
             int startX = 30;
             int startY = 30;
