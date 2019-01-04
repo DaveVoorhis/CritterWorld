@@ -16,13 +16,25 @@ namespace CritterWorld
         private Arena _arena;
         private Bitmap _terrainMask;
 
+        public Level() { }
+
         public Level(Arena arena)
         {
-            _arena = arena;
+            Arena = arena;
+        }
+
+        public Level(Arena arena, Bitmap terrainMask)
+        {
+            Arena = arena;
+            TerrainMask = terrainMask;
         }
 
         private void SetupMask()
         {
+            if (_arena == null || _terrainMask == null)
+            {
+                return;
+            }
             for (int y = 0; y < mapHeight; y++)
             {
                 for (int x = 0; x < mapWidth; x++)
@@ -40,6 +52,19 @@ namespace CritterWorld
                         _arena.AddSprite(terrainSprite);
                     }
                 }
+            }
+        }
+
+        public Arena Arena
+        {
+            get
+            {
+                return _arena;
+            }
+            set
+            {
+                _arena = value;
+                SetupMask();
             }
         }
 

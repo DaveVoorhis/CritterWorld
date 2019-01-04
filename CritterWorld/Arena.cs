@@ -19,6 +19,9 @@ namespace CritterWorld
 
         private void Collide(Critter critter1, Critter critter2)
         {
+            critter1.Bounceback();
+            critter2.Bounceback();
+
             critter1.AssignRandomDestination();
             critter2.AssignRandomDestination();
 
@@ -31,6 +34,7 @@ namespace CritterWorld
 
         private void Collide(Critter critter, Terrain terrain)
         {
+            critter.Bounceback();
             critter.AssignRandomDestination();
 
             Sprite bump = new ParticleExplosionSprite(10, Color.Gray, Color.LightGray, 1, 2, 5)
@@ -89,7 +93,7 @@ namespace CritterWorld
             spriteSurfaceMain.SpriteCollision += (sender, collisionEvent) => Collide(sender, collisionEvent);
 
             Level testLevel = new Level(this);
-            testLevel.TerrainMask = (Bitmap)Image.FromFile("Images/TerrainMasks/Background06.png");
+            testLevel.TerrainMask = (Bitmap)Image.FromFile("Images/TerrainMasks/Background02.png");
 
             int startX = 30;
             int startY = 30;

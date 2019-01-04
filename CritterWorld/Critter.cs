@@ -81,13 +81,13 @@ namespace CritterWorld
             AssignDestination(destX, destY);
         }
 
-        public void Reverse()
+        // Bounce back to position before most recent move. 
+        // Invoke after a collision to prevent "embedding" or slowly 
+        // creeping through obstacles when a collision is detected.
+        public void Bounceback()
         {
-            // TODO - fix.
-            ClearDestinationMarker();
             TargetMover mover = (TargetMover)sprite.Mover;
-            mover.TargetFacingAngle = sprite.FacingAngle - 180;
-            mover.StopAtTarget = false;
+            sprite.PositionF = mover.LastPosition;
         }
 
         public Point Position
@@ -136,6 +136,7 @@ namespace CritterWorld
         protected internal void Think(Random random)
         {
             // Do things here.
+            /*
             int rand = random.Next(0, 250);
             if (rand == 1)
             {
@@ -144,6 +145,7 @@ namespace CritterWorld
                 shockwave.Mover = new SlaveMover(sprite);
                 _spriteEngine.AddSprite(shockwave);
             }
+            */
         }
 
         private int moveCount = 0;

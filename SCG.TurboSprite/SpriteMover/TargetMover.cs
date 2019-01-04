@@ -54,6 +54,18 @@ namespace SCG.TurboSprite
 
         public float SpeedY { get; set; }
 
+        // Last position before movement.
+        public float OldX { get; set; }
+        public float OldY { get; set; }
+
+        public PointF LastPosition
+        {
+            get
+            {
+                return new PointF(OldX, OldY);
+            }
+        }
+
         // Desired orientation. Sprite's FacingAngle will be smoothly updated on each movement to eventually face this way.
         public int TargetFacingAngle
         {
@@ -90,20 +102,6 @@ namespace SCG.TurboSprite
             set
             {
                 _targetY = value;
-                CalculateVectors();
-            }
-        }
-
-        public PointF TargetF
-        {
-            get
-            {
-                return new PointF(_targetX, _targetY);
-            }
-            set
-            {
-                _targetX = value.X;
-                _targetY = value.Y;
                 CalculateVectors();
             }
         }
@@ -174,8 +172,8 @@ namespace SCG.TurboSprite
             {
                 return;
             }
-            int oldX = (int)_sprite.X;
-            int oldY = (int)_sprite.Y;
+            OldX = _sprite.X;
+            OldY = _sprite.Y;
             if (!StopAtTarget)
             {
                 // Do not check destination, just move the sprite
@@ -191,7 +189,7 @@ namespace SCG.TurboSprite
                 _sprite.Y = ((SpeedY > 0 && TempY > TargetY) || (SpeedY < 0 && TempY < TargetY)) ? TargetY : _sprite.Y + SpeedY;
             }
             // If sprite moved, alert listeners
-            if (SpriteMoved != null && ((int)_sprite.X != oldX || (int)_sprite.Y != oldY))
+            if (SpriteMoved != null && (_sprite.X != OldX || _sprite.Y != OldY))
             {
                 SpriteMoved(this, new SpriteEventArgs(_sprite));
             }
