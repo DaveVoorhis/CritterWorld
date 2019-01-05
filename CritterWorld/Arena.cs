@@ -53,17 +53,17 @@ namespace CritterWorld
 
         private void Collide(object sender, SpriteCollisionEventArgs collision)
         {
-            if (collision.Sprite1.Data is Critter && collision.Sprite2.Data is Critter)
+            if (collision.Sprite1 is Critter && collision.Sprite2 is Critter)
             {
-                Collide((Critter)collision.Sprite1.Data, (Critter)collision.Sprite2.Data);
+                Collide((Critter)collision.Sprite1, (Critter)collision.Sprite2);
             }
-            else if (collision.Sprite1.Data is Critter && collision.Sprite2 is Terrain)
+            else if (collision.Sprite1 is Critter && collision.Sprite2 is Terrain)
             {
-                Collide((Critter)collision.Sprite1.Data, (Terrain)collision.Sprite2);
+                Collide((Critter)collision.Sprite1, (Terrain)collision.Sprite2);
             }
-            else if (collision.Sprite1 is Terrain && collision.Sprite2.Data is Critter)
+            else if (collision.Sprite1 is Terrain && collision.Sprite2 is Critter)
             {
-                Collide((Critter)collision.Sprite2.Data, (Terrain)collision.Sprite1);
+                Collide((Critter)collision.Sprite2, (Terrain)collision.Sprite1);
             }
         }
 
@@ -107,29 +107,39 @@ namespace CritterWorld
             Level testLevel = new Level(this, (Bitmap)Image.FromFile("Images/TerrainMasks/Background06.png"));
 
             int startX = 30;
-            int startY = 30;
+            int startY = 0;
             for (int i = 0; i < critterCount; i++)
             {
                 Critter critter = null;
                 do
                 {
-                    try
-                    {
-                        critter = new Critter(spriteEngineMain, spriteEngineDebug, startX, startY, scale);
-                        critter.AssignRandomDestination();
-                    }
-                    catch (InvalidOperationException)
-                    {
-                        Console.WriteLine("Note: Critter relocated to avoid terrain.");
-                    }
                     startY += 30;
                     if (startY >= spriteSurfaceMain.Height - 30)
                     {
                         startY = 30;
                         startX += 100;
                     }
-                } while (critter == null);
+                    critter = new Critter(startX, startY, scale);
+                }
+                while (WillCollide(critter));
+                spriteEngineMain.AddSprite(critter);
             }
+
+            System.Timers.Timer critterStartupTimer = new System.Timers.Timer();
+            critterStartupTimer.Interval = 3000;
+            critterStartupTimer.AutoReset = false;
+            critterStartupTimer.Elapsed += (sender, e) =>
+            {
+                Sprite[] sprites = spriteEngineMain.Sprites.ToArray();
+                foreach (Sprite sprite in sprites)
+                {
+                    if (sprite is Critter)
+                    {
+                        ((Critter)sprite).Startup();
+                    }
+                }
+            };
+            critterStartupTimer.Start();
 
             spriteSurfaceMain.Active = true;
             spriteSurfaceMain.WraparoundEdges = true;

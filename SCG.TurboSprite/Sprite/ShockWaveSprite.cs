@@ -52,7 +52,7 @@ namespace SCG.TurboSprite
                 waves--;
             }
             Shape = new RectangleF(-50, -50, 100, 100);
-            addProcessHandler(sprite =>
+            Processors += sprite =>
             {
                 // decrease life span
                 _lifeSpan--;
@@ -60,7 +60,7 @@ namespace SCG.TurboSprite
                 {
                     Kill();
                 }
-            });
+            };
         }
 
         // Render the sprite

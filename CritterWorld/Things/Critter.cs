@@ -11,7 +11,7 @@ using System.Diagnostics;
 
 namespace CritterWorld
 {
-    class Critter
+    class Critter : PolygonSprite
     {
         public const int maxThinkTimeMilliseconds = 1000;
         public const int maxThinkTimeOverrunViolations = 5;
@@ -20,55 +20,21 @@ namespace CritterWorld
         public long thinkCount = 0;
         public long totalThinkTime = 0;
 
-        private readonly bool showDestinationMarkers = false;
+        private int moveCount = 0;
 
-        private readonly SpriteEngine _spriteEngine;
-        private readonly SpriteEngine _spriteEngineDebug;
-
-        private PolygonSprite sprite;
+        private Thread thinkThread = null;
+        private bool stopped = true;
 
         private static Random rnd = new Random(Guid.NewGuid().GetHashCode());
 
-        private PolygonSprite destinationMarker = null;
-
-        private void ClearDestinationMarker()
-        {
-            if (destinationMarker != null)
-            {
-                destinationMarker.Kill();
-            }
-        }
-
         public void ClearDestination()
         {
-            AssignDestination((int)sprite.X, (int)sprite.Y);
-        }
-
-        private void CreateDestinationMarker(int destX, int destY)
-        {
-            ClearDestinationMarker();
-
-            PointF[] markerPoly = new PointF[]
-            {
-                new PointF(-2, -2),
-                new PointF(-2, 2),
-                new PointF(2, 2),
-                new PointF(2, -2)
-            };
-            destinationMarker = new PolygonSprite(markerPoly);
-            destinationMarker.Position = new Point(destX, destY);
-            destinationMarker.Color = Color.Red;
-
-            _spriteEngineDebug.AddSprite(destinationMarker);
+            AssignDestination((int)X, (int)Y);
         }
 
         public void AssignDestination(int destX, int destY)
         {
-            if (showDestinationMarkers)
-            {
-                CreateDestinationMarker(destX, destY);
-            }
-            TargetMover mover = (TargetMover)sprite.Mover;
+            TargetMover mover = (TargetMover)Mover;
             mover.Speed = rnd.Next(10) + 1;
             mover.Target = new Point(destX, destY);
             mover.StopAtTarget = true;
@@ -76,8 +42,8 @@ namespace CritterWorld
 
         public void AssignRandomDestination()
         {
-            int destX = rnd.Next(sprite.Surface.Width);
-            int destY = rnd.Next(sprite.Surface.Height);
+            int destX = rnd.Next(Surface.Width);
+            int destY = rnd.Next(Surface.Height);
             AssignDestination(destX, destY);
         }
 
@@ -86,19 +52,7 @@ namespace CritterWorld
         // creeping through obstacles when a collision is detected.
         public void Bounceback()
         {
-            ((TargetMover)sprite.Mover).Bounceback();
-        }
-
-        public Point Position
-        {
-            get
-            {
-                return sprite.Position;
-            }
-            set
-            {
-                sprite.Position = value;
-            }
+            ((TargetMover)Mover).Bounceback();
         }
 
         public long TotalThinkTime
@@ -139,28 +93,37 @@ namespace CritterWorld
             if (rand == 1)
             {
                 Sprite shockwave = new ShockWaveSprite(5, 20, 10, Color.DarkBlue, Color.LightBlue);
-                shockwave.Position = sprite.Position;
-                shockwave.Mover = new SlaveMover(sprite);
-                _spriteEngine.AddSprite(shockwave);
+                shockwave.Position = Position;
+                shockwave.Mover = new SlaveMover(this);
+                Engine.AddSprite(shockwave);
             }
         }
 
-        private int moveCount = 0;
-
-        public Critter(SpriteEngine spriteEngine, SpriteEngine spriteEngineDebug, int startX, int startY, int scale)
+        public Critter(int startX, int startY, int scale) : base((new CritterBody()).GetBody(scale))
         {
-            _spriteEngineDebug = spriteEngineDebug;
-            _spriteEngine = spriteEngine;
+            LineWidth = 1;
+            Color = Sprite.RandomColor(127);
+            Position = new Point(startX, startY);
+            FacingAngle = 90;
 
-            CritterBody body = new CritterBody();
-            sprite = new PolygonSprite(body.GetBody(scale))
+            Processors += sprite =>
             {
-                Data = this,
-                LineWidth = 1,
-                Color = Sprite.RandomColor(127),
-                Position = new Point(startX, startY),
-                FacingAngle = 90
+                TargetMover spriteMover = (TargetMover)Mover;
+                if (spriteMover == null || (spriteMover.SpeedX == 0 && spriteMover.SpeedY == 0))
+                {
+                    return;
+                }
+                double theta = Sprite.RadToDeg((float)Math.Atan2(spriteMover.SpeedY, spriteMover.SpeedX));
+                spriteMover.TargetFacingAngle = (int)theta + 90;
             };
+        }
+
+        public void Startup()
+        {
+            if (thinkThread != null)
+            {
+                return;
+            }
 
             TargetMover spriteMover = new TargetMover();
             spriteMover.SpriteReachedTarget += (sender, spriteEvent) => AssignRandomDestination();
@@ -168,35 +131,20 @@ namespace CritterWorld
             {
                 if (moveCount-- == 0)
                 {
-                    sprite.IncrementFrame();
+                    IncrementFrame();
                     moveCount = 5 - Math.Min(5, (int)spriteMover.Speed);
                 }
             };
-            sprite.Mover = spriteMover;
+            Mover = spriteMover;
 
-            if (spriteEngine.WillCollide(sprite))
+            thinkThread = new Thread(() =>
             {
-                throw new InvalidOperationException("Attempting to add Critter that will collide with other SpriteS in the same SpriteEngine.");
-            }
-            spriteEngine.AddSprite(sprite);
-
-            sprite.addProcessHandler(sprite =>
-            {
-                if (spriteMover.SpeedX == 0 && spriteMover.SpeedY == 0)
-                {
-                    return;
-                }
-                double theta = Sprite.RadToDeg((float)Math.Atan2(spriteMover.SpeedY, spriteMover.SpeedX));
-                spriteMover.TargetFacingAngle = (int)theta + 90;
-            });
-
-            Thread processThread = new Thread(() =>
-            {
+                stopped = false;
                 Stopwatch stopwatch = new Stopwatch();
                 Random rnd = new Random(Guid.NewGuid().GetHashCode());
-                while (!sprite.Surface.IsDisposed && !sprite.Surface.Disposing && !sprite.Dead)
+                while (!Surface.IsDisposed && !Surface.Disposing && !Dead && !stopped)
                 {
-                    if (sprite.Surface.Active)
+                    if (Surface.Active)
                     {
                         try
                         {
@@ -228,10 +176,19 @@ namespace CritterWorld
                     }
                     Thread.Sleep(5);
                 }
+                thinkThread = null;
             });
-            processThread.Start();
-            sprite.Surface.Disposed += (e, evt) => processThread.Abort();
-            sprite.Died += (e, evt) => processThread.Abort();
+            thinkThread.Start();
+
+            Surface.Disposed += (e, evt) => thinkThread?.Abort();
+            Died += (e, evt) => thinkThread?.Abort();
+
+            AssignRandomDestination();
+        }
+
+        public void Shutdown()
+        {
+            stopped = true;
         }
     }
 }

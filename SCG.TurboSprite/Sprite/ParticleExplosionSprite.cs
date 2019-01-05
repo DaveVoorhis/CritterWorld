@@ -57,14 +57,14 @@ namespace SCG.TurboSprite
                 particles--;
             }
             Shape = new RectangleF(-15, -15, 30, 30);
-            addProcessHandler(sprite =>
+            Processors += sprite =>
             {
                 _lifeSpan--;
                 if (_lifeSpan <= 0)
                 {
                     Kill();
                 }
-            });
+            };
         }
 
         // Render the sprite

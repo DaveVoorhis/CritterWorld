@@ -65,7 +65,7 @@ namespace SCG.TurboSprite
             _q2 = numStars / 2;
             _q3 = numStars / 4;
 
-            addProcessHandler(sprite => {
+            Processors += sprite => {
                 for (int i = 0; i < _numStars; i++)
                 {
                     Star s = _starArray[i];
@@ -76,7 +76,7 @@ namespace SCG.TurboSprite
                         s.Z -= _numStars;
                 }
 
-            });
+            };
         }
 
         // Internal struct used to represent a single star

@@ -304,26 +304,12 @@ namespace SCG.TurboSprite
 
         public delegate void Processor(Sprite sprite);
 
-        private List<Processor> processors = new List<Processor>();
-
-        // Add additional processing handler.
-        public void addProcessHandler(Processor processor) {
-            processors.Add(processor);
-        }
-
-        // Remove additional processing handler.
-        public void removeProcessHandler(Processor processor)
-        {
-            processors.Remove(processor);
-        }
+        public event Processor Processors;
 
         // Launch any additional processing.
-        protected internal void launchProcess()
+        protected internal void LaunchProcess()
         {
-            foreach (Processor processor in processors)
-            {
-                processor.Invoke(this);
-            }
+            Processors?.Invoke(this);
         }
     }
 
