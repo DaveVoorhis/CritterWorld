@@ -15,8 +15,6 @@ namespace CritterWorld
         private Arena _arena;
         private Bitmap _terrainMask;
 
-        private Random rnd = new Random(Guid.NewGuid().GetHashCode());
-
         public Level() { }
 
         public Level(Arena arena)
@@ -61,53 +59,11 @@ namespace CritterWorld
                 return;
             }
 
-            Console.WriteLine("Loading terrain...");
             SetupTerrain();
 
-            Console.WriteLine("Loading food...");
-            for (int i = 0; i < 5; i++)
-            {
-                Food food;
-                do
-                {
-                    int x = rnd.Next(50, _arena.Surface.Width - 50);
-                    int y = rnd.Next(50, _arena.Surface.Height - 50);
-                    food = new Food(x, y);
-                }
-                while (_arena.WillCollide(food));
-                _arena.AddSprite(food);
-            }
-
-            Console.WriteLine("Loading bombs...");
-            for (int i = 0; i < 5; i++)
-            {
-                Bomb bomb;
-                do
-                {
-                    int x = rnd.Next(50, _arena.Surface.Width - 50);
-                    int y = rnd.Next(50, _arena.Surface.Height - 50);
-                    bomb = new Bomb(x, y);
-                }
-                while (_arena.WillCollide(bomb));
-                _arena.AddSprite(bomb);
-                bomb.LightFuse();
-            }
-
-            Console.WriteLine("Loading gifts...");
-            for (int i = 0; i < 5; i++)
-            {
-                Gift gift;
-                do
-                {
-                    int x = rnd.Next(50, _arena.Surface.Width - 50);
-                    int y = rnd.Next(50, _arena.Surface.Height - 50);
-                    gift = new Gift(x, y);
-                }
-                while (_arena.WillCollide(gift));
-                _arena.AddSprite(gift);
-            }
-
-            Console.WriteLine("Level loaded.");
+            _arena.AddFoods(5);
+            _arena.AddBombs(5);
+            _arena.AddGifts(5);
         }
 
         public Arena Arena

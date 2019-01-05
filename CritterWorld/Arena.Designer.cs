@@ -66,7 +66,7 @@
             this.spriteSurfaceMain.Text = "spriteSurface1";
             this.spriteSurfaceMain.ThreadPriority = System.Threading.ThreadPriority.AboveNormal;
             this.spriteSurfaceMain.UseVirtualSize = false;
-            this.spriteSurfaceMain.VirtualHeight = 872;
+            this.spriteSurfaceMain.VirtualHeight = 738;
             this.spriteSurfaceMain.VirtualSize = new System.Drawing.Size(1005, 738);
             this.spriteSurfaceMain.VirtualWidth = 0;
             this.spriteSurfaceMain.WraparoundEdges = true;

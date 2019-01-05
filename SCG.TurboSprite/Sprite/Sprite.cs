@@ -279,7 +279,7 @@ namespace SCG.TurboSprite
         public IMover Mover { get; set; }
 
         // Kill a sprite - it will be removed after next processing cycle
-        public void Kill()
+        public virtual void Kill()
         {
             Died?.Invoke(this, new SpriteEventArgs(this));
             Dead = true;

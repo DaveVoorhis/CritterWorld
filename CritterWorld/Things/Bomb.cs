@@ -38,6 +38,12 @@ namespace CritterWorld
             spark.Kill();
             spark = null;
         }
+
+        public override void Kill()
+        {
+            ExtinguishFuse();
+            base.Kill();
+        }
     }
 
 }

@@ -15,15 +15,71 @@ namespace CritterWorld
 {
     public partial class Arena : Form
     {
-        private SpriteEngine spriteEngineDebug;
+        // sprite engine for decorative, non-colliding sprites -- sparks, explosions, etc.
+        private SpriteEngine spriteEngineDecoration;
+
+        private Random rnd = new Random(Guid.NewGuid().GetHashCode());
 
         public SpriteSurface Surface
         {
             get { return spriteSurfaceMain; }
         }
 
+        public void AddGifts(int count)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                Gift gift;
+                do
+                {
+                    int x = rnd.Next(50, Surface.Width - 50);
+                    int y = rnd.Next(50, Surface.Height - 50);
+                    gift = new Gift(x, y);
+                }
+                while (WillCollide(gift));
+                AddSprite(gift);
+            }
+        }
+
+        public void AddBombs(int count)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                Bomb bomb;
+                do
+                {
+                    int x = rnd.Next(50, Surface.Width - 50);
+                    int y = rnd.Next(50, Surface.Height - 50);
+                    bomb = new Bomb(x, y);
+                }
+                while (WillCollide(bomb));
+                AddSprite(bomb);
+                bomb.LightFuse();
+            }
+        }
+
+        public void AddFoods(int count)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                Food food;
+                do
+                {
+                    int x = rnd.Next(50, Surface.Width - 50);
+                    int y = rnd.Next(50, Surface.Height - 50);
+                    food = new Food(x, y);
+                }
+                while (WillCollide(food));
+                AddSprite(food);
+            }
+        }
+
         private void Collide(Critter critter1, Critter critter2)
         {
+            if (critter1.Mover == null || critter2.Mover == null)
+            {
+                return;
+            }
             critter1.Bounceback();
             critter2.Bounceback();
 
@@ -34,36 +90,71 @@ namespace CritterWorld
             {
                 Position = new Point((critter1.Position.X + critter2.Position.X) / 2, (critter1.Position.Y + critter2.Position.Y) / 2)
             };
-            spriteEngineDebug.AddSprite(fight);
+            spriteEngineDecoration.AddSprite(fight);
         }
 
         private void Collide(Critter critter, Terrain terrain)
         {
+            if (critter.Mover == null)
+            {
+                return;
+            }
             critter.Bounceback();
             critter.AssignRandomDestination();
 
             terrain.Nudge();
 
-            Sprite bump = new ParticleExplosionSprite(10, Color.Gray, Color.LightGray, 1, 2, 5)
+            Sprite bump = new ParticleExplosionSprite(10, Color.Gray, Color.White, 1, 2, 5)
             {
                 Position = new Point((critter.Position.X + terrain.Position.X) / 2, (critter.Position.Y + terrain.Position.Y) / 2)
             };
-            spriteEngineDebug.AddSprite(bump);
+            spriteEngineDecoration.AddSprite(bump);
+        }
+
+        private void Collide(Critter critter, Bomb bomb)
+        {
+            critter.CrumpleAndDie();
+
+            Sprite explosion = new ParticleFountainSprite(250, Color.DarkGray, Color.White, 1, 3, 20)
+            {
+                Position = bomb.Position
+            };
+            spriteEngineDecoration.AddSprite(explosion);
+            System.Timers.Timer explosionTimer = new System.Timers.Timer
+            {
+                Interval = 500,
+                AutoReset = false
+            };
+            explosionTimer.Elapsed += (sender, e) => explosion.Kill();
+            explosionTimer.Start();
+            bomb.Kill();
+
+            AddBombs(1);
         }
 
         private void Collide(object sender, SpriteCollisionEventArgs collision)
         {
-            if (collision.Sprite1 is Critter && collision.Sprite2 is Critter)
+            Sprite sprite1 = collision.Sprite1;
+            Sprite sprite2 = collision.Sprite2;
+            if (sprite1 is Critter && sprite2 is Critter)
             {
-                Collide((Critter)collision.Sprite1, (Critter)collision.Sprite2);
+                Collide((Critter)sprite1, (Critter)sprite2);
             }
-            else if (collision.Sprite1 is Critter && collision.Sprite2 is Terrain)
+            else if (sprite1 is Critter && sprite2 is Terrain)
             {
-                Collide((Critter)collision.Sprite1, (Terrain)collision.Sprite2);
+                Collide((Critter)sprite1, (Terrain)sprite2);
             }
-            else if (collision.Sprite1 is Terrain && collision.Sprite2 is Critter)
+            else if (sprite1 is Terrain && sprite2 is Critter)
             {
-                Collide((Critter)collision.Sprite2, (Terrain)collision.Sprite1);
+                Collide((Critter)sprite2, (Terrain)sprite1);
+            }
+            else if (sprite1 is Critter && sprite2 is Bomb)
+            {
+                Collide((Critter)sprite1, (Bomb)sprite2);
+            }
+            else if (sprite1 is Bomb && sprite2 is Critter)
+            {
+                Collide((Critter)sprite2, (Bomb)sprite1);
             }
         }
 
@@ -95,7 +186,7 @@ namespace CritterWorld
 
             InitializeComponent();
 
-            spriteEngineDebug = new SpriteEngine(components)
+            spriteEngineDecoration = new SpriteEngine(components)
             {
                 Surface = spriteSurfaceMain,
                 DetectCollisionSelf = false,

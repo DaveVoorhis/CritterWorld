@@ -35,6 +35,10 @@ namespace CritterWorld
         public void AssignDestination(int destX, int destY)
         {
             TargetMover mover = (TargetMover)Mover;
+            if (mover == null)
+            {
+                return;
+            }
             mover.Speed = rnd.Next(10) + 1;
             mover.Target = new Point(destX, destY);
             mover.StopAtTarget = true;
@@ -52,7 +56,7 @@ namespace CritterWorld
         // creeping through obstacles when a collision is detected.
         public void Bounceback()
         {
-            ((TargetMover)Mover).Bounceback();
+            ((TargetMover)Mover)?.Bounceback();
         }
 
         public long TotalThinkTime
@@ -116,6 +120,12 @@ namespace CritterWorld
                 double theta = Sprite.RadToDeg((float)Math.Atan2(spriteMover.SpeedY, spriteMover.SpeedX));
                 spriteMover.TargetFacingAngle = (int)theta + 90;
             };
+        }
+
+        public void CrumpleAndDie()
+        {
+            Mover = null;
+            Shutdown();
         }
 
         public void Startup()

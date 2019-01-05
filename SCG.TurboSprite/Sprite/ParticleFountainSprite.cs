@@ -65,7 +65,7 @@ namespace SCG.TurboSprite
                 _particles.Add(particle);
                 particles--;
             }
-            Shape = new RectangleF(-radius, -radius, radius, radius);
+            Shape = new RectangleF(1, 1, 1, 1);
         }
 
         private void InitialiseParticle(Particle particle)

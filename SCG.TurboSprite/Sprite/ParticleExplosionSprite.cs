@@ -56,7 +56,7 @@ namespace SCG.TurboSprite
                 _particles.Add(p);
                 particles--;
             }
-            Shape = new RectangleF(-15, -15, 30, 30);
+            Shape = new RectangleF(1, 1, 1, 1);
             Processors += sprite =>
             {
                 _lifeSpan--;
