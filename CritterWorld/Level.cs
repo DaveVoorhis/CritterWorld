@@ -81,7 +81,16 @@ namespace CritterWorld
             Console.WriteLine("Loading bombs...");
             for (int i = 0; i < 5; i++)
             {
-                new Bomb(_arena);
+                Bomb bomb;
+                do
+                {
+                    int x = rnd.Next(50, _arena.Surface.Width - 50);
+                    int y = rnd.Next(50, _arena.Surface.Height - 50);
+                    bomb = new Bomb(x, y);
+                }
+                while (_arena.WillCollide(bomb));
+                _arena.AddSprite(bomb);
+                bomb.LightFuse();
             }
 
             Console.WriteLine("Loading gifts...");

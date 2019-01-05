@@ -9,27 +9,34 @@ using System.Threading.Tasks;
 
 namespace CritterWorld
 {
-    public class Bomb
+    public class Bomb : BitmapSprite
     {
-        public Bomb(Arena arena)
+        private Sprite spark;
+
+        public Bomb(int x, int y) : base((Bitmap)Image.FromFile("Images/bomb.png"))
         {
-            Random rnd = new Random(Guid.NewGuid().GetHashCode());
+            Position = new Point(x, y);
+        }
 
-            Sprite bomb = new BitmapSprite((Bitmap)Image.FromFile("Images/bomb.png"));
-            int x;
-            int y;
-            do
+        public void LightFuse()
+        {
+            if (spark != null)
             {
-                x = rnd.Next(50, arena.Surface.Width - 50);
-                y = rnd.Next(50, arena.Surface.Height - 50);
-                bomb.Position = new Point(x, y);
+                return;
             }
-            while (arena.WillCollide(bomb));
-            arena.AddSprite(bomb);
+            spark = new ParticleFountainSprite(10, Color.LightGray, Color.White, 1, 1, 3);
+            spark.Position = new Point((int)(X - WidthHalf + 1), (int)(Y - HeightHalf + 1));
+            Engine.AddSprite(spark);
+        }
 
-            Sprite spark = new ParticleFountainSprite(20, Color.LightGray, Color.White, 1, 2, 5);
-            spark.Position = new Point(x - bomb.WidthHalf + 1, y - bomb.HeightHalf + 1);
-            arena.AddSprite(spark);
+        public void ExtinguishFuse()
+        {
+            if (spark == null)
+            {
+                return;
+            }
+            spark.Kill();
+            spark = null;
         }
     }
 
