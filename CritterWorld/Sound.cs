@@ -55,14 +55,16 @@ namespace CritterWorld
 
         public static void PlayBump()
         {
+      //      AudioFileReader bump = new AudioFileReader("Sounds/Bump.wav");
+      //      playBoom.Init(bump);
+      //      playBoom.Play();
         }
 
         public static void PlayCrash()
         {
-            /*
-            IWavePlayer crash = NewPlayer("Crash");
-            crash.Play();
-            */
+            AudioFileReader crash = new AudioFileReader("Sounds/Crash.wav");
+            playBoom.Init(crash);
+            playBoom.Play();
         }
 
     }
