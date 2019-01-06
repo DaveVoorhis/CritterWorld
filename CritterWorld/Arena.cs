@@ -130,7 +130,7 @@ namespace CritterWorld
             {
                 explosion.Kill();
                 spew.Kill();
-                critter.SmokeAndStop(Color.Black, Color.Brown);
+                critter.StopAndSmoke(Color.Black, Color.Brown);
             };
             explosionTimer.Start();
             bomb.Kill();

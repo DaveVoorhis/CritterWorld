@@ -90,22 +90,7 @@ namespace CritterWorld
             }
         }
 
-        protected internal void Think(Random random)
-        {
-            // Do things here.
-            int rand = random.Next(0, 250);
-            if (rand == 1)
-            {
-                Sprite shockwave = new ShockWaveSprite(5, 20, 10, Color.DarkBlue, Color.LightBlue);
-                shockwave.Position = Position;
-                shockwave.Mover = new SlaveMover(this);
-                Engine.AddSprite(shockwave);
-            }
-            else if (rand == 2)
-            {
-                throw new FormatException("test exception");
-            }
-        }
+        bool selectedToTestCrash = false;
 
         public Critter(int startX, int startY, int scale) : base((new CritterBody()).GetBody(scale))
         {
@@ -113,6 +98,8 @@ namespace CritterWorld
             Color = Sprite.RandomColor(127);
             Position = new Point(startX, startY);
             FacingAngle = 90;
+
+            selectedToTestCrash = (rnd.Next(10) == 5);
 
             Processors += sprite =>
             {
@@ -126,7 +113,26 @@ namespace CritterWorld
             };
         }
 
-        public void SmokeAndStop(Color startColor, Color endColor)
+        protected internal void Think(Random random)
+        {
+            // Do things here.
+            int rand = random.Next(0, 2500);
+            if (rand == 25)
+            {
+                Sprite shockwave = new ShockWaveSprite(5, 20, 10, Color.DarkBlue, Color.LightBlue);
+                shockwave.Position = Position;
+                shockwave.Mover = new SlaveMover(this);
+                Engine.AddSprite(shockwave);
+            }
+            else if (rand == 26 && selectedToTestCrash)
+            {
+                throw new FormatException("test exception");
+            }
+        }
+
+        // Something has crashed, burned out or blown up. Stop thinking, moving, or doing anything except
+        // emit smoke for a while.
+        public void StopAndSmoke(Color startColor, Color endColor)
         {
             Mover = null;
             Shutdown();
@@ -207,7 +213,7 @@ namespace CritterWorld
                         catch (Exception e)
                         {
                             Console.WriteLine("Critter halted due to exception whilst thinking: " + e);
-                            SmokeAndStop(Color.Aquamarine, Color.Blue);
+                            StopAndSmoke(Color.Aquamarine, Color.Blue);
                             break;
                         }
                     }
