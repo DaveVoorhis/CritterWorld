@@ -27,6 +27,46 @@ namespace CritterWorld
 
         private static Random rnd = new Random(Guid.NewGuid().GetHashCode());
 
+        private readonly bool selectedToTestCrash = false;
+
+        public Critter(int startX, int startY, int scale) : base((new CritterBody()).GetBody(scale))
+        {
+            LineWidth = 1;
+            Color = Sprite.RandomColor(127);
+            Position = new Point(startX, startY);
+            FacingAngle = 90;
+
+            selectedToTestCrash = (rnd.Next(10) == 5);
+
+            Processors += sprite =>
+            {
+                TargetMover spriteMover = (TargetMover)Mover;
+                if (spriteMover == null || (spriteMover.SpeedX == 0 && spriteMover.SpeedY == 0))
+                {
+                    return;
+                }
+                double theta = Sprite.RadToDeg((float)Math.Atan2(spriteMover.SpeedY, spriteMover.SpeedX));
+                spriteMover.TargetFacingAngle = (int)theta + 90;
+            };
+        }
+
+        protected internal void Think(Random random)
+        {
+            // Do things here.
+            int rand = random.Next(0, 2500);
+            if (rand == 25)
+            {
+                Sprite shockwave = new ShockWaveSprite(5, 20, 10, Color.DarkBlue, Color.LightBlue);
+                shockwave.Position = Position;
+                shockwave.Mover = new SlaveMover(this);
+                Engine.AddSprite(shockwave);
+            }
+            else if (rand == 26 && selectedToTestCrash)
+            {
+                throw new FormatException("test exception");
+            }
+        }
+
         public void ClearDestination()
         {
             AssignDestination((int)X, (int)Y);
@@ -90,46 +130,6 @@ namespace CritterWorld
             }
         }
 
-        bool selectedToTestCrash = false;
-
-        public Critter(int startX, int startY, int scale) : base((new CritterBody()).GetBody(scale))
-        {
-            LineWidth = 1;
-            Color = Sprite.RandomColor(127);
-            Position = new Point(startX, startY);
-            FacingAngle = 90;
-
-            selectedToTestCrash = (rnd.Next(10) == 5);
-
-            Processors += sprite =>
-            {
-                TargetMover spriteMover = (TargetMover)Mover;
-                if (spriteMover == null || (spriteMover.SpeedX == 0 && spriteMover.SpeedY == 0))
-                {
-                    return;
-                }
-                double theta = Sprite.RadToDeg((float)Math.Atan2(spriteMover.SpeedY, spriteMover.SpeedX));
-                spriteMover.TargetFacingAngle = (int)theta + 90;
-            };
-        }
-
-        protected internal void Think(Random random)
-        {
-            // Do things here.
-            int rand = random.Next(0, 2500);
-            if (rand == 25)
-            {
-                Sprite shockwave = new ShockWaveSprite(5, 20, 10, Color.DarkBlue, Color.LightBlue);
-                shockwave.Position = Position;
-                shockwave.Mover = new SlaveMover(this);
-                Engine.AddSprite(shockwave);
-            }
-            else if (rand == 26 && selectedToTestCrash)
-            {
-                throw new FormatException("test exception");
-            }
-        }
-
         // Something has crashed, burned out or blown up. Stop thinking, moving, or doing anything except
         // emit smoke for a while.
         public void StopAndSmoke(Color startColor, Color endColor)
@@ -160,6 +160,7 @@ namespace CritterWorld
             smokeTimer.Start();
         }
 
+        // Launch this Critter.
         public void Startup()
         {
             if (thinkThread != null)
@@ -229,6 +230,7 @@ namespace CritterWorld
             AssignRandomDestination();
         }
 
+        // Shut down this Critter.
         public void Shutdown()
         {
             stopped = true;
