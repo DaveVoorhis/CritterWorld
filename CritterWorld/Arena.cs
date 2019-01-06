@@ -15,9 +15,6 @@ namespace CritterWorld
 {
     public partial class Arena : Form
     {
-        // sprite engine for decorative, non-colliding sprites -- sparks, explosions, etc.
-        private SpriteEngine spriteEngineDecoration;
-
         private Random rnd = new Random(Guid.NewGuid().GetHashCode());
 
         public SpriteSurface Surface
@@ -90,7 +87,7 @@ namespace CritterWorld
             {
                 Position = new Point((critter1.Position.X + critter2.Position.X) / 2, (critter1.Position.Y + critter2.Position.Y) / 2)
             };
-            spriteEngineDecoration.AddSprite(fight);
+            AddSprite(fight);
         }
 
         private void Collide(Critter critter, Terrain terrain)
@@ -108,23 +105,22 @@ namespace CritterWorld
             {
                 Position = new Point((critter.Position.X + terrain.Position.X) / 2, (critter.Position.Y + terrain.Position.Y) / 2)
             };
-            spriteEngineDecoration.AddSprite(bump);
+            AddSprite(bump);
         }
 
         private void Collide(Critter critter, Bomb bomb)
         {
-            critter.CrumpleAndDie();
-
             Sprite spew = new StarFieldSprite(100, 5, 5, 10)
             {
                 Position = bomb.Position
             };
-            spriteEngineDecoration.AddSprite(spew);
+            AddSprite(spew);
             Sprite explosion = new ParticleFountainSprite(250, Color.DarkGray, Color.White, 1, 3, 20)
             {
                 Position = bomb.Position
             };
-            spriteEngineDecoration.AddSprite(explosion);
+            AddSprite(explosion);
+            critter.Mover = null;
             System.Timers.Timer explosionTimer = new System.Timers.Timer
             {
                 Interval = 500,
@@ -134,30 +130,7 @@ namespace CritterWorld
             {
                 explosion.Kill();
                 spew.Kill();
-                ParticleFountainSprite smoke = new ParticleFountainSprite(20, Color.Black, Color.Brown, 1, 10, 10)
-                {
-                    Position = critter.Position
-                };
-                spriteEngineDecoration.AddSprite(smoke);
-                System.Timers.Timer smokeTimer = new System.Timers.Timer
-                {
-                    Interval = 1000,
-                    AutoReset = true
-                };
-                smokeTimer.Elapsed += (sender2, e2) =>
-                {
-                    if (smoke.EndDiameter >= 2)
-                    {
-                        smoke.EndDiameter -= 1;
-                        smoke.Radius -= 1;
-                    }
-                    else
-                    {
-                        smoke.Kill();
-                        smokeTimer.Stop();
-                    }
-                };
-                smokeTimer.Start();
+                critter.SmokeAndStop(Color.Black, Color.Brown);
             };
             explosionTimer.Start();
             bomb.Kill();
@@ -218,13 +191,6 @@ namespace CritterWorld
             const int scale = 1;
 
             InitializeComponent();
-
-            spriteEngineDecoration = new SpriteEngine(components)
-            {
-                Surface = spriteSurfaceMain,
-                DetectCollisionSelf = false,
-                DetectCollisionTag = 50
-            };
 
             spriteSurfaceMain.SpriteCollision += (sender, collisionEvent) => Collide(sender, collisionEvent);
 

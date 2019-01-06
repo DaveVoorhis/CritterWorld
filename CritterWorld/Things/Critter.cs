@@ -122,10 +122,32 @@ namespace CritterWorld
             };
         }
 
-        public void CrumpleAndDie()
+        public void SmokeAndStop(Color startColor, Color endColor)
         {
             Mover = null;
             Shutdown();
+            ParticleFountainSprite smoke = new ParticleFountainSprite(20, Color.Black, Color.Brown, 1, 10, 10);
+            smoke.Position = Position;
+            Engine.AddSprite(smoke);
+            System.Timers.Timer smokeTimer = new System.Timers.Timer
+            {
+                Interval = 1000,
+                AutoReset = true
+            };
+            smokeTimer.Elapsed += (sender2, e2) =>
+            {
+                if (smoke.EndDiameter >= 2)
+                {
+                    smoke.EndDiameter -= 1;
+                    smoke.Radius -= 1;
+                }
+                else
+                {
+                    smoke.Kill();
+                    smokeTimer.Stop();
+                }
+            };
+            smokeTimer.Start();
         }
 
         public void Startup()
@@ -180,7 +202,8 @@ namespace CritterWorld
                         }
                         catch (Exception e)
                         {
-                            Console.WriteLine("Critter thinking crashed due to " + e);
+                            Console.WriteLine("Critter halted due to exception whilst thinking: " + e);
+                            SmokeAndStop(Color.Aquamarine, Color.Blue);
                             break;
                         }
                     }
