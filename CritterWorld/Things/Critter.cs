@@ -101,6 +101,10 @@ namespace CritterWorld
                 shockwave.Mover = new SlaveMover(this);
                 Engine.AddSprite(shockwave);
             }
+            else if (rand == 2)
+            {
+                throw new FormatException("test exception");
+            }
         }
 
         public Critter(int startX, int startY, int scale) : base((new CritterBody()).GetBody(scale))
@@ -126,7 +130,7 @@ namespace CritterWorld
         {
             Mover = null;
             Shutdown();
-            ParticleFountainSprite smoke = new ParticleFountainSprite(20, Color.Black, Color.Brown, 1, 10, 10);
+            ParticleFountainSprite smoke = new ParticleFountainSprite(20, startColor, endColor, 1, 10, 10);
             smoke.Position = Position;
             Engine.AddSprite(smoke);
             System.Timers.Timer smokeTimer = new System.Timers.Timer
