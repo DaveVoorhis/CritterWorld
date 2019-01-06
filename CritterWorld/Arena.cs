@@ -115,6 +115,11 @@ namespace CritterWorld
         {
             critter.CrumpleAndDie();
 
+            Sprite spew = new StarFieldSprite(100, 5, 5, 10)
+            {
+                Position = bomb.Position
+            };
+            spriteEngineDecoration.AddSprite(spew);
             Sprite explosion = new ParticleFountainSprite(250, Color.DarkGray, Color.White, 1, 3, 20)
             {
                 Position = bomb.Position
@@ -125,7 +130,35 @@ namespace CritterWorld
                 Interval = 500,
                 AutoReset = false
             };
-            explosionTimer.Elapsed += (sender, e) => explosion.Kill();
+            explosionTimer.Elapsed += (sender, e) =>
+            {
+                explosion.Kill();
+                spew.Kill();
+                ParticleFountainSprite smoke = new ParticleFountainSprite(20, Color.Black, Color.Brown, 1, 10, 10)
+                {
+                    Position = critter.Position
+                };
+                spriteEngineDecoration.AddSprite(smoke);
+                System.Timers.Timer smokeTimer = new System.Timers.Timer
+                {
+                    Interval = 1000,
+                    AutoReset = true
+                };
+                smokeTimer.Elapsed += (sender2, e2) =>
+                {
+                    if (smoke.EndDiameter >= 2)
+                    {
+                        smoke.EndDiameter -= 1;
+                        smoke.Radius -= 1;
+                    }
+                    else
+                    {
+                        smoke.Kill();
+                        smokeTimer.Stop();
+                    }
+                };
+                smokeTimer.Start();
+            };
             explosionTimer.Start();
             bomb.Kill();
 

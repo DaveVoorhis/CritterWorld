@@ -40,11 +40,11 @@ namespace SCG.TurboSprite
 
         private static Random rnd = new Random(Guid.NewGuid().GetHashCode());
 
-        public int Radius { get; private set; }
-        public Color StartColor { get; private set; }
-        public Color EndColor { get; private set; }
-        public int StartDiameter { get; private set; }
-        public int EndDiameter { get; private set; }
+        public int Radius { get; set; }
+        public Color StartColor { get; set; }
+        public Color EndColor { get; set; }
+        public int StartDiameter { get; set; }
+        public int EndDiameter { get; set; }
 
         public static double GetDistance(double x1, double y1, double x2, double y2)
         {
@@ -75,7 +75,7 @@ namespace SCG.TurboSprite
             particle.Color = Sprite.RandomColorFromRange(StartColor, EndColor);
             particle.DirectionX = rnd.NextDouble() * 4 - 2;
             particle.DirectionY = rnd.NextDouble() * 4 - 2;
-            particle.Diameter = rnd.Next(EndDiameter - StartDiameter) + StartDiameter;
+            particle.Diameter = rnd.Next(StartDiameter, EndDiameter);
         }
 
         // Render the sprite
