@@ -213,6 +213,7 @@ namespace CritterWorld
                         }
                         catch (Exception e)
                         {
+                            Sound.PlayCrash();
                             Console.WriteLine("Critter halted due to exception whilst thinking: " + e);
                             StopAndSmoke(Color.Aquamarine, Color.Blue);
                             break;

@@ -77,6 +77,9 @@ namespace CritterWorld
             {
                 return;
             }
+
+            Sound.PlayBump();
+
             critter1.Bounceback();
             critter2.Bounceback();
 
@@ -96,6 +99,9 @@ namespace CritterWorld
             {
                 return;
             }
+
+            Sound.PlayZap();
+
             critter.Bounceback();
             critter.AssignRandomDestination();
 
@@ -110,6 +116,8 @@ namespace CritterWorld
 
         private void Collide(Critter critter, Bomb bomb)
         {
+            Sound.PlayBoom();
+
             Sprite spew = new StarFieldSprite(100, 5, 5, 10)
             {
                 Position = bomb.Position
@@ -123,7 +131,7 @@ namespace CritterWorld
             critter.Mover = null;
             System.Timers.Timer explosionTimer = new System.Timers.Timer
             {
-                Interval = 500,
+                Interval = 250,
                 AutoReset = false
             };
             explosionTimer.Elapsed += (sender, e) =>
