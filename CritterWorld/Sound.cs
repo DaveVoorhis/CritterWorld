@@ -9,6 +9,7 @@ using NAudio.FireAndForget;
 
 namespace CritterWorld
 {
+    // IntervalBlocker can be used to prevent a sound from playing too often within a given (somewhat variable) period of time.
     public class IntervalBlocker
     {
         private static Random rnd = new Random(Guid.NewGuid().GetHashCode());
@@ -71,22 +72,22 @@ namespace CritterWorld
             Play("Crash");
         }
 
-        private static IntervalBlocker bumpTimer = new IntervalBlocker(100, 5);
+        private static IntervalBlocker bumping = new IntervalBlocker(100, 5);
 
         public static void PlayBump()
         {
-            if (bumpTimer.IsBlocked())
+            if (bumping.IsBlocked())
             {
                 return;
             }
             Play("Bump");
         }
 
-        private static IntervalBlocker zapTimer = new IntervalBlocker(500, 3);
+        private static IntervalBlocker zapping = new IntervalBlocker(500, 3);
 
         public static void PlayZap()
         {
-            if (zapTimer.IsBlocked())
+            if (zapping.IsBlocked())
             {
                 return;
             }
