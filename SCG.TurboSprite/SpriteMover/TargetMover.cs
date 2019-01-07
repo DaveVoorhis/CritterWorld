@@ -125,7 +125,10 @@ namespace SCG.TurboSprite
         // creeping through obstacles when a collision is detected.
         public void Bounceback()
         {
-            _sprite.PositionF = LastPosition;
+            if (_sprite != null)
+            {
+                _sprite.PositionF = LastPosition;
+            }
         }
 
         // Calculate X/Y movement vectors based on speed and destination

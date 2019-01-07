@@ -62,7 +62,7 @@ namespace CritterWorld
             SetupTerrain();
 
             _arena.AddFoods(5);
-            _arena.AddBombs(25);
+            _arena.AddBombs(5);
             _arena.AddGifts(5);
         }
 

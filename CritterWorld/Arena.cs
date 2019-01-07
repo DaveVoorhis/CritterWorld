@@ -107,7 +107,7 @@ namespace CritterWorld
 
             terrain.Nudge();
 
-            Sprite bump = new ParticleExplosionSprite(10, Color.Gray, Color.White, 1, 2, 5)
+            Sprite bump = new ParticleExplosionSprite(10, Color.LightBlue, Color.White, 1, 2, 5)
             {
                 Position = new Point((critter.Position.X + terrain.Position.X) / 2, (critter.Position.Y + terrain.Position.Y) / 2)
             };
@@ -202,7 +202,7 @@ namespace CritterWorld
 
             spriteSurfaceMain.SpriteCollision += (sender, collisionEvent) => Collide(sender, collisionEvent);
 
-            Level testLevel = new Level(this, (Bitmap)Image.FromFile("Images/TerrainMasks/Background06.png"));
+            Level testLevel = new Level(this, (Bitmap)Image.FromFile("Images/TerrainMasks/Background05.png"));
 
             int startX = 30;
             int startY = 0;

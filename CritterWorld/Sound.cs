@@ -1,71 +1,113 @@
-﻿using NAudio.Wave;
-using NAudio.Wave.SampleProviders;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Media;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
-using System.Windows.Media;
+using NAudio.FireAndForget;
 
 namespace CritterWorld
 {
-    public class Sound
+    public class IntervalBlocker
     {
-        static AudioFileReader boom = new AudioFileReader("Sounds/Explosion.wav");
-        static AudioFileReader zap = new AudioFileReader("Sounds/Zap.wav");
-        static AudioFileReader bump = new AudioFileReader("Sounds/Bump.wav");
-        static AudioFileReader crash = new AudioFileReader("Sounds/Crash.wav");
+        private static Random rnd = new Random(Guid.NewGuid().GetHashCode());
 
-        static IWavePlayer playBoom = new WaveOut();
+        private Timer timer;
+        private int _maxTimeout;
+        private int _maxSimultaneous;
+        private int simultaneousCount;
 
-        public static void PlayBoom()
+        public IntervalBlocker(int maxTimeout, int maxSimultaneous = 1)
         {
-            AudioFileReader boom = new AudioFileReader("Sounds/Explosion.wav");
-            playBoom.Init(boom);
-            playBoom.Play();
+            _maxTimeout = maxTimeout;
+            _maxSimultaneous = maxSimultaneous;
+            simultaneousCount = 0;
         }
 
-        static bool zapPlaying = true;
-
-        public static void PlayZap()
+        public bool IsBlocked()
         {
-            /*
-            if (zapPlaying)
+            if (++simultaneousCount < _maxSimultaneous)
             {
-                return;
+                return false;
             }
-            zapPlaying = true;
-            IWavePlayer zap = NewPlayer("Zap");
-            zap.Play();
-            Timer timer = new Timer
+            if (timer != null)
             {
-                AutoReset = false,
-                Interval = 500
+                return true;
+            }
+            timer = new Timer
+            {
+                Interval = rnd.Next(_maxTimeout / 3, _maxTimeout),
+                AutoReset = false
             };
             timer.Elapsed += (e, evt) =>
             {
-                zap.Stop();
-                zapPlaying = false;
+                timer = null;
+                simultaneousCount = 0;
             };
             timer.Start();
-            */
+            return false;
         }
+    }
 
-        public static void PlayBump()
+    public class Sound
+    {
+        static AudioPlaybackEngine player = new AudioPlaybackEngine(44100, 2);
+
+        static Dictionary<string, CachedSound> sounds = new Dictionary<string, CachedSound>();
+
+        private static void Play(String soundName)
         {
-      //      AudioFileReader bump = new AudioFileReader("Sounds/Bump.wav");
-      //      playBoom.Init(bump);
-      //      playBoom.Play();
+            if (!sounds.TryGetValue(soundName, out CachedSound sound))
+            {
+                sound = new CachedSound("Sounds/" + soundName + ".wav");
+                sounds.Add(soundName, sound);
+            }
+            player.PlaySound(sound);
         }
 
         public static void PlayCrash()
         {
-            AudioFileReader crash = new AudioFileReader("Sounds/Crash.wav");
-            playBoom.Init(crash);
-            playBoom.Play();
+            Play("Crash");
         }
 
+        private static IntervalBlocker bumpTimer = new IntervalBlocker(100, 5);
+
+        public static void PlayBump()
+        {
+            if (bumpTimer.IsBlocked())
+            {
+                return;
+            }
+            Play("Bump");
+        }
+
+        private static IntervalBlocker zapTimer = new IntervalBlocker(500, 3);
+
+        public static void PlayZap()
+        {
+            if (zapTimer.IsBlocked())
+            {
+                return;
+            }
+            Play("Zap");
+       //     Play("Electric");
+        }
+
+        public static void PlayBoom()
+        {
+            Play("Explosion");
+        }
+
+        public static void PlayGulp()
+        {
+            Play("Gulp");
+        }
+
+        public static void PlayYay()
+        {
+            Play("Yay");
+        }
     }
+
 }
