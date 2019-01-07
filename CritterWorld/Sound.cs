@@ -91,7 +91,6 @@ namespace CritterWorld
                 return;
             }
             Play("Zap");
-       //     Play("Electric");
         }
 
         public static void PlayBoom()
