@@ -74,14 +74,14 @@
             this.menuStart.Name = "menuStart";
             this.menuStart.Size = new System.Drawing.Size(180, 22);
             this.menuStart.Text = "Start";
-            this.menuStart.Click += new System.EventHandler(this.menuStart_Click);
+            this.menuStart.Click += new System.EventHandler(this.MenuStart_Click);
             // 
             // menuStop
             // 
             this.menuStop.Name = "menuStop";
             this.menuStop.Size = new System.Drawing.Size(180, 22);
             this.menuStop.Text = "Stop";
-            this.menuStop.Click += new System.EventHandler(this.menuStop_Click);
+            this.menuStop.Click += new System.EventHandler(this.MenuStop_Click);
             // 
             // toolStripSeparator1
             // 
@@ -93,7 +93,7 @@
             this.menuExit.Name = "menuExit";
             this.menuExit.Size = new System.Drawing.Size(180, 22);
             this.menuExit.Text = "Exit";
-            this.menuExit.Click += new System.EventHandler(this.menuExit_Click);
+            this.menuExit.Click += new System.EventHandler(this.MenuExit_Click);
             // 
             // labelFPS
             // 

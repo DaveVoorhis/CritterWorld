@@ -23,6 +23,21 @@ namespace CritterWorld
             return new string('.', tickCount);
         }
 
+        private void MenuStart_Click(object sender, EventArgs e)
+        {
+            new Level(arena, (Bitmap)Image.FromFile("Images/TerrainMasks/Background05.png"));
+        }
+
+        private void MenuStop_Click(object sender, EventArgs e)
+        {
+            arena.Clear();
+        }
+
+        private void MenuExit_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
         public Critterworld()
         {
             InitializeComponent();
@@ -31,21 +46,6 @@ namespace CritterWorld
             fpsDisplayTimer.Interval = 250;
             fpsDisplayTimer.Elapsed += (sender, e) => labelFPS.Invoke(new Action(() => labelFPS.Text = arena.ActualFPS + " fps" + TickShow()));
             fpsDisplayTimer.Start();
-        }
-
-        private void menuStart_Click(object sender, EventArgs e)
-        {
-            new Level(arena, (Bitmap)Image.FromFile("Images/TerrainMasks/Background05.png"));
-        }
-
-        private void menuStop_Click(object sender, EventArgs e)
-        {
-            arena.Clear();
-        }
-
-        private void menuExit_Click(object sender, EventArgs e)
-        {
-            Application.Exit();
         }
     }
 }
