@@ -146,6 +146,20 @@ namespace CritterWorld
             AddBombs(1);
         }
 
+        private void Collide(Critter critter, Food food)
+        {
+            Sound.PlayGulp();
+            food.Kill();
+            AddFoods(1);
+        }
+
+        private void Collide(Critter critter, Gift gift)
+        {
+            Sound.PlayYay();
+            gift.Kill();
+            AddGifts(1);
+        }
+
         private void Collide(object sender, SpriteCollisionEventArgs collision)
         {
             Sprite sprite1 = collision.Sprite1;
@@ -169,6 +183,22 @@ namespace CritterWorld
             else if (sprite1 is Bomb && sprite2 is Critter)
             {
                 Collide((Critter)sprite2, (Bomb)sprite1);
+            }
+            else if (sprite1 is Critter && sprite2 is Food)
+            {
+                Collide((Critter)sprite1, (Food)sprite2);
+            }
+            else if (sprite1 is Food && sprite2 is Critter)
+            {
+                Collide((Critter)sprite2, (Food)sprite1);
+            }
+            else if (sprite1 is Critter && sprite2 is Gift)
+            {
+                Collide((Critter)sprite1, (Gift)sprite2);
+            }
+            else if (sprite1 is Gift && sprite2 is Critter)
+            {
+                Collide((Critter)sprite2, (Gift)sprite1);
             }
         }
 
