@@ -118,7 +118,6 @@ namespace CritterWorld
         public void Clear()
         {
             // TODO - fix this.
-            spriteSurfaceMain.Active = false;
             spriteEngineMain.Clear();
         }
 
