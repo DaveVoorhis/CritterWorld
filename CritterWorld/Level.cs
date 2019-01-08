@@ -12,6 +12,15 @@ namespace CritterWorld
     {
         private const int terrainDensity = 80;
 
+        const int critterCount = 25;
+        const int scale = 1;
+
+        const int foodCount = 5;
+        const int giftCount = 5;
+        const int bombCount = 5;
+
+        const string terrainMaskFilename = "Images/TerrainMasks/Background05.png";
+
         private Arena _arena;
         private Bitmap _terrainMask;
 
@@ -45,8 +54,7 @@ namespace CritterWorld
                         int arenaX2 = (x + 1) * _arena.Surface.Width / mapWidth;
                         int arenaY1 = y * _arena.Surface.Height / mapHeight;
                         int arenaY2 = (y + 1) * _arena.Surface.Height / mapHeight;
-                        Terrain terrainSprite = new Terrain(arenaX1, arenaX2, arenaY1, arenaY2);
-                        _arena.AddSprite(terrainSprite);
+                        _arena.AddTerrain(arenaX1, arenaX2, arenaY1, arenaY2);
                     }
                 }
             }
@@ -61,9 +69,17 @@ namespace CritterWorld
 
             SetupTerrain();
 
-            _arena.AddFoods(5);
-            _arena.AddBombs(5);
-            _arena.AddGifts(5);
+            _arena.AddFoods(foodCount);
+            _arena.AddBombs(bombCount);
+            _arena.AddGifts(giftCount);
+
+            for (int i = 0; i < critterCount; i++)
+            {
+                Critter critter = new Critter(scale);
+                _arena.AddCritter(critter);
+            }
+
+            _arena.Launch();
         }
 
         public Arena Arena

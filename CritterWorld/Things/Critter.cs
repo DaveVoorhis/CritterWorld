@@ -11,7 +11,7 @@ using System.Diagnostics;
 
 namespace CritterWorld
 {
-    class Critter : PolygonSprite
+    public class Critter : PolygonSprite
     {
         public const int maxThinkTimeMilliseconds = 1000;
         public const int maxThinkTimeOverrunViolations = 5;
@@ -29,11 +29,10 @@ namespace CritterWorld
 
         private readonly bool selectedToTestCrash = false;
 
-        public Critter(int startX, int startY, int scale) : base((new CritterBody()).GetBody(scale))
+        public Critter(int scale) : base((new CritterBody()).GetBody(scale))
         {
             LineWidth = 1;
             Color = Sprite.RandomColor(127);
-            Position = new Point(startX, startY);
             FacingAngle = 90;
 
             selectedToTestCrash = (rnd.Next(10) == 5);

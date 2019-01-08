@@ -2,12 +2,12 @@
 {
     partial class Arena
     {
-        /// <summary>
+        /// <summary> 
         /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
+        /// <summary> 
         /// Clean up any resources being used.
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
@@ -20,40 +20,24 @@
             base.Dispose(disposing);
         }
 
-        #region Windows Form Designer generated code
+        #region Component Designer generated code
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
+        /// <summary> 
+        /// Required method for Designer support - do not modify 
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.labelFPS = new System.Windows.Forms.Label();
             this.spriteSurfaceMain = new SCG.TurboSprite.SpriteSurface(this.components);
             this.spriteEngineMain = new SCG.TurboSprite.SpriteEngine(this.components);
             this.SuspendLayout();
-            // 
-            // labelFPS
-            // 
-            this.labelFPS.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelFPS.AutoSize = true;
-            this.labelFPS.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.labelFPS.ForeColor = System.Drawing.SystemColors.Window;
-            this.labelFPS.Location = new System.Drawing.Point(938, 725);
-            this.labelFPS.Name = "labelFPS";
-            this.labelFPS.Size = new System.Drawing.Size(67, 13);
-            this.labelFPS.TabIndex = 1;
-            this.labelFPS.Text = "FPSFPSFPS";
-            this.labelFPS.TextAlign = System.Drawing.ContentAlignment.BottomRight;
             // 
             // spriteSurfaceMain
             // 
             this.spriteSurfaceMain.Active = false;
             this.spriteSurfaceMain.AutoBlank = true;
-            this.spriteSurfaceMain.AutoBlankColor = System.Drawing.Color.Black;
-            this.spriteSurfaceMain.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.spriteSurfaceMain.CausesValidation = false;
+            this.spriteSurfaceMain.AutoBlankColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.spriteSurfaceMain.DesiredFPS = 30;
             this.spriteSurfaceMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.spriteSurfaceMain.Location = new System.Drawing.Point(0, 0);
@@ -61,13 +45,12 @@
             this.spriteSurfaceMain.Name = "spriteSurfaceMain";
             this.spriteSurfaceMain.OffsetX = 0;
             this.spriteSurfaceMain.OffsetY = 0;
-            this.spriteSurfaceMain.Size = new System.Drawing.Size(1005, 738);
+            this.spriteSurfaceMain.Size = new System.Drawing.Size(896, 629);
             this.spriteSurfaceMain.TabIndex = 0;
-            this.spriteSurfaceMain.Text = "spriteSurface1";
             this.spriteSurfaceMain.ThreadPriority = System.Threading.ThreadPriority.AboveNormal;
             this.spriteSurfaceMain.UseVirtualSize = false;
-            this.spriteSurfaceMain.VirtualHeight = 738;
-            this.spriteSurfaceMain.VirtualSize = new System.Drawing.Size(1005, 738);
+            this.spriteSurfaceMain.VirtualHeight = 629;
+            this.spriteSurfaceMain.VirtualSize = new System.Drawing.Size(896, 629);
             this.spriteSurfaceMain.VirtualWidth = 0;
             this.spriteSurfaceMain.WraparoundEdges = true;
             // 
@@ -82,22 +65,15 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1005, 738);
-            this.Controls.Add(this.labelFPS);
             this.Controls.Add(this.spriteSurfaceMain);
-            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Arena";
-            this.Text = "CritterWorld";
+            this.Size = new System.Drawing.Size(896, 629);
             this.ResumeLayout(false);
-            this.PerformLayout();
-
         }
 
         #endregion
 
         private SCG.TurboSprite.SpriteSurface spriteSurfaceMain;
         private SCG.TurboSprite.SpriteEngine spriteEngineMain;
-        private System.Windows.Forms.Label labelFPS;
     }
 }
-

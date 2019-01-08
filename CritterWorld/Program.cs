@@ -16,7 +16,7 @@ namespace CritterWorld
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Arena());
+            Application.Run(new Critterworld());
         }
     }
 }

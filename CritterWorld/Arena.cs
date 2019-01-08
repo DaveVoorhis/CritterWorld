@@ -1,25 +1,47 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using SCG.TurboSprite;
-using System.Threading;
-using Timer = System.Windows.Forms.Timer;
 
 namespace CritterWorld
 {
-    public partial class Arena : Form
+    public partial class Arena : UserControl
     {
         private Random rnd = new Random(Guid.NewGuid().GetHashCode());
 
+        private int critterStartX = 30;
+        private int critterStartY = 0;
+
+        private bool WillCollide(Sprite sprite)
+        {
+            return spriteEngineMain.WillCollide(sprite);
+        }
+
+        private void AddSprite(Sprite sprite)
+        {
+            spriteEngineMain.AddSprite(sprite);
+        }
+
         public SpriteSurface Surface
         {
-            get { return spriteSurfaceMain; }
+            get
+            {
+                return spriteSurfaceMain;
+            }
+        }
+
+        public int ActualFPS
+        {
+            get
+            {
+                return spriteSurfaceMain.ActualFPS;
+            }
         }
 
         public void AddGifts(int count)
@@ -55,6 +77,12 @@ namespace CritterWorld
             }
         }
 
+        public void AddTerrain(int arenaX1, int arenaX2, int arenaY1, int arenaY2)
+        {
+            Terrain terrainSprite = new Terrain(arenaX1, arenaX2, arenaY1, arenaY2);
+            AddSprite(terrainSprite);
+        }
+
         public void AddFoods(int count)
         {
             for (int i = 0; i < count; i++)
@@ -69,6 +97,49 @@ namespace CritterWorld
                 while (WillCollide(food));
                 AddSprite(food);
             }
+        }
+
+        public void AddCritter(Critter critter)
+        {
+            do
+            {
+                critterStartY += 30;
+                if (critterStartY >= spriteSurfaceMain.Height - 30)
+                {
+                    critterStartY = 30;
+                    critterStartX += 100;
+                }
+                critter.Position = new Point(critterStartX, critterStartY);
+            }
+            while (WillCollide(critter));
+            spriteEngineMain.AddSprite(critter);
+        }
+
+        public void Clear()
+        {
+            spriteSurfaceMain.Active = false;
+            spriteEngineMain.Clear();
+        }
+
+        public void Launch()
+        {
+            spriteSurfaceMain.Active = true;
+
+            System.Timers.Timer critterStartupTimer = new System.Timers.Timer();
+            critterStartupTimer.Interval = 3000;
+            critterStartupTimer.AutoReset = false;
+            critterStartupTimer.Elapsed += (sender, e) =>
+            {
+                Sprite[] sprites = spriteEngineMain.Sprites.ToArray();
+                foreach (Sprite sprite in sprites)
+                {
+                    if (sprite is Critter)
+                    {
+                        ((Critter)sprite).Startup();
+                    }
+                }
+            };
+            critterStartupTimer.Start();
         }
 
         private void Collide(Critter critter1, Critter critter2)
@@ -202,80 +273,14 @@ namespace CritterWorld
             }
         }
 
-        int tickCount = 0;
-
-        private String TickShow()
-        {
-            if (tickCount++ > 5)
-            {
-                tickCount = 0;
-            }
-            return new string('.', tickCount);
-        }
-
-        public bool WillCollide(Sprite sprite)
-        {
-            return spriteEngineMain.WillCollide(sprite);
-        }
-
-        public void AddSprite(Sprite sprite)
-        {
-            spriteEngineMain.AddSprite(sprite);
-        }
-
         public Arena()
         {
-            const int critterCount = 25;
-            const int scale = 1;
-
             InitializeComponent();
 
             spriteSurfaceMain.SpriteCollision += (sender, collisionEvent) => Collide(sender, collisionEvent);
 
-            Level testLevel = new Level(this, (Bitmap)Image.FromFile("Images/TerrainMasks/Background05.png"));
-
-            int startX = 30;
-            int startY = 0;
-            for (int i = 0; i < critterCount; i++)
-            {
-                Critter critter = null;
-                do
-                {
-                    startY += 30;
-                    if (startY >= spriteSurfaceMain.Height - 30)
-                    {
-                        startY = 30;
-                        startX += 100;
-                    }
-                    critter = new Critter(startX, startY, scale);
-                }
-                while (WillCollide(critter));
-                spriteEngineMain.AddSprite(critter);
-            }
-
-            System.Timers.Timer critterStartupTimer = new System.Timers.Timer();
-            critterStartupTimer.Interval = 3000;
-            critterStartupTimer.AutoReset = false;
-            critterStartupTimer.Elapsed += (sender, e) =>
-            {
-                Sprite[] sprites = spriteEngineMain.Sprites.ToArray();
-                foreach (Sprite sprite in sprites)
-                {
-                    if (sprite is Critter)
-                    {
-                        ((Critter)sprite).Startup();
-                    }
-                }
-            };
-            critterStartupTimer.Start();
-
-            spriteSurfaceMain.Active = true;
             spriteSurfaceMain.WraparoundEdges = true;
-
-            System.Timers.Timer fpsDisplayTimer = new System.Timers.Timer();
-            fpsDisplayTimer.Interval = 250;
-            fpsDisplayTimer.Elapsed += (sender, e) => labelFPS.Invoke(new Action(() => labelFPS.Text = spriteSurfaceMain.ActualFPS + " fps" + TickShow()));
-            fpsDisplayTimer.Start();
         }
     }
 }
+
