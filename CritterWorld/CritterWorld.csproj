@@ -145,6 +145,12 @@
     <Content Include="Images\WinnerCritter.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Sounds\Arc.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sounds\Arc2.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Sounds\Boom.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

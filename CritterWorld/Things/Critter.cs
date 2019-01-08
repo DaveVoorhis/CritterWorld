@@ -56,6 +56,7 @@ namespace CritterWorld
             int rand = random.Next(0, 2500);
             if (rand == 25)
             {
+                Sound.PlayArc();
                 Sprite shockwave = new ShockWaveSprite(5, 20, 10, Color.DarkBlue, Color.LightBlue);
                 shockwave.Position = Position;
                 shockwave.Mover = new SlaveMover(this);

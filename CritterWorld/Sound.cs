@@ -59,10 +59,14 @@ namespace CritterWorld
 
         private static void Play(String soundName)
         {
-            if (!sounds.TryGetValue(soundName, out CachedSound sound))
+            CachedSound sound;
+            lock (player)
             {
-                sound = new CachedSound("Sounds/" + soundName + ".wav");
-                sounds.Add(soundName, sound);
+                if (!sounds.TryGetValue(soundName, out sound))
+                {
+                    sound = new CachedSound("Sounds/" + soundName + ".wav");
+                    sounds.Add(soundName, sound);
+                }
             }
             player.PlaySound(sound);
         }
@@ -91,7 +95,7 @@ namespace CritterWorld
             {
                 return;
             }
-            Play("Zap");
+            Play("Arc2");
         }
 
         public static void PlayBoom()
@@ -107,6 +111,11 @@ namespace CritterWorld
         public static void PlayYay()
         {
             Play("Yay");
+        }
+
+        public static void PlayArc()
+        {
+            Play("Zap");
         }
     }
 
