@@ -60,7 +60,7 @@ namespace CritterWorld
         private static void Play(String soundName)
         {
             CachedSound sound;
-            lock (player)
+            lock (sounds)
             {
                 if (!sounds.TryGetValue(soundName, out sound))
                 {

@@ -138,7 +138,7 @@ namespace CritterWorld
             Shutdown();
             ParticleFountainSprite smoke = new ParticleFountainSprite(20, startColor, endColor, 1, 10, 10);
             smoke.Position = Position;
-            Engine?.AddSprite(smoke);
+            Engine.AddSprite(smoke);
             System.Timers.Timer smokeTimer = new System.Timers.Timer
             {
                 Interval = 1000,
@@ -235,6 +235,15 @@ namespace CritterWorld
         public void Shutdown()
         {
             stopped = true;
+        }
+
+        // True if this critter is stopped or dead
+        public bool Stopped
+        {
+            get
+            {
+                return Dead || stopped;
+            }
         }
 
         public override void Kill()

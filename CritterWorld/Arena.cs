@@ -124,13 +124,6 @@ namespace CritterWorld
             critterStartY = 0;
         }
 
-        public void Clear()
-        {
-            Shutdown();
-            spriteEngineMain.Clear();
-            ResetLaunchPosition();
-        }
-
         public void Launch()
         {
             spriteSurfaceMain.Active = true;
@@ -161,6 +154,25 @@ namespace CritterWorld
                 {
                     ((Critter)sprite).Shutdown();
                 }
+            }
+            spriteEngineMain.Clear();
+            ResetLaunchPosition();
+        }
+
+        public int CountOfActiveCritters
+        {
+            get
+            {
+                int count = 0;
+                Sprite[] sprites = spriteEngineMain.Sprites.ToArray();
+                foreach (Sprite sprite in sprites)
+                {
+                    if (sprite is Critter && !sprite.Dead && !((Critter)sprite).Stopped)
+                    {
+                        count++;
+                    }
+                }
+                return count;
             }
         }
 

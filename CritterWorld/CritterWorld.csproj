@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Competition.cs" />
     <Compile Include="Critterworld.cs">
       <SubType>Form</SubType>
     </Compile>
