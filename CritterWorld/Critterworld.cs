@@ -44,7 +44,7 @@ namespace CritterWorld
 
             System.Timers.Timer fpsDisplayTimer = new System.Timers.Timer();
             fpsDisplayTimer.Interval = 250;
-            fpsDisplayTimer.Elapsed += (sender, e) => labelFPS.Invoke(new Action(() => labelFPS.Text = arena.ActualFPS + " fps" + TickShow()));
+            fpsDisplayTimer.Elapsed += (sender, e) => this.Invoke(new Action(() => labelFPS.Text = arena.ActualFPS + " fps" + TickShow()));
             fpsDisplayTimer.Start();
         }
     }

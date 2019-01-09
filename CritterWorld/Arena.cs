@@ -15,8 +15,11 @@ namespace CritterWorld
     {
         private Random rnd = new Random(Guid.NewGuid().GetHashCode());
 
-        private int critterStartX = 30;
-        private int critterStartY = 0;
+        private int critterStartX;
+        private int critterStartY;
+
+        private const int launchMarginX = 50;
+        private const int launchMarginY = 50;
 
         private bool WillCollide(Sprite sprite)
         {
@@ -51,8 +54,8 @@ namespace CritterWorld
                 Gift gift;
                 do
                 {
-                    int x = rnd.Next(50, Surface.Width - 50);
-                    int y = rnd.Next(50, Surface.Height - 50);
+                    int x = rnd.Next(launchMarginX, Surface.Width - launchMarginX);
+                    int y = rnd.Next(launchMarginY, Surface.Height - launchMarginY);
                     gift = new Gift(x, y);
                 }
                 while (WillCollide(gift));
@@ -67,8 +70,8 @@ namespace CritterWorld
                 Bomb bomb;
                 do
                 {
-                    int x = rnd.Next(50, Surface.Width - 50);
-                    int y = rnd.Next(50, Surface.Height - 50);
+                    int x = rnd.Next(launchMarginX, Surface.Width - launchMarginX);
+                    int y = rnd.Next(launchMarginY, Surface.Height - launchMarginY);
                     bomb = new Bomb(x, y);
                 }
                 while (WillCollide(bomb));
@@ -90,8 +93,8 @@ namespace CritterWorld
                 Food food;
                 do
                 {
-                    int x = rnd.Next(50, Surface.Width - 50);
-                    int y = rnd.Next(50, Surface.Height - 50);
+                    int x = rnd.Next(launchMarginX, Surface.Width - launchMarginX);
+                    int y = rnd.Next(launchMarginY, Surface.Height - launchMarginY);
                     food = new Food(x, y);
                 }
                 while (WillCollide(food));
@@ -115,10 +118,17 @@ namespace CritterWorld
             spriteEngineMain.AddSprite(critter);
         }
 
+        public void ResetLaunchPosition()
+        {
+            critterStartX = 30;
+            critterStartY = 0;
+        }
+
         public void Clear()
         {
-            // TODO - fix this.
+            Shutdown();
             spriteEngineMain.Clear();
+            ResetLaunchPosition();
         }
 
         public void Launch()
@@ -126,7 +136,7 @@ namespace CritterWorld
             spriteSurfaceMain.Active = true;
 
             System.Timers.Timer critterStartupTimer = new System.Timers.Timer();
-            critterStartupTimer.Interval = 3000;
+            critterStartupTimer.Interval = 2000;
             critterStartupTimer.AutoReset = false;
             critterStartupTimer.Elapsed += (sender, e) =>
             {
@@ -140,6 +150,18 @@ namespace CritterWorld
                 }
             };
             critterStartupTimer.Start();
+        }
+
+        public void Shutdown()
+        {
+            Sprite[] sprites = spriteEngineMain.Sprites.ToArray();
+            foreach (Sprite sprite in sprites)
+            {
+                if (sprite is Critter)
+                {
+                    ((Critter)sprite).Shutdown();
+                }
+            }
         }
 
         private void Collide(Critter critter1, Critter critter2)
@@ -275,6 +297,8 @@ namespace CritterWorld
 
         public Arena()
         {
+            ResetLaunchPosition();
+
             InitializeComponent();
 
             spriteSurfaceMain.SpriteCollision += (sender, collisionEvent) => Collide(sender, collisionEvent);

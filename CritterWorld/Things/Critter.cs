@@ -236,5 +236,11 @@ namespace CritterWorld
         {
             stopped = true;
         }
+
+        public override void Kill()
+        {
+            Shutdown();
+            base.Kill();
+        }
     }
 }

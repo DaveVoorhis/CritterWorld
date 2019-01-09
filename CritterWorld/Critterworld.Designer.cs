@@ -35,16 +35,20 @@
             this.menuStop = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.menuExit = new System.Windows.Forms.ToolStripMenuItem();
-            this.labelFPS = new System.Windows.Forms.Label();
+            this.labelFPS = new System.Windows.Forms.ToolStripStatusLabel();
             this.arena = new CritterWorld.Arena();
+            this.labelFPS = new System.Windows.Forms.ToolStripStatusLabel();
+            this.statusStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // statusStrip
             // 
-            this.statusStrip.Location = new System.Drawing.Point(0, 573);
+            this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.labelFPS});
+            this.statusStrip.Location = new System.Drawing.Point(0, 752);
             this.statusStrip.Name = "statusStrip";
-            this.statusStrip.Size = new System.Drawing.Size(963, 22);
+            this.statusStrip.Size = new System.Drawing.Size(1119, 22);
             this.statusStrip.TabIndex = 0;
             this.statusStrip.Text = "statusStrip";
             // 
@@ -54,7 +58,7 @@
             this.fileToolStripMenuItem});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
-            this.menuStrip.Size = new System.Drawing.Size(963, 24);
+            this.menuStrip.Size = new System.Drawing.Size(1119, 24);
             this.menuStrip.TabIndex = 1;
             this.menuStrip.Text = "menuStrip1";
             // 
@@ -72,36 +76,33 @@
             // menuStart
             // 
             this.menuStart.Name = "menuStart";
-            this.menuStart.Size = new System.Drawing.Size(180, 22);
+            this.menuStart.Size = new System.Drawing.Size(98, 22);
             this.menuStart.Text = "Start";
             this.menuStart.Click += new System.EventHandler(this.MenuStart_Click);
             // 
             // menuStop
             // 
             this.menuStop.Name = "menuStop";
-            this.menuStop.Size = new System.Drawing.Size(180, 22);
+            this.menuStop.Size = new System.Drawing.Size(98, 22);
             this.menuStop.Text = "Stop";
             this.menuStop.Click += new System.EventHandler(this.MenuStop_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(95, 6);
             // 
             // menuExit
             // 
             this.menuExit.Name = "menuExit";
-            this.menuExit.Size = new System.Drawing.Size(180, 22);
+            this.menuExit.Size = new System.Drawing.Size(98, 22);
             this.menuExit.Text = "Exit";
             this.menuExit.Click += new System.EventHandler(this.MenuExit_Click);
             // 
             // labelFPS
             // 
             this.labelFPS.AutoSize = true;
-            this.labelFPS.Location = new System.Drawing.Point(12, 582);
             this.labelFPS.Name = "labelFPS";
-            this.labelFPS.Size = new System.Drawing.Size(67, 13);
-            this.labelFPS.TabIndex = 2;
             this.labelFPS.Text = "FPSFPSFPS";
             // 
             // arena
@@ -109,21 +110,28 @@
             this.arena.Dock = System.Windows.Forms.DockStyle.Fill;
             this.arena.Location = new System.Drawing.Point(0, 24);
             this.arena.Name = "arena";
-            this.arena.Size = new System.Drawing.Size(963, 549);
+            this.arena.Size = new System.Drawing.Size(1119, 728);
             this.arena.TabIndex = 3;
+            // 
+            // toolStripStatusLabel1
+            // 
+            this.labelFPS.Name = "toolStripStatusLabel1";
+            this.labelFPS.Size = new System.Drawing.Size(118, 17);
+            this.labelFPS.Text = "toolStripStatusLabel1";
             // 
             // Critterworld
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(963, 595);
+            this.ClientSize = new System.Drawing.Size(1119, 774);
             this.Controls.Add(this.arena);
-            this.Controls.Add(this.labelFPS);
             this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.menuStrip);
             this.MainMenuStrip = this.menuStrip;
             this.Name = "Critterworld";
             this.Text = "Critterworld II";
+            this.statusStrip.ResumeLayout(false);
+            this.statusStrip.PerformLayout();
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
             this.ResumeLayout(false);
@@ -140,7 +148,7 @@
         private System.Windows.Forms.ToolStripMenuItem menuStop;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem menuExit;
-        private System.Windows.Forms.Label labelFPS;
         private Arena arena;
+        private System.Windows.Forms.ToolStripStatusLabel labelFPS;
     }
 }
