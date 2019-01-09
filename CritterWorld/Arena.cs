@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using SCG.TurboSprite;
+using System.Threading;
 
 namespace CritterWorld
 {
@@ -147,6 +148,7 @@ namespace CritterWorld
 
         public void Shutdown()
         {
+            spriteSurfaceMain.Active = false;
             Sprite[] sprites = spriteEngineMain.Sprites.ToArray();
             foreach (Sprite sprite in sprites)
             {
@@ -156,6 +158,10 @@ namespace CritterWorld
                 }
             }
             spriteEngineMain.Clear();
+            Thread.Sleep(500);
+            spriteSurfaceMain.Active = true;
+            Thread.Sleep(500);
+            spriteSurfaceMain.Active = false;
             ResetLaunchPosition();
         }
 
