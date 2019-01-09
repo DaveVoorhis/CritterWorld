@@ -53,6 +53,7 @@
     <Compile Include="Critterworld.Designer.cs">
       <DependentUpon>Critterworld.cs</DependentUpon>
     </Compile>
+    <Compile Include="FontPolygon.cs" />
     <Compile Include="Sound.cs" />
     <Compile Include="Things\Critter.cs" />
     <Compile Include="Things\CritterBody.cs" />
@@ -110,82 +111,82 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Images\ballcache.png">
+    <Content Include="Resources\Images\ballcache.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\bomb.png">
+    <Content Include="Resources\Images\bomb.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\gift.png">
+    <Content Include="Resources\Images\gift.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\Goal.png">
+    <Content Include="Resources\Images\Goal.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\Kiwi-Fruit.png">
+    <Content Include="Resources\Images\Kiwi-Fruit.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\poop.png">
+    <Content Include="Resources\Images\poop.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\tennisball.png">
+    <Content Include="Resources\Images\tennisball.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\TerrainMasks\Background00.png">
+    <Content Include="Resources\TerrainMasks\Background00.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\TerrainMasks\Background01.png">
+    <Content Include="Resources\TerrainMasks\Background01.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\TerrainMasks\Background02.png">
+    <Content Include="Resources\TerrainMasks\Background02.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\TerrainMasks\Background03.png">
+    <Content Include="Resources\TerrainMasks\Background03.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\TerrainMasks\Background04.png">
+    <Content Include="Resources\TerrainMasks\Background04.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\TerrainMasks\Background05.png">
+    <Content Include="Resources\TerrainMasks\Background05.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\TerrainMasks\Background06.png">
+    <Content Include="Resources\TerrainMasks\Background06.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\WinnerCritter.png">
+    <Content Include="Resources\Images\WinnerCritter.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Sounds\Arc.wav">
+    <Content Include="Resources\Sounds\Arc.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Sounds\Arc2.wav">
+    <Content Include="Resources\Sounds\Arc2.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Sounds\Boom.wav">
+    <Content Include="Resources\Sounds\Boom.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Sounds\Bump.wav">
+    <Content Include="Resources\Sounds\Bump.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Sounds\Crash.wav">
+    <Content Include="Resources\Sounds\Crash.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Sounds\Electric.wav">
+    <Content Include="Resources\Sounds\Electric.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Sounds\Explosion.wav">
+    <Content Include="Resources\Sounds\Explosion.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Sounds\Gulp.wav">
+    <Content Include="Resources\Sounds\Gulp.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Sounds\Yay.wav">
+    <Content Include="Resources\Sounds\Yay.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Sounds\Zap.wav">
+    <Content Include="Resources\Sounds\Zap.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Sounds\Zap2.wav">
+    <Content Include="Resources\Sounds\Zap2.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

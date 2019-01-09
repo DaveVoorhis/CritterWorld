@@ -64,7 +64,7 @@ namespace CritterWorld
             {
                 if (!sounds.TryGetValue(soundName, out sound))
                 {
-                    sound = new CachedSound("Sounds/" + soundName + ".wav");
+                    sound = new CachedSound("Resources/Sounds/" + soundName + ".wav");
                     sounds.Add(soundName, sound);
                 }
             }

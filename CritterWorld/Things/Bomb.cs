@@ -13,7 +13,7 @@ namespace CritterWorld
     {
         private Sprite spark;
 
-        public Bomb(int x, int y) : base((Bitmap)Image.FromFile("Images/bomb.png"))
+        public Bomb(int x, int y) : base((Bitmap)Image.FromFile("Resources/Images/bomb.png"))
         {
             Position = new Point(x, y);
         }

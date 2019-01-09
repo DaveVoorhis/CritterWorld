@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SCG.TurboSprite;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -27,6 +28,7 @@ namespace CritterWorld
 
         private void Shutdown()
         {
+            arena.Shutdown();
             if (level != null)
             {
                 level.Shutdown();
@@ -42,7 +44,7 @@ namespace CritterWorld
         private void MenuStart_Click(object sender, EventArgs e)
         {
             Shutdown();
-            level = new Level(arena, (Bitmap)Image.FromFile("Images/TerrainMasks/Background05.png"));
+            level = new Level(arena, (Bitmap)Image.FromFile("Resources/TerrainMasks/Background05.png"));
             level.Launch();
         }
 
@@ -50,13 +52,13 @@ namespace CritterWorld
         {
             Shutdown();
             competition = new Competition(arena);
-            competition.Add(new Level((Bitmap)Image.FromFile("Images/TerrainMasks/Background00.png")));
-            competition.Add(new Level((Bitmap)Image.FromFile("Images/TerrainMasks/Background01.png")));
-            competition.Add(new Level((Bitmap)Image.FromFile("Images/TerrainMasks/Background02.png")));
-            competition.Add(new Level((Bitmap)Image.FromFile("Images/TerrainMasks/Background03.png")));
-            competition.Add(new Level((Bitmap)Image.FromFile("Images/TerrainMasks/Background04.png")));
-            competition.Add(new Level((Bitmap)Image.FromFile("Images/TerrainMasks/Background05.png")));
-            competition.Add(new Level((Bitmap)Image.FromFile("Images/TerrainMasks/Background06.png")));
+            competition.Add(new Level((Bitmap)Image.FromFile("Resources/TerrainMasks/Background00.png")));
+            competition.Add(new Level((Bitmap)Image.FromFile("Resources/TerrainMasks/Background01.png")));
+            competition.Add(new Level((Bitmap)Image.FromFile("Resources/TerrainMasks/Background02.png")));
+            competition.Add(new Level((Bitmap)Image.FromFile("Resources/TerrainMasks/Background03.png")));
+            competition.Add(new Level((Bitmap)Image.FromFile("Resources/TerrainMasks/Background04.png")));
+            competition.Add(new Level((Bitmap)Image.FromFile("Resources/TerrainMasks/Background05.png")));
+            competition.Add(new Level((Bitmap)Image.FromFile("Resources/TerrainMasks/Background06.png")));
             competition.Launch();
         }
 
@@ -74,6 +76,23 @@ namespace CritterWorld
         public Critterworld()
         {
             InitializeComponent();
+
+            String splashTextSrc = "CritterWorld";
+            int index = 0;
+            foreach (Char c in splashTextSrc)
+            {
+                FontPolygon splashTextDefinition = new FontPolygon(c.ToString(), "Arial", 150);
+                PolygonSprite splashText = new PolygonSprite(splashTextDefinition.GetPoints());
+                Size size = TextRenderer.MeasureText(c.ToString(), new Font("Arial", 150, FontStyle.Regular));
+                splashText.Position = new Point(0 + (index++ * size.Width), 140);
+                arena.AddSprite(splashText);
+            }
+
+            FontPolygon splashTextDefinition2 = new FontPolygon("2", "Arial", 250);
+            PolygonSprite splashText2 = new PolygonSprite(splashTextDefinition2.GetPoints());
+            splashText2.Position = new Point(250, 340);
+            splashText2.Color = Color.Green;
+            arena.AddSprite(splashText2);
 
             System.Timers.Timer fpsDisplayTimer = new System.Timers.Timer();
             fpsDisplayTimer.Interval = 250;

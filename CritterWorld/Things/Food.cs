@@ -11,7 +11,7 @@ namespace CritterWorld
 {
     public class Food : BitmapSprite
     {
-        public Food(int x, int y) : base((Bitmap)Image.FromFile("Images/Kiwi-Fruit.png"))
+        public Food(int x, int y) : base((Bitmap)Image.FromFile("Resources/Images/Kiwi-Fruit.png"))
         {
             Position = new Point(x, y);
         }

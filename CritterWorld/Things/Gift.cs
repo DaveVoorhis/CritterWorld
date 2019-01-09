@@ -11,7 +11,7 @@ namespace CritterWorld
 {
     public class Gift : BitmapSprite
     {
-        public Gift(int x, int y) : base((Bitmap)Image.FromFile("Images/gift.png"))
+        public Gift(int x, int y) : base((Bitmap)Image.FromFile("Resources/Images/gift.png"))
         {
             Position = new Point(x, y);
         }

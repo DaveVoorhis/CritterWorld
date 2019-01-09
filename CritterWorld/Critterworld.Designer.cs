@@ -47,17 +47,16 @@
             this.statusStrip.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.labelFPS});
-            this.statusStrip.Location = new System.Drawing.Point(0, 1451);
+            this.statusStrip.Location = new System.Drawing.Point(0, 906);
             this.statusStrip.Name = "statusStrip";
-            this.statusStrip.Padding = new System.Windows.Forms.Padding(2, 0, 28, 0);
-            this.statusStrip.Size = new System.Drawing.Size(2238, 37);
+            this.statusStrip.Size = new System.Drawing.Size(962, 22);
             this.statusStrip.TabIndex = 0;
             this.statusStrip.Text = "statusStrip";
             // 
             // labelFPS
             // 
             this.labelFPS.Name = "labelFPS";
-            this.labelFPS.Size = new System.Drawing.Size(129, 32);
+            this.labelFPS.Size = new System.Drawing.Size(64, 17);
             this.labelFPS.Text = "FPSFPSFPS";
             // 
             // menuStrip
@@ -67,8 +66,7 @@
             this.fileToolStripMenuItem});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
-            this.menuStrip.Padding = new System.Windows.Forms.Padding(12, 4, 0, 4);
-            this.menuStrip.Size = new System.Drawing.Size(2238, 46);
+            this.menuStrip.Size = new System.Drawing.Size(962, 24);
             this.menuStrip.TabIndex = 1;
             this.menuStrip.Text = "menuStrip1";
             // 
@@ -81,61 +79,60 @@
             this.toolStripSeparator1,
             this.menuExit});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(64, 38);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // menuLevelStart
             // 
             this.menuLevelStart.Name = "menuLevelStart";
-            this.menuLevelStart.Size = new System.Drawing.Size(324, 38);
+            this.menuLevelStart.Size = new System.Drawing.Size(168, 22);
             this.menuLevelStart.Text = "Start a Level";
             this.menuLevelStart.Click += new System.EventHandler(this.MenuStart_Click);
             // 
             // menuCompetitionStart
             // 
             this.menuCompetitionStart.Name = "menuCompetitionStart";
-            this.menuCompetitionStart.Size = new System.Drawing.Size(324, 38);
+            this.menuCompetitionStart.Size = new System.Drawing.Size(168, 22);
             this.menuCompetitionStart.Text = "Start Competition";
             this.menuCompetitionStart.Click += new System.EventHandler(this.MenuCompetionStart_Click);
             // 
             // menuStop
             // 
             this.menuStop.Name = "menuStop";
-            this.menuStop.Size = new System.Drawing.Size(324, 38);
+            this.menuStop.Size = new System.Drawing.Size(168, 22);
             this.menuStop.Text = "Stop";
             this.menuStop.Click += new System.EventHandler(this.MenuStop_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(321, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(165, 6);
             // 
             // menuExit
             // 
             this.menuExit.Name = "menuExit";
-            this.menuExit.Size = new System.Drawing.Size(324, 38);
+            this.menuExit.Size = new System.Drawing.Size(168, 22);
             this.menuExit.Text = "Exit";
             this.menuExit.Click += new System.EventHandler(this.MenuExit_Click);
             // 
             // arena
             // 
             this.arena.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.arena.Location = new System.Drawing.Point(0, 46);
-            this.arena.Margin = new System.Windows.Forms.Padding(12);
+            this.arena.Location = new System.Drawing.Point(0, 24);
+            this.arena.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.arena.Name = "arena";
-            this.arena.Size = new System.Drawing.Size(2238, 1405);
+            this.arena.Size = new System.Drawing.Size(962, 882);
             this.arena.TabIndex = 3;
             // 
             // Critterworld
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(2238, 1488);
+            this.ClientSize = new System.Drawing.Size(962, 928);
             this.Controls.Add(this.arena);
             this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.menuStrip);
             this.MainMenuStrip = this.menuStrip;
-            this.Margin = new System.Windows.Forms.Padding(6);
             this.Name = "Critterworld";
             this.Text = "Critterworld II";
             this.statusStrip.ResumeLayout(false);

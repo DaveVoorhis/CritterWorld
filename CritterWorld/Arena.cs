@@ -22,12 +22,12 @@ namespace CritterWorld
         private const int launchMarginX = 50;
         private const int launchMarginY = 50;
 
-        private bool WillCollide(Sprite sprite)
+        public bool WillCollide(Sprite sprite)
         {
             return spriteEngineMain.WillCollide(sprite);
         }
 
-        private void AddSprite(Sprite sprite)
+        public void AddSprite(Sprite sprite)
         {
             spriteEngineMain.AddSprite(sprite);
         }
