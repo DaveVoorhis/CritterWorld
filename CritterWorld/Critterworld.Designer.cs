@@ -35,7 +35,6 @@
             this.menuStop = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.menuExit = new System.Windows.Forms.ToolStripMenuItem();
-            this.labelFPS = new System.Windows.Forms.ToolStripStatusLabel();
             this.arena = new CritterWorld.Arena();
             this.labelFPS = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusStrip.SuspendLayout();
@@ -102,7 +101,6 @@
             // labelFPS
             // 
             this.labelFPS.AutoSize = true;
-            this.labelFPS.Name = "labelFPS";
             this.labelFPS.Text = "FPSFPSFPS";
             // 
             // arena
@@ -112,12 +110,6 @@
             this.arena.Name = "arena";
             this.arena.Size = new System.Drawing.Size(1119, 728);
             this.arena.TabIndex = 3;
-            // 
-            // toolStripStatusLabel1
-            // 
-            this.labelFPS.Name = "toolStripStatusLabel1";
-            this.labelFPS.Size = new System.Drawing.Size(118, 17);
-            this.labelFPS.Text = "toolStripStatusLabel1";
             // 
             // Critterworld
             // 
