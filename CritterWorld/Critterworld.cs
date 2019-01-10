@@ -7,7 +7,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Timers;
 using System.Windows.Forms;
 
 namespace CritterWorld
@@ -86,9 +86,18 @@ namespace CritterWorld
             Sprite splashText = new TextSprite("GAME OVER", "Arial", 100, FontStyle.Regular);
             arena.AddSprite(splashText);
             splashText.Position = new Point(arena.Width / 2, arena.Height / 2);
+            System.Timers.Timer gameOverTimer = new System.Timers.Timer();
+            gameOverTimer.AutoReset = false;
+            gameOverTimer.Interval = 5000;
+            gameOverTimer.Elapsed += (sender, e) =>
+            {
+                Shutdown();
+                DisplaySplash();
+            };
+            gameOverTimer.Start();
         }
 
-        private void DisplayLogo()
+        private void DisplayCritterworldText()
         {
             Sprite splashText = new TextSprite("CritterWorld", "Arial", 150, FontStyle.Regular);
             arena.AddSprite(splashText);
@@ -99,7 +108,10 @@ namespace CritterWorld
                 SizeTwitchPercentage = 0
             };
             splashText.Mover = splashTextTwitcher;
+        }
 
+        private void DisplayVersion()
+        {
             TextSprite splashTextVersion = new TextSprite("2", "Arial", 250, FontStyle.Bold);
             arena.AddSprite(splashTextVersion);
             splashTextVersion.Position = new Point(arena.Width / 2, arena.Height / 2 + 150);
@@ -110,7 +122,10 @@ namespace CritterWorld
                 SizeTwitchPercentage = 50
             };
             splashTextVersion.Mover = splashTextVersionTwitcher;
+        }
 
+        private void DisplayWanderingCritter()
+        {
             PolygonSprite wanderer = new PolygonSprite((new CritterBody()).GetBody());
             wanderer.Color = Sprite.RandomColor(127);
             wanderer.Processors += sprite =>
@@ -137,12 +152,22 @@ namespace CritterWorld
             };
             route.Add(margin, margin, speed);
             route.Add(arena.Width - margin, margin, speed);
-            route.Add(arena.Width - margin, arena.Height - margin, speed);
+            route.Add(arena.Width - margin, arena.Height / 2 - margin, speed);
+            route.Add(margin, arena.Height / 2 - margin, speed);
             route.Add(margin, arena.Height - margin, speed);
+            route.Add(arena.Width - margin, arena.Height - margin, speed);
+            route.Add(arena.Width - margin, arena.Height / 2 - margin, speed);
+            route.Add(margin, arena.Height / 2 - margin, speed);
             route.Repeat = true;
             arena.AddSprite(wanderer);
             route.Start();
+        }
 
+        private void DisplaySplash()
+        {
+            DisplayCritterworldText();
+            DisplayVersion();
+            DisplayWanderingCritter();
             arena.Launch();
         }
 
@@ -150,7 +175,7 @@ namespace CritterWorld
         {
             InitializeComponent();
 
-            DisplayLogo();
+            DisplaySplash();
 
             System.Timers.Timer fpsDisplayTimer = new System.Timers.Timer();
             fpsDisplayTimer.Interval = 250;

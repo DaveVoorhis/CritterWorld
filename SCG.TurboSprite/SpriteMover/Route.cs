@@ -50,17 +50,14 @@ namespace SCG.TurboSprite.SpriteMover
                     mover.Speed = 0;
                     if (!Repeat)
                     {
-                        Console.WriteLine("Route: reached destination at index " + currentDestinationIndex);
                         Finished?.Invoke(this, new EventArgs());
                         return;
                     }
                     else
                     {
-                        Console.WriteLine("Route: start over at beginning of route.");
                         currentDestinationIndex = 0;
                     }
                 }
-                Console.WriteLine("Route: move to " + route[currentDestinationIndex].Target + " at speed " + route[currentDestinationIndex].Speed);
                 mover.Target = route[currentDestinationIndex].Target;
                 mover.Speed = route[currentDestinationIndex].Speed;
             };

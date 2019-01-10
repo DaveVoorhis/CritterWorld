@@ -1,0 +1,1 @@
+﻿- Check that shutting down and starting up sprite surface/engine runs only one update thread at a time.
