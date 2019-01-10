@@ -1,1 +1,3 @@
 ﻿- Check that shutting down and starting up sprite surface/engine runs only one update thread at a time.
+- Add version number to project, and display in main taskbar.
+- Add level timeout and display in main taskbar.
