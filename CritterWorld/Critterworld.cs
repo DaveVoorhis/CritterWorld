@@ -1,4 +1,5 @@
 ﻿using SCG.TurboSprite;
+using SCG.TurboSprite.SpriteMover;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -110,8 +111,37 @@ namespace CritterWorld
             };
             splashTextVersion.Mover = splashTextVersionTwitcher;
 
-            Critter wanderer = new Critter(1);
-            arena.AddCritter(wanderer);
+            PolygonSprite wanderer = new PolygonSprite((new CritterBody()).GetBody());
+            wanderer.Color = Sprite.RandomColor(127);
+            wanderer.Processors += sprite =>
+            {
+                TargetMover spriteMover = (TargetMover)sprite.Mover;
+                if (spriteMover == null || (spriteMover.SpeedX == 0 && spriteMover.SpeedY == 0))
+                {
+                    return;
+                }
+                double theta = Sprite.RadToDeg((float)Math.Atan2(spriteMover.SpeedY, spriteMover.SpeedX));
+                spriteMover.TargetFacingAngle = (int)theta + 90;
+            };
+            int margin = 20;
+            int speed = 4;
+            int moveCount = 0;
+            Route route = new Route(wanderer);
+            route.SpriteMoved += (sender, spriteEvent) =>
+            {
+                if (moveCount-- == 0)
+                {
+                    wanderer.IncrementFrame();
+                    moveCount = 5 - Math.Min(5, speed);
+                }
+            };
+            route.Add(margin, margin, speed);
+            route.Add(arena.Width - margin, margin, speed);
+            route.Add(arena.Width - margin, arena.Height - margin, speed);
+            route.Add(margin, arena.Height - margin, speed);
+            route.Repeat = true;
+            arena.AddSprite(wanderer);
+            route.Start();
 
             arena.Launch();
         }

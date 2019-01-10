@@ -178,6 +178,10 @@ namespace SCG.TurboSprite
             }
             if (SpeedX == 0 && SpeedY == 0)
             {
+                if (Speed != 0)
+                {
+                    CalculateVectors();
+                }
                 return;
             }
             LastPositionX = _sprite.X;
