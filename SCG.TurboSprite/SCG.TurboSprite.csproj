@@ -58,6 +58,7 @@
     <Compile Include="Sprite\Particle.cs" />
     <Compile Include="Sprite\ParticleFountainSprite.cs" />
     <Compile Include="Sprite\ParticleExplosionSprite.cs" />
+    <Compile Include="Sprite\TextSprite.cs" />
     <Compile Include="Sprite\PolygonSprite.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sprite\ShockWaveSprite.cs" />

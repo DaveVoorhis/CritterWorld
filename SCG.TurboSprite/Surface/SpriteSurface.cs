@@ -320,6 +320,9 @@ namespace SCG.TurboSprite
                 // Obtain Graphics object of double buffer
                 Graphics grBuffer = Graphics.FromImage(_buffer);
 
+                // Make pretty
+                grBuffer.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+
                 // Obtain Graphics object of SpriteSurface
                 Graphics grSurface = e.Graphics;
                 using (grBuffer)

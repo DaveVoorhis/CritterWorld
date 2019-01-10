@@ -31,53 +31,35 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 
 namespace SCG.TurboSprite
 {
-    public class PolygonSprite : Sprite
+    public class TextSprite : Sprite
     {
-        private int _lastFrame = 0;
-        private int _lastAngle;
-        private readonly PointF[][] _rotatedPoints;
-        private readonly PointF[][] _drawnPoints;
-        private readonly PointF[][] _model;
+        private GraphicsPath path;
+        private Point oldPosition = new Point(-1, -1);
+        private string oldText = null;
+        private string oldFontName = null;
+        private int oldSize = -1;
+        private FontStyle oldStyle = FontStyle.Regular;
 
-        // Construct a polygon-based sprite with 1 or more arrays of points that can be selected to create animation.
-        public PolygonSprite(PointF[][] model)
+        string Text { get; set; }
+
+        string FontName { get; set; }
+
+        int Size { get; set; }
+
+        FontStyle Style { get; set; }
+
+        // Construct a vector sprite from text.
+        public TextSprite(string text, string fontName, int size, FontStyle style)
         {
-            _model = model;
-            _lastAngle = -1;
-            _lastFrame = 0;
-            FrameCount = model.Length;
-            _rotatedPoints = new PointF[FrameCount][];
-            _drawnPoints = new PointF[FrameCount][];
-            for (int i = 0; i < FrameCount; i++)
-            {
-                int polySize = model[i].Length;
-                _drawnPoints[i] = new PointF[polySize];
-                _rotatedPoints[i] = new PointF[polySize];
-            }
-            RotateAndAnimate();
-        }
-
-        // Construct a non-animated polygon-based sprite.
-        public PolygonSprite(PointF[] points) : this(new PointF[][] { points }) {}
-
-        // Select the specific Points collection to display.
-        public int Frame { get; set; }
-
-        // Get the number of animation frames.
-        public int FrameCount { get; internal set; }
-
-        // Switch to next frame.
-        public void IncrementFrame()
-        {
-            int nextFrame = Frame + 1;
-            if (nextFrame >= FrameCount)
-            {
-                nextFrame = 0;
-            }
-            Frame = nextFrame;
+            Text = text;
+            FontName = fontName;
+            Size = size;
+            Style = style;
+            Shape = new Rectangle(1, 1, 1, 1);
         }
 
         private void ObtainShape()
@@ -87,7 +69,7 @@ namespace SCG.TurboSprite
             float y1 = 0;
             float x2 = 0;
             float y2 = 0;
-            foreach (PointF point in _rotatedPoints[_lastFrame])
+            foreach (PointF point in path.PathPoints)
             {
                 if (point.X < x1)
                 {
@@ -121,34 +103,27 @@ namespace SCG.TurboSprite
         // Access the fill color
         public Color FillColor { get; set; } = Color.Empty;
 
-        private void RotateAndAnimate()
-        {
-            // Process rotation and animation
-            if (FacingAngle != _lastAngle || Frame != _lastFrame)
-            {
-                _lastAngle = FacingAngle;
-                _lastFrame = Frame;
-                float sin = Sprite.Sin(FacingAngle);
-                float cos = Sprite.Cos(FacingAngle);
-                for (int point = 0; point < _rotatedPoints[_lastFrame].Length; point++)
-                {
-                    _rotatedPoints[_lastFrame][point].X = _model[_lastFrame][point].X * cos - _model[_lastFrame][point].Y * sin;
-                    _rotatedPoints[_lastFrame][point].Y = _model[_lastFrame][point].Y * cos + _model[_lastFrame][point].X * sin;
-                }
-                ObtainShape();
-            }
-        }
-
         // Render the sprite - draw the polygon
         protected internal override void Render(Graphics graphics)
         {
-            RotateAndAnimate();
-
-            // Transform polygon into viewport coordinates
-            for (int point = 0; point < _rotatedPoints[_lastFrame].Length; point++)
+            if (Text != oldText || !Position.Equals(oldPosition) || FontName != oldFontName || Size != oldSize || Style != oldStyle)
             {
-                _drawnPoints[_lastFrame][point].X = _rotatedPoints[_lastFrame][point].X + X - Surface.OffsetX;
-                _drawnPoints[_lastFrame][point].Y = _rotatedPoints[_lastFrame][point].Y + Y - Surface.OffsetY;
+                path = new GraphicsPath();
+
+                using (Font font = new Font(FontName, Size, Style))
+                using (StringFormat stringFormat = new StringFormat())
+                {
+                    stringFormat.Alignment = StringAlignment.Center;
+                    stringFormat.LineAlignment = StringAlignment.Center;
+                    path.AddString(Text, font.FontFamily, (int)font.Style, font.Size, Position, stringFormat);
+                }
+                ObtainShape();
+
+                oldText = Text;
+                oldPosition = Position;
+                oldFontName = FontName;
+                oldSize = Size;
+                oldStyle = Style;
             }
 
             // Fill it?
@@ -156,14 +131,14 @@ namespace SCG.TurboSprite
             {
                 using (Brush brush = new SolidBrush(FillColor))
                 {
-                    graphics.FillPolygon(brush, _drawnPoints[_lastFrame]);
+                    graphics.FillPath(brush, path);
                 }
             }
 
             // Draw outline
             using (Pen pen = new Pen(Color, LineWidth))
             {
-                graphics.DrawPolygon(pen, _drawnPoints[_lastFrame]);
+                graphics.DrawPath(pen, path);
             }
         }
     }

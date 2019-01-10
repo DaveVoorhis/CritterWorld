@@ -11,13 +11,15 @@ namespace CritterWorld
     public class Level
     {
         private const int terrainDensity = 80;
+        private const int critterSpriteScale = 1;
 
-        const int critterCount = 25;
-        const int scale = 1;
+        int CritterCount { get; set; } = 25;
 
-        const int foodCount = 5;
-        const int giftCount = 5;
-        const int bombCount = 5;
+        int FoodCount { get; set; } = 5;
+
+        int GiftCount { get; set; } = 5;
+
+        int BombCount { get; set; }  = 5;
 
         public Level() { }
 
@@ -81,13 +83,13 @@ namespace CritterWorld
 
             SetupTerrain();
 
-            Arena.AddFoods(foodCount);
-            Arena.AddBombs(bombCount);
-            Arena.AddGifts(giftCount);
+            Arena.AddFoods(FoodCount);
+            Arena.AddBombs(BombCount);
+            Arena.AddGifts(GiftCount);
 
-            for (int i = 0; i < critterCount; i++)
+            for (int i = 0; i < CritterCount; i++)
             {
-                Critter critter = new Critter(scale);
+                Critter critter = new Critter(critterSpriteScale);
                 Arena.AddCritter(critter);
             }
 

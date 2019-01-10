@@ -66,9 +66,6 @@ namespace SCG.TurboSprite
         // Render the sprite
         protected internal override void Render(Graphics graphics)
         {
-            // Make pretty
-            graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-
             using (Pen pen = new Pen(Color.Black))
             {
                 foreach (Wave wave in _waves)

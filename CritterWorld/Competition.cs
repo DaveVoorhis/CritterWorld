@@ -10,8 +10,9 @@ namespace CritterWorld
     class Competition
     {
         private List<Level> levels = new List<Level>();
-        private Arena _arena;
+        private readonly Arena _arena;
 
+        private int levelIndex = -1;
         private Level currentLevel;
 
         private Timer levelCheckTimer = new Timer();
@@ -27,33 +28,32 @@ namespace CritterWorld
             level.Arena = _arena;
         }
 
-        public void Launch()
+        public void NextLevel()
         {
-            int levelIndex = 0;
+            currentLevel?.Shutdown();
+            levelIndex++;
             if (levelIndex > levels.Count)
             {
                 return;
             }
             currentLevel = levels[levelIndex];
+            currentLevel.Launch();
+        }
 
+        public void Launch()
+        {
+            levelIndex = -1;
+            NextLevel();
             levelCheckTimer.Interval = 5000;
             levelCheckTimer.AutoReset = true;
             levelCheckTimer.Elapsed += (e, evt) =>
             {
                 if (currentLevel.CountOfActiveCritters <= 1)
                 {
-                    currentLevel.Shutdown();
-                    levelIndex++;
-                    if (levelIndex > levels.Count)
-                    {
-                        return;
-                    }
-                    currentLevel = levels[levelIndex];
-                    currentLevel.Launch();
+                    NextLevel();
                 }
             };
             levelCheckTimer.Start();
-            currentLevel.Launch();
         }
 
         public void Shutdown()

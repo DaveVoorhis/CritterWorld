@@ -65,6 +65,7 @@ namespace CritterWorld
         private void MenuStop_Click(object sender, EventArgs e)
         {
             Shutdown();
+            DisplayGameOver();
         }
 
         private void MenuExit_Click(object sender, EventArgs e)
@@ -73,26 +74,30 @@ namespace CritterWorld
             Application.Exit();
         }
 
+        private void DisplayGameOver()
+        {
+            Sprite splashText = new TextSprite("GAME OVER", "Arial", 100, FontStyle.Regular);
+            arena.AddSprite(splashText);
+            splashText.Position = new Point(arena.Width / 2, arena.Height / 2);
+        }
+
+        private void DisplayLogo()
+        {
+            Sprite splashText = new TextSprite("CritterWorld", "Arial", 150, FontStyle.Regular);
+            arena.AddSprite(splashText);
+            splashText.Position = new Point(arena.Width / 2, arena.Height / 2 - 100);
+
+            TextSprite splashTextVersion = new TextSprite("2", "Arial", 250, FontStyle.Bold);
+            arena.AddSprite(splashTextVersion);
+            splashTextVersion.Position = new Point(arena.Width / 2, arena.Height / 2 + 150);
+            splashTextVersion.Color = Color.Green;
+        }
+
         public Critterworld()
         {
             InitializeComponent();
 
-            String splashTextSrc = "CritterWorld";
-            int index = 0;
-            foreach (Char c in splashTextSrc)
-            {
-                FontPolygon splashTextDefinition = new FontPolygon(c.ToString(), "Arial", 150);
-                PolygonSprite splashText = new PolygonSprite(splashTextDefinition.GetPoints());
-                Size size = TextRenderer.MeasureText(c.ToString(), new Font("Arial", 150, FontStyle.Regular));
-                splashText.Position = new Point(0 + (index++ * size.Width), 140);
-                arena.AddSprite(splashText);
-            }
-
-            FontPolygon splashTextDefinition2 = new FontPolygon("2", "Arial", 250);
-            PolygonSprite splashText2 = new PolygonSprite(splashTextDefinition2.GetPoints());
-            splashText2.Position = new Point(250, 340);
-            splashText2.Color = Color.Green;
-            arena.AddSprite(splashText2);
+            DisplayLogo();
 
             System.Timers.Timer fpsDisplayTimer = new System.Timers.Timer();
             fpsDisplayTimer.Interval = 250;
