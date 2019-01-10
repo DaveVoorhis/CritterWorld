@@ -33,7 +33,10 @@
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuLevelStart = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.menuCompetitionStart = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuNextLevel = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.menuStop = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.menuExit = new System.Windows.Forms.ToolStripMenuItem();
@@ -47,9 +50,9 @@
             this.statusStrip.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.labelFPS});
-            this.statusStrip.Location = new System.Drawing.Point(0, 906);
+            this.statusStrip.Location = new System.Drawing.Point(0, 784);
             this.statusStrip.Name = "statusStrip";
-            this.statusStrip.Size = new System.Drawing.Size(962, 22);
+            this.statusStrip.Size = new System.Drawing.Size(927, 22);
             this.statusStrip.TabIndex = 0;
             this.statusStrip.Text = "statusStrip";
             // 
@@ -66,7 +69,7 @@
             this.fileToolStripMenuItem});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
-            this.menuStrip.Size = new System.Drawing.Size(962, 24);
+            this.menuStrip.Size = new System.Drawing.Size(927, 24);
             this.menuStrip.TabIndex = 1;
             this.menuStrip.Text = "menuStrip1";
             // 
@@ -74,7 +77,10 @@
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuLevelStart,
+            this.toolStripSeparator2,
             this.menuCompetitionStart,
+            this.menuNextLevel,
+            this.toolStripSeparator3,
             this.menuStop,
             this.toolStripSeparator1,
             this.menuExit});
@@ -89,12 +95,29 @@
             this.menuLevelStart.Text = "Start a Level";
             this.menuLevelStart.Click += new System.EventHandler(this.MenuStart_Click);
             // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(165, 6);
+            // 
             // menuCompetitionStart
             // 
             this.menuCompetitionStart.Name = "menuCompetitionStart";
             this.menuCompetitionStart.Size = new System.Drawing.Size(168, 22);
             this.menuCompetitionStart.Text = "Start Competition";
             this.menuCompetitionStart.Click += new System.EventHandler(this.MenuCompetionStart_Click);
+            // 
+            // menuNextLevel
+            // 
+            this.menuNextLevel.Name = "menuNextLevel";
+            this.menuNextLevel.Size = new System.Drawing.Size(168, 22);
+            this.menuNextLevel.Text = "Next level";
+            this.menuNextLevel.Click += new System.EventHandler(this.MenuNextLevel_Click);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(165, 6);
             // 
             // menuStop
             // 
@@ -121,14 +144,14 @@
             this.arena.Location = new System.Drawing.Point(0, 24);
             this.arena.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.arena.Name = "arena";
-            this.arena.Size = new System.Drawing.Size(962, 882);
+            this.arena.Size = new System.Drawing.Size(927, 760);
             this.arena.TabIndex = 3;
             // 
             // Critterworld
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(962, 928);
+            this.ClientSize = new System.Drawing.Size(927, 806);
             this.Controls.Add(this.arena);
             this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.menuStrip);
@@ -156,5 +179,8 @@
         private Arena arena;
         private System.Windows.Forms.ToolStripStatusLabel labelFPS;
         private System.Windows.Forms.ToolStripMenuItem menuCompetitionStart;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripMenuItem menuNextLevel;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
     }
 }

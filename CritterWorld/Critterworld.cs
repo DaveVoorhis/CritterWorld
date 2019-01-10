@@ -52,6 +52,7 @@ namespace CritterWorld
         {
             Shutdown();
             competition = new Competition(arena);
+            competition.Finished += (sndr, ev) => DisplayGameOver();
             competition.Add(new Level((Bitmap)Image.FromFile("Resources/TerrainMasks/Background00.png")));
             competition.Add(new Level((Bitmap)Image.FromFile("Resources/TerrainMasks/Background01.png")));
             competition.Add(new Level((Bitmap)Image.FromFile("Resources/TerrainMasks/Background02.png")));
@@ -60,6 +61,11 @@ namespace CritterWorld
             competition.Add(new Level((Bitmap)Image.FromFile("Resources/TerrainMasks/Background05.png")));
             competition.Add(new Level((Bitmap)Image.FromFile("Resources/TerrainMasks/Background06.png")));
             competition.Launch();
+        }
+
+        private void MenuNextLevel_Click(object sender, EventArgs e)
+        {
+            competition?.NextLevel();
         }
 
         private void MenuStop_Click(object sender, EventArgs e)

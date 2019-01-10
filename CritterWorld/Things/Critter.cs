@@ -185,7 +185,7 @@ namespace CritterWorld
                 stopped = false;
                 Stopwatch stopwatch = new Stopwatch();
                 Random rnd = new Random(Guid.NewGuid().GetHashCode());
-                while (!Surface.IsDisposed && !Surface.Disposing && !Dead && !stopped)
+                while (Surface != null && !Surface.IsDisposed && !Surface.Disposing && !Dead && !stopped)
                 {
                     if (Surface.Active)
                     {
