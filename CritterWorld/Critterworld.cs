@@ -86,11 +86,28 @@ namespace CritterWorld
             Sprite splashText = new TextSprite("CritterWorld", "Arial", 150, FontStyle.Regular);
             arena.AddSprite(splashText);
             splashText.Position = new Point(arena.Width / 2, arena.Height / 2 - 100);
+            TextTwitcher splashTextTwitcher = new TextTwitcher
+            {
+                PositionTwitchRange = 2,
+                SizeTwitchPercentage = 0
+            };
+            splashText.Mover = splashTextTwitcher;
 
             TextSprite splashTextVersion = new TextSprite("2", "Arial", 250, FontStyle.Bold);
             arena.AddSprite(splashTextVersion);
             splashTextVersion.Position = new Point(arena.Width / 2, arena.Height / 2 + 150);
             splashTextVersion.Color = Color.Green;
+            TextTwitcher splashTextVersionTwitcher = new TextTwitcher
+            {
+                PositionTwitchRange = 3,
+                SizeTwitchPercentage = 50
+            };
+            splashTextVersion.Mover = splashTextVersionTwitcher;
+
+            Critter wanderer = new Critter(1);
+            arena.AddCritter(wanderer);
+
+            arena.Launch();
         }
 
         public Critterworld()

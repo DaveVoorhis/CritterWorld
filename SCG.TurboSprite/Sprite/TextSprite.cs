@@ -44,13 +44,13 @@ namespace SCG.TurboSprite
         private int oldSize = -1;
         private FontStyle oldStyle = FontStyle.Regular;
 
-        string Text { get; set; }
+        public string Text { get; set; }
 
-        string FontName { get; set; }
+        public string FontName { get; set; }
 
-        int Size { get; set; }
+        public int Size { get; set; }
 
-        FontStyle Style { get; set; }
+        public FontStyle Style { get; set; }
 
         // Construct a vector sprite from text.
         public TextSprite(string text, string fontName, int size, FontStyle style)
