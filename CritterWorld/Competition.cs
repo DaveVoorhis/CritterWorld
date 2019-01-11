@@ -32,8 +32,8 @@ namespace CritterWorld
 
         public void NextLevel()
         {
-            currentLevel?.Shutdown();
             levelCheckTimer.Stop();
+            currentLevel?.Shutdown();
             levelIndex++;
             if (levelIndex >= levels.Count)
             {
