@@ -175,11 +175,16 @@ namespace CritterWorld
         {
             InitializeComponent();
 
+            Width = 1000;
+            Height = 800 + Height - arena.Height;
+
+            labelVersion.Text = Version.VersionName;
+
             DisplaySplash();
 
             System.Timers.Timer fpsDisplayTimer = new System.Timers.Timer();
             fpsDisplayTimer.Interval = 250;
-            fpsDisplayTimer.Elapsed += (sender, e) => Invoke(new Action(() => labelFPS.Text = arena.ActualFPS + " fps" + TickShow()));
+            fpsDisplayTimer.Elapsed += (sender, e) => Invoke(new Action(() => labelFPS.Text = "FPS: " + arena.ActualFPS + TickShow()));
             fpsDisplayTimer.Start();
         }
     }
