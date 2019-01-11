@@ -1,2 +1,1 @@
-﻿- Add version number to project, and display in main taskbar.
-- Add level timeout and display in main taskbar.
+﻿
