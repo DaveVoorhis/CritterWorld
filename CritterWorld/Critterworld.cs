@@ -15,7 +15,7 @@ namespace CritterWorld
     public partial class Critterworld : Form
     {
         // Level duration in seconds.
-        const int levelDuration = 60 * 1; 
+        const int levelDuration = 10 * 1; 
 
         private int tickCount = 0;
         private Level level;
@@ -96,7 +96,6 @@ namespace CritterWorld
 
         private void MenuStop_Click(object sender, EventArgs e)
         {
-            Shutdown();
             DisplayGameOver();
         }
 
@@ -108,6 +107,7 @@ namespace CritterWorld
 
         private void DisplayGameOver()
         {
+            Shutdown();
             LevelTimerStop();
             Sprite splashText = new TextSprite("GAME OVER", "Arial", 100, FontStyle.Regular);
             arena.AddSprite(splashText);
@@ -121,6 +121,7 @@ namespace CritterWorld
                 DisplaySplash();
             };
             gameOverTimer.Start();
+            arena.Launch();
         }
 
         private void DisplayCritterworldText()
