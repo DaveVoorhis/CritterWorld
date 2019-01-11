@@ -138,7 +138,7 @@ namespace CritterWorld
             Shutdown();
             ParticleFountainSprite smoke = new ParticleFountainSprite(20, startColor, endColor, 1, 10, 10);
             smoke.Position = Position;
-            Engine.AddSprite(smoke);
+            Engine?.AddSprite(smoke);
             System.Timers.Timer smokeTimer = new System.Timers.Timer
             {
                 Interval = 1000,

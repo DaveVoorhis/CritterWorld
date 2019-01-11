@@ -14,6 +14,9 @@ namespace CritterWorld
 {
     public partial class Critterworld : Form
     {
+        // Level duration in seconds.
+        const int levelDuration = 60 * 1; 
+
         private int tickCount = 0;
         private Level level;
         private Competition competition;
@@ -29,6 +32,7 @@ namespace CritterWorld
 
         private void Shutdown()
         {
+            LevelTimerStop();
             arena.Shutdown();
             if (level != null)
             {
@@ -42,18 +46,26 @@ namespace CritterWorld
             }
         }
 
-        private void MenuStart_Click(object sender, EventArgs e)
+        private void StartOneLevel()
         {
             Shutdown();
+            LevelTimerStart();
             level = new Level(arena, (Bitmap)Image.FromFile("Resources/TerrainMasks/Background05.png"));
             level.Launch();
+        }
+
+        private void MenuStart_Click(object sender, EventArgs e)
+        {
+            StartOneLevel();
         }
 
         private void MenuCompetionStart_Click(object sender, EventArgs e)
         {
             Shutdown();
+            LevelTimerStart();
             competition = new Competition(arena);
             competition.Finished += (sndr, ev) => DisplayGameOver();
+            competition.FinishedLevel += (sndr, ev) => LevelTimerStart();
             competition.Add(new Level((Bitmap)Image.FromFile("Resources/TerrainMasks/Background00.png")));
             competition.Add(new Level((Bitmap)Image.FromFile("Resources/TerrainMasks/Background01.png")));
             competition.Add(new Level((Bitmap)Image.FromFile("Resources/TerrainMasks/Background02.png")));
@@ -64,9 +76,22 @@ namespace CritterWorld
             competition.Launch();
         }
 
+        private void NextLevel()
+        {
+            if (competition != null)
+            {
+                LevelTimerStart();
+                competition.NextLevel();
+            }
+            else if (level != null)
+            {
+                StartOneLevel();
+            }
+        }
+
         private void MenuNextLevel_Click(object sender, EventArgs e)
         {
-            competition?.NextLevel();
+            NextLevel();
         }
 
         private void MenuStop_Click(object sender, EventArgs e)
@@ -83,6 +108,7 @@ namespace CritterWorld
 
         private void DisplayGameOver()
         {
+            LevelTimerStop();
             Sprite splashText = new TextSprite("GAME OVER", "Arial", 100, FontStyle.Regular);
             arena.AddSprite(splashText);
             splashText.Position = new Point(arena.Width / 2, arena.Height / 2);
@@ -165,10 +191,51 @@ namespace CritterWorld
 
         private void DisplaySplash()
         {
+            LevelTimerStop();
             DisplayCritterworldText();
             DisplayVersion();
             DisplayWanderingCritter();
             arena.Launch();
+        }
+
+        private System.Timers.Timer levelTimer = null;
+        private int countDown;
+
+        private void Tick()
+        {
+            countDown--;
+            if (countDown <= 0)
+            {
+                NextLevel();
+            }
+            else
+            {
+                Invoke(new Action(() => levelTimeoutProgress.Value = countDown * 100 / levelDuration));
+            }
+        }
+
+        private void LevelTimerStart()
+        {
+            if (levelTimer == null)
+            {
+                levelTimer = new System.Timers.Timer();
+                levelTimer.Interval = 1000;
+                levelTimer.AutoReset = true;
+                levelTimer.Elapsed += (sender, e) => Tick();
+            }
+            levelTimer.Stop();
+            levelTimer.Start();
+            countDown = levelDuration;
+            Invoke(new Action(() => levelTimeoutProgress.Value = 100));
+        }
+
+        private void LevelTimerStop()
+        {
+            if (levelTimer != null)
+            {
+                levelTimer.Stop();
+                Invoke(new Action(() => levelTimeoutProgress.Value = 0));
+            }
         }
 
         public Critterworld()

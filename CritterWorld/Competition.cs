@@ -9,7 +9,8 @@ namespace CritterWorld
 {
     class Competition
     {
-        public event EventHandler<EventArgs> Finished; 
+        public event EventHandler<EventArgs> Finished;
+        public event EventHandler<EventArgs> FinishedLevel;
 
         private List<Level> levels = new List<Level>();
         private readonly Arena _arena;
@@ -45,6 +46,7 @@ namespace CritterWorld
                 currentLevel = levels[levelIndex];
                 currentLevel.Launch();
                 levelCheckTimer.Start();
+                FinishedLevel?.Invoke(this, new EventArgs());
             }
         }
 
