@@ -21,6 +21,8 @@ namespace CritterWorld
         private Level level;
         private Competition competition;
 
+        System.Timers.Timer fpsDisplayTimer;
+
         private String TickShow()
         {
             if (tickCount++ > 5)
@@ -54,6 +56,26 @@ namespace CritterWorld
             level.Launch();
         }
 
+        private void NextLevel()
+        {
+            if (competition != null)
+            {
+                LevelTimerStart();
+                competition.NextLevel();
+            }
+            else if (level != null)
+            {
+                StartOneLevel();
+            }
+        }
+
+        private void ExitApplication()
+        {
+            fpsDisplayTimer.Stop();
+            Shutdown();
+            Application.Exit();
+        }
+
         private void MenuStart_Click(object sender, EventArgs e)
         {
             StartOneLevel();
@@ -76,19 +98,6 @@ namespace CritterWorld
             competition.Launch();
         }
 
-        private void NextLevel()
-        {
-            if (competition != null)
-            {
-                LevelTimerStart();
-                competition.NextLevel();
-            }
-            else if (level != null)
-            {
-                StartOneLevel();
-            }
-        }
-
         private void MenuNextLevel_Click(object sender, EventArgs e)
         {
             NextLevel();
@@ -101,8 +110,7 @@ namespace CritterWorld
 
         private void MenuExit_Click(object sender, EventArgs e)
         {
-            Shutdown();
-            Application.Exit();
+            ExitApplication();
         }
 
         private void DisplayGameOver()
@@ -244,6 +252,8 @@ namespace CritterWorld
         {
             InitializeComponent();
 
+            FormClosing += (sender, e) => ExitApplication();
+
             Width = 1000;
             Height = 800 + Height - arena.Height;
 
@@ -251,7 +261,7 @@ namespace CritterWorld
 
             DisplaySplash();
 
-            System.Timers.Timer fpsDisplayTimer = new System.Timers.Timer();
+            fpsDisplayTimer = new System.Timers.Timer();
             fpsDisplayTimer.Interval = 250;
             fpsDisplayTimer.Elapsed += (sender, e) => Invoke(new Action(() => labelFPS.Text = arena.ActualFPS + " FPS" + TickShow()));
             fpsDisplayTimer.Start();
