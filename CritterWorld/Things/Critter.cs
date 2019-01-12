@@ -29,6 +29,13 @@ namespace CritterWorld
 
         private readonly bool selectedToTestCrash = false;
 
+        public int EscapeCount { get; private set; }
+        public int BombCount { get; private set; }
+        public int CrashCount { get; private set; }
+        public int OverallScore { get; private set; }
+        public int CurrentScore { get; private set; }
+        public int Energy { get; private set; }
+
         public Critter(int scale) : base((new CritterBody()).GetBody(scale))
         {
             LineWidth = 1;
@@ -51,7 +58,30 @@ namespace CritterWorld
 
         public void Escaped()
         {
+            EscapeCount++;
+            OverallScore += CurrentScore;
+            CurrentScore = 0;
             Kill();
+        }
+
+        public void Scored()
+        {
+            CurrentScore++;
+        }
+
+        public void Ate()
+        {
+            Energy++;
+        }
+
+        public void Bombed()
+        {
+            BombCount++;
+        }
+
+        public void Crashed()
+        {
+            CrashCount++;
         }
 
         protected internal void Think(Random random)
@@ -218,6 +248,7 @@ namespace CritterWorld
                         }
                         catch (Exception e)
                         {
+                            Crashed();
                             Sound.PlayCrash();
                             Console.WriteLine("Critter halted due to exception whilst thinking: " + e);
                             StopAndSmoke(Color.Aquamarine, Color.Blue);

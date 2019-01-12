@@ -232,6 +232,7 @@ namespace CritterWorld
         {
             Sound.PlayBoom();
 
+            critter.Bombed();
             Sprite spew = new StarFieldSprite(100, 5, 5, 10)
             {
                 Position = bomb.Position
@@ -264,6 +265,7 @@ namespace CritterWorld
         {
             Sound.PlayGulp();
             food.Kill();
+            critter.Ate();
             AddFoods(1);
         }
 
@@ -271,6 +273,7 @@ namespace CritterWorld
         {
             Sound.PlayYay();
             gift.Kill();
+            critter.Scored();
             AddGifts(1);
         }
 
