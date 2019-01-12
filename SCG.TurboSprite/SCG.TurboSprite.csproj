@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="SpriteMover\Route.cs" />
+    <Compile Include="SpriteMover\TextGrower.cs" />
     <Compile Include="SpriteMover\TextTwitcher.cs" />
     <Compile Include="Sprite\AnimatedBitmapSprite.cs" />
     <Compile Include="Sprite\BitmapSprite.cs" />
