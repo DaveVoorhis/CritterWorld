@@ -7,6 +7,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Timers;
 using System.Windows.Forms;
 
@@ -73,6 +74,7 @@ namespace CritterWorld
         {
             fpsDisplayTimer.Stop();
             Shutdown();
+            Thread.Sleep(500);
             Application.Exit();
         }
 
