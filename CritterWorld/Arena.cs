@@ -157,14 +157,8 @@ namespace CritterWorld
                     ((Critter)sprite).Shutdown();
                 }
             }
-            while (spriteEngineMain.Sprites.Count > 0)
-            {
-                spriteEngineMain.Clear();
-                Thread.Sleep(500);
-                spriteSurfaceMain.Active = true;
-                Thread.Sleep(500);
-            }
-            spriteSurfaceMain.Active = false;
+            Thread.Sleep(500);
+            spriteEngineMain.Purge();
             ResetLaunchPosition();
         }
 

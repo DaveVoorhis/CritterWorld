@@ -153,7 +153,7 @@ namespace SCG.TurboSprite
             sprite.Kill();
         }
 
-        // Remove all sprites
+        // Remove all sprites via Kill().
         public void Clear()
         {
             lock (_spriteList)
@@ -162,6 +162,15 @@ namespace SCG.TurboSprite
                 {
                     sprite.Kill();
                 }
+            }
+        }
+
+        // Remove all sprites by purging them from the sprite list.
+        public void Purge()
+        {
+            lock (_spriteList)
+            {
+                _spriteList.Clear();
             }
         }
 
