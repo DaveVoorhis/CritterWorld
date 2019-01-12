@@ -15,7 +15,7 @@ namespace CritterWorld
     public partial class Critterworld : Form
     {
         // Level duration in seconds.
-        const int levelDuration = 10 * 1; 
+        const int levelDuration = 60 * 3; 
 
         private int tickCount = 0;
         private Level level;
