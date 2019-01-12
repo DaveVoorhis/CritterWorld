@@ -57,7 +57,7 @@ namespace CritterWorld
                 {
                     int x = rnd.Next(launchMarginX, Surface.Width - launchMarginX);
                     int y = rnd.Next(launchMarginY, Surface.Height - launchMarginY);
-                    gift = new Gift(x, y);
+                    gift = new Gift(new Point(x, y));
                 }
                 while (WillCollide(gift));
                 AddSprite(gift);
@@ -73,7 +73,7 @@ namespace CritterWorld
                 {
                     int x = rnd.Next(launchMarginX, Surface.Width - launchMarginX);
                     int y = rnd.Next(launchMarginY, Surface.Height - launchMarginY);
-                    bomb = new Bomb(x, y);
+                    bomb = new Bomb(new Point(x, y));
                 }
                 while (WillCollide(bomb));
                 AddSprite(bomb);
@@ -96,7 +96,7 @@ namespace CritterWorld
                 {
                     int x = rnd.Next(launchMarginX, Surface.Width - launchMarginX);
                     int y = rnd.Next(launchMarginY, Surface.Height - launchMarginY);
-                    food = new Food(x, y);
+                    food = new Food(new Point(x, y));
                 }
                 while (WillCollide(food));
                 AddSprite(food);
@@ -117,6 +117,12 @@ namespace CritterWorld
             }
             while (WillCollide(critter));
             spriteEngineMain.AddSprite(critter);
+        }
+
+        public void AddEscapeHatch(Point position)
+        {
+            EscapeHatch escapeHatch = new EscapeHatch(position);
+            spriteEngineMain.AddSprite(escapeHatch);
         }
 
         public void ResetLaunchPosition()
@@ -268,6 +274,12 @@ namespace CritterWorld
             AddGifts(1);
         }
 
+        private void Collide(Critter critter, EscapeHatch hatch)
+        {
+            Sound.PlayCheer();
+            critter.Escaped();
+        }
+
         private void Collide(object sender, SpriteCollisionEventArgs collision)
         {
             Sprite sprite1 = collision.Sprite1;
@@ -307,6 +319,14 @@ namespace CritterWorld
             else if (sprite1 is Gift && sprite2 is Critter)
             {
                 Collide((Critter)sprite2, (Gift)sprite1);
+            }
+            else if (sprite1 is Critter && sprite2 is EscapeHatch)
+            {
+                Collide((Critter)sprite1, (EscapeHatch)sprite2);
+            }
+            else if (sprite1 is EscapeHatch && sprite2 is Critter)
+            {
+                Collide((Critter)sprite2, (EscapeHatch)sprite1);
             }
         }
 

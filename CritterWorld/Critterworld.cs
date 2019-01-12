@@ -53,7 +53,7 @@ namespace CritterWorld
         {
             Shutdown();
             LevelTimerStart();
-            level = new Level(arena, (Bitmap)Image.FromFile("Resources/TerrainMasks/Background05.png"));
+            level = new Level(arena, (Bitmap)Image.FromFile("Resources/TerrainMasks/Background05.png"), new Point(457, 440));
             level.Launch();
         }
 
@@ -72,6 +72,7 @@ namespace CritterWorld
 
         private void ExitApplication()
         {
+            LevelTimerStop();
             fpsDisplayTimer.Stop();
             Shutdown();
             Thread.Sleep(500);
@@ -90,13 +91,13 @@ namespace CritterWorld
             competition = new Competition(arena);
             competition.Finished += (sndr, ev) => DisplayGameOver();
             competition.FinishedLevel += (sndr, ev) => LevelTimerStart();
-            competition.Add(new Level((Bitmap)Image.FromFile("Resources/TerrainMasks/Background00.png")));
-            competition.Add(new Level((Bitmap)Image.FromFile("Resources/TerrainMasks/Background01.png")));
-            competition.Add(new Level((Bitmap)Image.FromFile("Resources/TerrainMasks/Background02.png")));
-            competition.Add(new Level((Bitmap)Image.FromFile("Resources/TerrainMasks/Background03.png")));
-            competition.Add(new Level((Bitmap)Image.FromFile("Resources/TerrainMasks/Background04.png")));
-            competition.Add(new Level((Bitmap)Image.FromFile("Resources/TerrainMasks/Background05.png")));
-            competition.Add(new Level((Bitmap)Image.FromFile("Resources/TerrainMasks/Background06.png")));
+            competition.Add(new Level((Bitmap)Image.FromFile("Resources/TerrainMasks/Background00.png"), new Point(345, 186)));
+            competition.Add(new Level((Bitmap)Image.FromFile("Resources/TerrainMasks/Background01.png"), new Point(319, 247)));
+            competition.Add(new Level((Bitmap)Image.FromFile("Resources/TerrainMasks/Background02.png"), new Point(532, 32)));
+            competition.Add(new Level((Bitmap)Image.FromFile("Resources/TerrainMasks/Background03.png"), new Point(504, 269)));
+            competition.Add(new Level((Bitmap)Image.FromFile("Resources/TerrainMasks/Background04.png"), new Point(183, 279)));
+            competition.Add(new Level((Bitmap)Image.FromFile("Resources/TerrainMasks/Background05.png"), new Point(457, 440)));
+            competition.Add(new Level((Bitmap)Image.FromFile("Resources/TerrainMasks/Background06.png"), new Point(280, 360)));
             competition.Launch();
         }
 

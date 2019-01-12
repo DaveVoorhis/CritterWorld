@@ -28,20 +28,24 @@ namespace CritterWorld
             Arena = arena;
         }
 
-        public Level(Bitmap terrainMask)
+        public Level(Bitmap terrainMask, Point escapeHatch)
         {
             TerrainMask = terrainMask;
+            EscapeHatch = escapeHatch;
         }
 
-        public Level(Arena arena, Bitmap terrainMask)
+        public Level(Arena arena, Bitmap terrainMask, Point escapeHatch)
         {
             Arena = arena;
             TerrainMask = terrainMask;
+            EscapeHatch = escapeHatch;
         }
 
         public Arena Arena { get; set; }
 
         public Bitmap TerrainMask { get; set; }
+
+        public Point EscapeHatch { get; set; }
 
         public int CountOfActiveCritters
         {
@@ -54,7 +58,7 @@ namespace CritterWorld
         private void SetupTerrain()
         {
             int mapWidth = terrainDensity;
-            int mapHeight = (int)(terrainDensity * (float)Arena.Surface.Height / (float)Arena.Surface.Width);
+            int mapHeight = (int)(terrainDensity * (float)Arena.Surface.Height / Arena.Surface.Width);
             for (int y = 0; y < mapHeight; y++)
             {
                 for (int x = 0; x < mapWidth; x++)
@@ -86,6 +90,13 @@ namespace CritterWorld
             Arena.AddFoods(FoodCount);
             Arena.AddBombs(BombCount);
             Arena.AddGifts(GiftCount);
+
+            if (EscapeHatch.X != 0 && EscapeHatch.Y != 0)
+            {
+                int escapeX = EscapeHatch.X * Arena.Surface.Width / TerrainMask.Width;
+                int escapeY = EscapeHatch.Y * Arena.Surface.Height / TerrainMask.Height;
+                Arena.AddEscapeHatch(new Point(escapeX, escapeY));
+            }
 
             for (int i = 0; i < CritterCount; i++)
             {

@@ -49,6 +49,11 @@ namespace CritterWorld
             };
         }
 
+        public void Escaped()
+        {
+            Kill();
+        }
+
         protected internal void Think(Random random)
         {
             // Do things here.

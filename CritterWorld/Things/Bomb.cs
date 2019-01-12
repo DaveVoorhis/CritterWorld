@@ -13,9 +13,9 @@ namespace CritterWorld
     {
         private Sprite spark;
 
-        public Bomb(int x, int y) : base((Bitmap)Image.FromFile("Resources/Images/bomb.png"))
+        public Bomb(Point position) : base((Bitmap)Image.FromFile("Resources/Images/bomb.png"))
         {
-            Position = new Point(x, y);
+            Position = position;
         }
 
         public void LightFuse()

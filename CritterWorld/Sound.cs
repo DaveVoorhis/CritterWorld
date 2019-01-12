@@ -117,6 +117,11 @@ namespace CritterWorld
         {
             Play("Zap");
         }
+
+        public static void PlayCheer()
+        {
+            Play("Cheer");
+        }
     }
 
 }

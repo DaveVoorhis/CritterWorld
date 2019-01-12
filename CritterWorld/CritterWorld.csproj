@@ -57,6 +57,7 @@
     <Compile Include="Things\Critter.cs" />
     <Compile Include="Things\CritterBody.cs" />
     <Compile Include="Things\Bomb.cs" />
+    <Compile Include="Things\EscapeHatch.cs" />
     <Compile Include="Things\Gift.cs" />
     <Compile Include="Level.cs" />
     <Compile Include="Program.cs" />
@@ -131,6 +132,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\Images\tennisball.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Sounds\Cheer.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\TerrainMasks\Background00.png">

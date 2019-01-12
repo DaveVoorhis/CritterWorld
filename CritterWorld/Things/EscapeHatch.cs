@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace CritterWorld
 {
-    public class Food : BitmapSprite
+    public class EscapeHatch : BitmapSprite
     {
-        public Food(Point position) : base((Bitmap)Image.FromFile("Resources/Images/Kiwi-Fruit.png"))
+        public EscapeHatch(Point position) : base((Bitmap)Image.FromFile("Resources/Images/Goal.png"))
         {
             Position = position;
         }
