@@ -30,6 +30,7 @@
         {
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.labelVersion = new System.Windows.Forms.ToolStripStatusLabel();
+            this.levelTimeoutProgress = new System.Windows.Forms.ToolStripProgressBar();
             this.labelFPS = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -42,7 +43,8 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.menuExit = new System.Windows.Forms.ToolStripMenuItem();
             this.arena = new CritterWorld.Arena();
-            this.levelTimeoutProgress = new System.Windows.Forms.ToolStripProgressBar();
+            this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuFullScreen = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.SuspendLayout();
@@ -66,6 +68,11 @@
             this.labelVersion.Size = new System.Drawing.Size(118, 17);
             this.labelVersion.Text = "toolStripStatusLabel1";
             // 
+            // levelTimeoutProgress
+            // 
+            this.levelTimeoutProgress.Name = "levelTimeoutProgress";
+            this.levelTimeoutProgress.Size = new System.Drawing.Size(500, 16);
+            // 
             // labelFPS
             // 
             this.labelFPS.Name = "labelFPS";
@@ -76,7 +83,8 @@
             // 
             this.menuStrip.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem});
+            this.fileToolStripMenuItem,
+            this.viewToolStripMenuItem});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
             this.menuStrip.Size = new System.Drawing.Size(842, 24);
@@ -152,15 +160,25 @@
             // 
             this.arena.Dock = System.Windows.Forms.DockStyle.Fill;
             this.arena.Location = new System.Drawing.Point(0, 24);
-            this.arena.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.arena.Margin = new System.Windows.Forms.Padding(6);
             this.arena.Name = "arena";
             this.arena.Size = new System.Drawing.Size(842, 490);
             this.arena.TabIndex = 3;
             // 
-            // levelTimeoutProgress
+            // viewToolStripMenuItem
             // 
-            this.levelTimeoutProgress.Name = "levelTimeoutProgress";
-            this.levelTimeoutProgress.Size = new System.Drawing.Size(500, 16);
+            this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuFullScreen});
+            this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
+            this.viewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.viewToolStripMenuItem.Text = "View";
+            // 
+            // menuFullScreen
+            // 
+            this.menuFullScreen.Name = "menuFullScreen";
+            this.menuFullScreen.Size = new System.Drawing.Size(180, 22);
+            this.menuFullScreen.Text = "Full screen";
+            this.menuFullScreen.Click += new System.EventHandler(this.MenuFullScreen_Click);
             // 
             // Critterworld
             // 
@@ -199,5 +217,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripStatusLabel labelVersion;
         private System.Windows.Forms.ToolStripProgressBar levelTimeoutProgress;
+        private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem menuFullScreen;
     }
 }

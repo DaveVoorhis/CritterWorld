@@ -22,7 +22,50 @@ namespace CritterWorld
         private Level level;
         private Competition competition;
 
-        System.Timers.Timer fpsDisplayTimer;
+        private System.Timers.Timer fpsDisplayTimer;
+
+        private Size oldSize;
+        private Point oldLocation;
+        private FormWindowState oldState;
+        private FormBorderStyle oldStyle;
+
+        private bool isFullScreen = false;
+
+        private bool Fullscreen
+        {
+            get
+            {
+                return isFullScreen;
+            }
+            set
+            {
+                if (value)
+                {
+                    oldSize = Size;
+                    oldState = WindowState;
+                    oldStyle = FormBorderStyle;
+                    oldLocation = Location;
+                    WindowState = FormWindowState.Normal;
+                    FormBorderStyle = FormBorderStyle.None;
+                    Bounds = Screen.PrimaryScreen.Bounds;
+                    isFullScreen = true;
+                }
+                else
+                {
+                    Location = oldLocation;
+                    WindowState = oldState;
+                    FormBorderStyle = oldStyle;
+                    Size = oldSize;
+                    isFullScreen = false;
+                }
+            }
+        }
+
+        private void MenuFullScreen_Click(object sender, EventArgs e)
+        {
+            Fullscreen = !Fullscreen;
+            menuFullScreen.Checked = Fullscreen;
+        }
 
         private String TickShow()
         {
@@ -254,6 +297,8 @@ namespace CritterWorld
         public Critterworld()
         {
             InitializeComponent();
+
+            menuFullScreen.Checked = Fullscreen;
 
             FormClosing += (sender, e) => ExitApplication();
 
