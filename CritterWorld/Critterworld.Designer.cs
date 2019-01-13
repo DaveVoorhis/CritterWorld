@@ -48,8 +48,15 @@
             this.menuFullScreen = new System.Windows.Forms.ToolStripMenuItem();
             this.textLog = new System.Windows.Forms.TextBox();
             this.arena = new CritterWorld.Arena();
+            this.dataGridViewLeaderboard = new System.Windows.Forms.DataGridView();
+            this.labelLeaderboard = new System.Windows.Forms.Label();
+            this.labelWaiting = new System.Windows.Forms.Label();
+            this.dataGridViewWaiting = new System.Windows.Forms.DataGridView();
+            this.panelScore = new System.Windows.Forms.Panel();
             this.statusStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewLeaderboard)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewWaiting)).BeginInit();
             this.SuspendLayout();
             // 
             // statusStrip
@@ -208,11 +215,64 @@
             this.arena.Size = new System.Drawing.Size(842, 490);
             this.arena.TabIndex = 3;
             // 
+            // dataGridViewLeaderboard
+            // 
+            this.dataGridViewLeaderboard.AllowUserToAddRows = false;
+            this.dataGridViewLeaderboard.AllowUserToDeleteRows = false;
+            this.dataGridViewLeaderboard.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewLeaderboard.Location = new System.Drawing.Point(1091, 61);
+            this.dataGridViewLeaderboard.Name = "dataGridViewLeaderboard";
+            this.dataGridViewLeaderboard.ReadOnly = true;
+            this.dataGridViewLeaderboard.Size = new System.Drawing.Size(177, 150);
+            this.dataGridViewLeaderboard.TabIndex = 5;
+            // 
+            // labelLeaderboard
+            // 
+            this.labelLeaderboard.AutoSize = true;
+            this.labelLeaderboard.Location = new System.Drawing.Point(1088, 45);
+            this.labelLeaderboard.Name = "labelLeaderboard";
+            this.labelLeaderboard.Size = new System.Drawing.Size(71, 13);
+            this.labelLeaderboard.TabIndex = 6;
+            this.labelLeaderboard.Text = "Leader Board";
+            // 
+            // labelWaiting
+            // 
+            this.labelWaiting.AutoSize = true;
+            this.labelWaiting.Location = new System.Drawing.Point(1088, 329);
+            this.labelWaiting.Name = "labelWaiting";
+            this.labelWaiting.Size = new System.Drawing.Size(43, 13);
+            this.labelWaiting.TabIndex = 8;
+            this.labelWaiting.Text = "Waiting";
+            // 
+            // dataGridViewWaiting
+            // 
+            this.dataGridViewWaiting.AllowUserToAddRows = false;
+            this.dataGridViewWaiting.AllowUserToDeleteRows = false;
+            this.dataGridViewWaiting.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewWaiting.Location = new System.Drawing.Point(1091, 345);
+            this.dataGridViewWaiting.Name = "dataGridViewWaiting";
+            this.dataGridViewWaiting.ReadOnly = true;
+            this.dataGridViewWaiting.Size = new System.Drawing.Size(177, 150);
+            this.dataGridViewWaiting.TabIndex = 7;
+            // 
+            // panelScore
+            // 
+            this.panelScore.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelScore.Location = new System.Drawing.Point(868, 61);
+            this.panelScore.Name = "panelScore";
+            this.panelScore.Size = new System.Drawing.Size(200, 100);
+            this.panelScore.TabIndex = 9;
+            // 
             // Critterworld
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1268, 667);
+            this.Controls.Add(this.panelScore);
+            this.Controls.Add(this.labelWaiting);
+            this.Controls.Add(this.dataGridViewWaiting);
+            this.Controls.Add(this.labelLeaderboard);
+            this.Controls.Add(this.dataGridViewLeaderboard);
             this.Controls.Add(this.textLog);
             this.Controls.Add(this.arena);
             this.Controls.Add(this.statusStrip);
@@ -225,6 +285,8 @@
             this.statusStrip.PerformLayout();
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewLeaderboard)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewWaiting)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -252,5 +314,10 @@
         private System.Windows.Forms.TextBox textLog;
         private System.Windows.Forms.ToolStripStatusLabel toolStripPadding2;
         private System.Windows.Forms.ToolStripStatusLabel toolStripPadding1;
+        private System.Windows.Forms.DataGridView dataGridViewLeaderboard;
+        private System.Windows.Forms.Label labelLeaderboard;
+        private System.Windows.Forms.Label labelWaiting;
+        private System.Windows.Forms.DataGridView dataGridViewWaiting;
+        private System.Windows.Forms.Panel panelScore;
     }
 }

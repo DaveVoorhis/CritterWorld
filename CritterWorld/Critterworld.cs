@@ -295,10 +295,20 @@ namespace CritterWorld
         {
             levelTimeoutProgress.Width = (int)(Width * 0.75);
 
-            int separationBetweenArenaAndTextLog = 0;
-            textLog.Bounds = new Rectangle(0, arena.Bottom + separationBetweenArenaAndTextLog, arena.Width, ClientRectangle.Height - statusStrip.Height - menuStrip.Height - arena.Height - separationBetweenArenaAndTextLog);
+            int heightOfDisplayArea = ClientRectangle.Height - statusStrip.Height - menuStrip.Height;
 
+            textLog.Bounds = new Rectangle(0, arena.Bottom, arena.Width, heightOfDisplayArea - arena.Height);
 
+            int widthToRightOfArena = ClientRectangle.Width - arena.Width;
+            panelScore.Bounds = new Rectangle(arena.Right, menuStrip.Height, widthToRightOfArena / 2, heightOfDisplayArea);
+
+            labelLeaderboard.Location = new Point(panelScore.Right, menuStrip.Height);
+
+            dataGridViewLeaderboard.Bounds = new Rectangle(panelScore.Right, labelLeaderboard.Bottom, widthToRightOfArena / 2, (heightOfDisplayArea - labelLeaderboard.Bounds.Height) / 2);
+
+            labelWaiting.Location = new Point(panelScore.Right, dataGridViewLeaderboard.Bottom);
+
+            dataGridViewWaiting.Bounds = new Rectangle(panelScore.Right, labelWaiting.Bottom, ClientRectangle.Width - arena.Width - panelScore.Width, heightOfDisplayArea - labelWaiting.Height - dataGridViewLeaderboard.Height - labelLeaderboard.Height);
         }
 
         // Use explicit layout to get around issues with HiDPI displays.
