@@ -61,19 +61,12 @@ namespace CritterWorld
             }
         }
 
-        private void MenuFullScreen_Click(object sender, EventArgs e)
-        {
-            Fullscreen = !Fullscreen;
-            menuFullScreen.Checked = Fullscreen;
-        }
+        private static string tickLine = ".....";
 
         private String TickShow()
         {
-            if (tickCount++ > 5)
-            {
-                tickCount = 0;
-            }
-            return new string('.', tickCount);
+            tickCount = (tickCount + 1) % tickLine.Length;
+            return " "+ tickLine.Substring(tickCount) + " " + tickLine.Substring(tickLine.Length - tickCount) + ".";
         }
 
         private void Shutdown()
@@ -144,6 +137,12 @@ namespace CritterWorld
             competition.Launch();
         }
 
+        private void MenuFullScreen_Click(object sender, EventArgs e)
+        {
+            Fullscreen = !Fullscreen;
+            menuFullScreen.Checked = Fullscreen;
+        }
+
         private void MenuNextLevel_Click(object sender, EventArgs e)
         {
             NextLevel();
@@ -170,11 +169,7 @@ namespace CritterWorld
             System.Timers.Timer gameOverTimer = new System.Timers.Timer();
             gameOverTimer.AutoReset = false;
             gameOverTimer.Interval = 5000;
-            gameOverTimer.Elapsed += (sender, e) =>
-            {
-                Shutdown();
-                DisplaySplash();
-            };
+            gameOverTimer.Elapsed += (sender, e) => DisplaySplash();
             gameOverTimer.Start();
             arena.Launch();
         }
@@ -247,6 +242,7 @@ namespace CritterWorld
 
         private void DisplaySplash()
         {
+            Shutdown();
             LevelTimerStop();
             DisplayCritterworldText();
             DisplayVersion();
@@ -293,17 +289,46 @@ namespace CritterWorld
                 Invoke(new Action(() => levelTimeoutProgress.Value = 0));
             }
         }
+   
+        // Use explicit layout to get around issues with HiDPI displays.
+        private void ForceLayout()
+        {
+            levelTimeoutProgress.Width = (int)(Width * 0.75);
+
+            int separationBetweenArenaAndTextLog = 0;
+            textLog.Bounds = new Rectangle(0, arena.Bottom + separationBetweenArenaAndTextLog, arena.Width, ClientRectangle.Height - statusStrip.Height - menuStrip.Height - arena.Height - separationBetweenArenaAndTextLog);
+
+
+        }
+
+        // Use explicit layout to get around issues with HiDPI displays.
+        private void ForceInitialLayout()
+        {
+            arena.Width = 1024;
+            arena.Height = 768;
+
+            Location = new Point(20, 20);
+            Width = Screen.PrimaryScreen.Bounds.Width - 50;
+            Height = Screen.PrimaryScreen.Bounds.Height - 50;
+
+            ForceLayout();
+        }
+
+        private void Critterworld_Resize(object sender, EventArgs e)
+        {
+            ForceLayout();
+        }
 
         public Critterworld()
         {
             InitializeComponent();
 
+            ForceInitialLayout();
+
             menuFullScreen.Checked = Fullscreen;
+            menuFullScreen.ImageScaling = ToolStripItemImageScaling.None;       // fix alignment problem on HiDPI displays
 
             FormClosing += (sender, e) => ExitApplication();
-
-            Width = 1000;
-            Height = 800 + Height - arena.Height;
 
             labelVersion.Text = Version.VersionName;
 
