@@ -27,17 +27,28 @@ namespace CritterWorld
 
         private static Random rnd = new Random(Guid.NewGuid().GetHashCode());
 
+        private int _critterNumber;
+
         private readonly bool selectedToTestCrash = false;
 
         public int EscapeCount { get; private set; }
+
         public int BombCount { get; private set; }
+
         public int CrashCount { get; private set; }
+
         public int OverallScore { get; private set; }
+
         public int CurrentScore { get; private set; }
+
         public int Energy { get; private set; }
 
-        public Critter(int scale) : base((new CritterBody()).GetBody(scale))
+        public int Health { get; private set; }
+
+        public Critter(int critterNumber) : base((new CritterBody()).GetBody(1))
         {
+            _critterNumber = critterNumber;
+
             LineWidth = 1;
             Color = Sprite.RandomColor(127);
             FacingAngle = 90;
@@ -171,8 +182,10 @@ namespace CritterWorld
         {
             Mover = null;
             Shutdown();
-            ParticleFountainSprite smoke = new ParticleFountainSprite(20, startColor, endColor, 1, 10, 10);
-            smoke.Position = Position;
+            ParticleFountainSprite smoke = new ParticleFountainSprite(20, startColor, endColor, 1, 10, 10)
+            {
+                Position = Position
+            };
             Engine?.AddSprite(smoke);
             System.Timers.Timer smokeTimer = new System.Timers.Timer
             {
@@ -195,6 +208,29 @@ namespace CritterWorld
             smokeTimer.Start();
         }
 
+        private TextSprite numberPlate = null;
+
+        // Attach a number plate to this Critter.
+        public void AttachNumberPlate()
+        {
+            if (numberPlate != null)
+            {
+                return;
+            }
+            numberPlate = new TextSprite(_critterNumber.ToString(), "Arial", 14, FontStyle.Regular)
+            {
+                Position = Position,
+                IsFilled = true,
+                Color = Color.White,
+                FillColor = Color.White,
+                Alpha = 200,
+                Mover = new SlaveMover(this)
+            };
+            Engine.AddSprite(numberPlate);
+        }
+
+        private int numberPlateIncrement = 1;
+
         // Launch this Critter.
         public void Startup()
         {
@@ -215,6 +251,8 @@ namespace CritterWorld
             };
             Mover = spriteMover;
 
+            AttachNumberPlate();
+
             thinkThread = new Thread(() =>
             {
                 stopped = false;
@@ -226,6 +264,20 @@ namespace CritterWorld
                     {
                         try
                         {
+                            if (numberPlate != null)
+                            {
+                                numberPlate.Position = Position;
+                                numberPlate.Alpha += (byte)numberPlateIncrement;
+                                if (numberPlate.Alpha == 255)
+                                {
+                                    numberPlateIncrement = -1;
+                                }
+                                else if (numberPlate.Alpha == 0)
+                                {
+                                    numberPlateIncrement = 1;
+                                }
+                            }
+
                             stopwatch.Reset();
                             stopwatch.Start();
                             Think(rnd);
@@ -270,6 +322,12 @@ namespace CritterWorld
         // Shut down this Critter.
         public void Shutdown()
         {
+            if (numberPlate != null)
+            {
+                numberPlate.Color = Color.LightGray;
+                numberPlate.FillColor = Color.LightGray;
+                numberPlate.Alpha = 255;
+            }
             stopped = true;
         }
 
@@ -285,6 +343,10 @@ namespace CritterWorld
         public override void Kill()
         {
             Shutdown();
+            if (numberPlate != null)
+            {
+                numberPlate.Kill();
+            }
             base.Kill();
         }
     }

@@ -103,6 +103,9 @@ namespace SCG.TurboSprite
         // Access the fill color
         public Color FillColor { get; set; } = Color.Empty;
 
+        // Transparency. 255 = opaque. 0 = transparent.
+        public byte Alpha { get; set; } = 255;
+
         // Render the sprite - draw the polygon
         protected internal override void Render(Graphics graphics)
         {
@@ -129,14 +132,14 @@ namespace SCG.TurboSprite
             // Fill it?
             if (IsFilled)
             {
-                using (Brush brush = new SolidBrush(FillColor))
+                using (Brush brush = new SolidBrush(Color.FromArgb(Alpha, Color)))
                 {
                     graphics.FillPath(brush, path);
                 }
             }
 
             // Draw outline
-            using (Pen pen = new Pen(Color, LineWidth))
+            using (Pen pen = new Pen(Color.FromArgb(Alpha, Color), LineWidth))
             {
                 graphics.DrawPath(pen, path);
             }

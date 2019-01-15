@@ -100,7 +100,7 @@ namespace CritterWorld
 
             for (int i = 0; i < CritterCount; i++)
             {
-                Critter critter = new Critter(critterSpriteScale);
+                Critter critter = new Critter(i);
                 Arena.AddCritter(critter);
             }
 
