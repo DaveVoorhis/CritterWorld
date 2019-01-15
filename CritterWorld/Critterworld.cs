@@ -309,6 +309,9 @@ namespace CritterWorld
             labelWaiting.Location = new Point(panelScore.Right, dataGridViewLeaderboard.Bottom);
 
             dataGridViewWaiting.Bounds = new Rectangle(panelScore.Right, labelWaiting.Bottom, ClientRectangle.Width - arena.Width - panelScore.Width, heightOfDisplayArea - labelWaiting.Height - dataGridViewLeaderboard.Height - labelLeaderboard.Height);
+
+            Console.WriteLine("panelScore Height = " + panelScore.Height);
+            Console.WriteLine("panelScore Width = " + panelScore.Width);
         }
 
         // Use explicit layout to get around issues with HiDPI displays.
@@ -334,6 +337,14 @@ namespace CritterWorld
             InitializeComponent();
 
             ForceInitialLayout();
+
+
+            for (int i=0; i<25; i++)
+            {
+                CritterScorePanel scorePanel = new CritterScorePanel();
+                scorePanel.Location = new Point(0, scorePanel.Height * i);
+                panelScore.Controls.Add(scorePanel);
+            }
 
             menuFullScreen.Checked = Fullscreen;
             menuFullScreen.ImageScaling = ToolStripItemImageScaling.None;       // fix alignment problem on HiDPI displays
