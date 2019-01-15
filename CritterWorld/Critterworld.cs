@@ -66,7 +66,7 @@ namespace CritterWorld
         private String TickShow()
         {
             tickCount = (tickCount + 1) % tickLine.Length;
-            return " "+ tickLine.Substring(tickCount) + " " + tickLine.Substring(tickLine.Length - tickCount) + ".";
+            return " " + tickLine.Substring(tickCount) + " " + tickLine.Substring(tickLine.Length - tickCount) + ".";
         }
 
         private void Shutdown()
