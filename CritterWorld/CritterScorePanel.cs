@@ -7,55 +7,45 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using SCG.TurboSprite;
 
 namespace CritterWorld
 {
-    public partial class CritterScorePanel : UserControl, IScoreDisplay
+    public partial class CritterScorePanel : UserControl
     {
-        private int currentScore;
-        private int overallScore;
-        private int critterNumber;
-
-        private void UpdateScore()
+        private void UpdateScore(int currentScore, int overallScore)
         {
-            Invoke(new Action(() => labelScore.Text = currentScore + "/" + overallScore));
+            labelScore.Text = currentScore + "/" + overallScore;
         }
 
-        public CritterScorePanel()
+        public CritterScorePanel(Critter critter)
         {
             InitializeComponent();
-        }
 
-        int IScoreDisplay.CritterNumber { set => critterNumber = value; }
+            // TODO - set image of critter in score area here
 
-        string IScoreDisplay.Name { set => Invoke(new Action(() => labelName.Text = value)); }
-
-        string IScoreDisplay.Author { set => Invoke(new Action(() => labelAuthor.Text = value)); }
-
-        bool IScoreDisplay.Escaped { set => Invoke(new Action(() => labelEscaped.Visible = value)); }
-
-        int IScoreDisplay.Energy { set => Invoke(new Action(() => progressBarEnergy.Value = value)); }
-
-        bool IScoreDisplay.Killed { set => Invoke(new Action(() => labelDead.Visible = value)); }
-
-        int IScoreDisplay.Health { set => Invoke(new Action(() => progressBarHealth.Value = value)); }
-
-        int IScoreDisplay.CurrentScore
-        {
-            set
+            Timer timer = new Timer
             {
-                currentScore = value;
-                UpdateScore();
-            }
-        }
-
-        int IScoreDisplay.OverallScore {
-            set
+                Interval = 500
+            };
+            timer.Tick += (e, evt) =>
             {
-                overallScore = value;
-                UpdateScore();
-            }
+                UpdateScore(critter.CurrentScore, critter.OverallScore);
+                progressBarHealth.Value = critter.Health;
+                progressBarEnergy.Value = critter.Energy;
+                if (critter.IsEscaped)
+                {
+                    labelEscaped.Visible = true;
+                    UpdateScore(critter.CurrentScore, critter.OverallScore);
+                    timer.Stop();
+                }
+                if (critter.IsDead)
+                {
+                    labelDead.Visible = true;
+                    timer.Stop();
+                }
+            };
+            timer.Start();
         }
-
     }
 }

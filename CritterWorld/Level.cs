@@ -13,8 +13,6 @@ namespace CritterWorld
         private const int terrainDensity = 80;
         private const int critterSpriteScale = 1;
 
-        int CritterCount { get; set; } = 25;
-
         int FoodCount { get; set; } = 5;
 
         int GiftCount { get; set; } = 5;
@@ -78,7 +76,7 @@ namespace CritterWorld
             }
         }
 
-        public void Launch(IScoreDisplay[] critterScorePanels)
+        public void Setup()
         {
             if (Arena == null || TerrainMask == null)
             {
@@ -97,20 +95,6 @@ namespace CritterWorld
                 int escapeY = EscapeHatch.Y * Arena.Surface.Height / TerrainMask.Height;
                 Arena.AddEscapeHatch(new Point(escapeX, escapeY));
             }
-
-            for (int i = 0; i < CritterCount; i++)
-            {
-                Critter critter = new Critter(i + 1);
-                critter.ScoreDisplay = critterScorePanels[i];
-                Arena.AddCritter(critter);
-            }
-
-            Arena.Launch();
-        }
-
-        public void Shutdown()
-        {
-            Arena.Shutdown();
         }
     }
 

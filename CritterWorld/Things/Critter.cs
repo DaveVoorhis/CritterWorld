@@ -32,20 +32,16 @@ namespace CritterWorld
         private readonly bool selectedToTestCrash = false;
 
         public int EscapeCount { get; private set; }
-
         public int BombCount { get; private set; }
-
         public int CrashCount { get; private set; }
 
         public int OverallScore { get; private set; }
-
         public int CurrentScore { get; private set; }
 
         public int Energy { get; private set; }
-
         public int Health { get; private set; }
-
-        public IScoreDisplay ScoreDisplay { get; set; } = new EmptyScoreDisplay();
+        public bool IsEscaped { get; private set; }
+        public bool IsDead { get; private set; }
 
         public Critter(int critterNumber) : base((new CritterBody()).GetBody(1))
         {
@@ -73,16 +69,13 @@ namespace CritterWorld
         {
             EscapeCount++;
             OverallScore += CurrentScore;
-            CurrentScore = 0;
             Kill();
-            ScoreDisplay.Escaped = true;
-            ScoreDisplay.OverallScore = OverallScore;
+            IsEscaped = true;
         }
 
         public void Scored()
         {
             CurrentScore++;
-            ScoreDisplay.CurrentScore = CurrentScore;
         }
 
         public void Ate()
@@ -92,19 +85,18 @@ namespace CritterWorld
             {
                 Energy = 100;
             }
-            ScoreDisplay.Energy = Energy;
         }
 
         public void Bombed()
         {
             BombCount++;
-            ScoreDisplay.Killed = true;
+            IsDead = true;
         }
 
         public void Crashed()
         {
             CrashCount++;
-            ScoreDisplay.Killed = true;
+            IsDead = true;
         }
 
         protected internal void Think(Random random)
@@ -248,14 +240,8 @@ namespace CritterWorld
         {
             Health = 100;
             Energy = 100;
-
-            ScoreDisplay.CritterNumber = _critterNumber;
-            ScoreDisplay.CurrentScore = CurrentScore;
-            ScoreDisplay.OverallScore = OverallScore;
-            ScoreDisplay.Energy = Energy;
-            ScoreDisplay.Health = Health;
-            ScoreDisplay.Escaped = false;
-            ScoreDisplay.Killed = false;
+            IsEscaped = false;
+            IsDead = false;
 
             if (thinkThread != null)
             {
@@ -372,26 +358,5 @@ namespace CritterWorld
             }
             base.Kill();
         }
-    }
-
-    internal class EmptyScoreDisplay : IScoreDisplay
-    {
-        int IScoreDisplay.CritterNumber { set { } }
-
-        string IScoreDisplay.Name { set { } }
-
-        string IScoreDisplay.Author { set { } }
-
-        int IScoreDisplay.CurrentScore { set { } }
-
-        bool IScoreDisplay.Escaped { set { } }
-
-        int IScoreDisplay.Energy { set { } }
-
-        bool IScoreDisplay.Killed { set { } }
-
-        int IScoreDisplay.Health { set { } }
-
-        int IScoreDisplay.OverallScore { set { } }
     }
 }

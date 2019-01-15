@@ -34,8 +34,6 @@ namespace CritterWorld
 
         private bool isFullScreen = false;
 
-        private IScoreDisplay[] critterScorePanels = new IScoreDisplay[maxCrittersRunning];
-
         private bool Fullscreen
         {
             get
@@ -74,20 +72,39 @@ namespace CritterWorld
             return " " + tickLine.Substring(tickCount) + " " + tickLine.Substring(tickLine.Length - tickCount) + ".";
         }
 
+        private void ClearScorePanel()
+        {
+            if (IsHandleCreated)
+            {
+                Invoke(new Action(() => panelScore.Controls.Clear()));
+            }
+        }
+
         private void Shutdown()
         {
             LevelTimerStop();
             arena.Shutdown();
-            if (level != null)
-            {
-                level.Shutdown();
-                level = null;
-            }
+            level = null;
             if (competition != null)
             {
                 competition.Shutdown();
                 competition = null;
             }
+            ClearScorePanel();
+        }
+
+        private void AddCrittersToArena()
+        {
+            ClearScorePanel();
+            for (int i = 0; i < maxCrittersRunning; i++)
+            {
+                Critter critter = new Critter(i + 1);
+                arena.AddCritter(critter);
+                CritterScorePanel scorePanel = new CritterScorePanel(critter);
+                scorePanel.Location = new Point(0, scorePanel.Height * i);
+                Invoke(new Action(() => panelScore.Controls.Add(scorePanel)));
+            }
+            arena.Launch();
         }
 
         private void StartOneLevel()
@@ -95,7 +112,8 @@ namespace CritterWorld
             Shutdown();
             LevelTimerStart();
             level = new Level(arena, (Bitmap)Image.FromFile("Resources/TerrainMasks/Background05.png"), new Point(457, 440));
-            level.Launch(critterScorePanels);
+            level.Setup();
+            AddCrittersToArena();
         }
 
         private void NextLevel()
@@ -129,7 +147,7 @@ namespace CritterWorld
         {
             Shutdown();
             LevelTimerStart();
-            competition = new Competition(arena, critterScorePanels);
+            competition = new Competition(arena, () => AddCrittersToArena());
             competition.Finished += (sndr, ev) => DisplayGameOver();
             competition.FinishedLevel += (sndr, ev) => LevelTimerStart();
             competition.Add(new Level((Bitmap)Image.FromFile("Resources/TerrainMasks/Background00.png"), new Point(345, 186)));
@@ -294,7 +312,7 @@ namespace CritterWorld
                 Invoke(new Action(() => levelTimeoutProgress.Value = 0));
             }
         }
-   
+
         // Use explicit layout to get around issues with HiDPI displays.
         private void ForceLayout()
         {
@@ -339,14 +357,6 @@ namespace CritterWorld
             InitializeComponent();
 
             ForceInitialLayout();
-
-            for (int i = 0; i < maxCrittersRunning; i++)
-            {
-                CritterScorePanel scorePanel = new CritterScorePanel();
-                scorePanel.Location = new Point(0, scorePanel.Height * i);
-                panelScore.Controls.Add(scorePanel);
-                critterScorePanels[i] = scorePanel;
-            }
 
             menuFullScreen.Checked = Fullscreen;
             menuFullScreen.ImageScaling = ToolStripItemImageScaling.None;       // fix alignment problem on HiDPI displays

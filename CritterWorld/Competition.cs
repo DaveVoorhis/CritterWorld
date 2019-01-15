@@ -14,16 +14,16 @@ namespace CritterWorld
 
         private List<Level> levels = new List<Level>();
         private readonly Arena _arena;
-        private readonly IScoreDisplay[] _critterScorePanels;
         private int levelIndex = -1;
         private Level currentLevel;
+        private readonly Action _LoadCritters;
 
         private Timer levelCheckTimer = new Timer();
 
-        public Competition(Arena arena, IScoreDisplay[] critterScorePanels)
+        public Competition(Arena arena, Action LoadCritters)
         {
             _arena = arena;
-            _critterScorePanels = critterScorePanels;
+            _LoadCritters = LoadCritters;
         }
 
         public void Add(Level level)
@@ -35,7 +35,7 @@ namespace CritterWorld
         public void NextLevel()
         {
             levelCheckTimer.Stop();
-            currentLevel?.Shutdown();
+            _arena.Shutdown();
             levelIndex++;
             if (levelIndex >= levels.Count)
             {
@@ -45,7 +45,9 @@ namespace CritterWorld
             else
             {
                 currentLevel = levels[levelIndex];
-                currentLevel.Launch(_critterScorePanels);
+                currentLevel.Setup();
+                _LoadCritters();
+                _arena.Launch();
                 levelCheckTimer.Start();
                 FinishedLevel?.Invoke(this, new EventArgs());
             }
@@ -69,10 +71,7 @@ namespace CritterWorld
 
         public void Shutdown()
         {
-            if (currentLevel != null)
-            {
-                currentLevel.Shutdown();
-            }
+            _arena.Shutdown();
             levelCheckTimer.Stop();
         }
     }
