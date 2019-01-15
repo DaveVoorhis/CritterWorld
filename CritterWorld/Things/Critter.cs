@@ -45,6 +45,8 @@ namespace CritterWorld
 
         public int Health { get; private set; }
 
+        public IScoreDisplay ScoreDisplay { get; set; } = new EmptyScoreDisplay();
+
         public Critter(int critterNumber) : base((new CritterBody()).GetBody(1))
         {
             _critterNumber = critterNumber;
@@ -73,26 +75,36 @@ namespace CritterWorld
             OverallScore += CurrentScore;
             CurrentScore = 0;
             Kill();
+            ScoreDisplay.Escaped = true;
+            ScoreDisplay.OverallScore = OverallScore;
         }
 
         public void Scored()
         {
             CurrentScore++;
+            ScoreDisplay.CurrentScore = CurrentScore;
         }
 
         public void Ate()
         {
             Energy++;
+            if (Energy > 100)
+            {
+                Energy = 100;
+            }
+            ScoreDisplay.Energy = Energy;
         }
 
         public void Bombed()
         {
             BombCount++;
+            ScoreDisplay.Killed = true;
         }
 
         public void Crashed()
         {
             CrashCount++;
+            ScoreDisplay.Killed = true;
         }
 
         protected internal void Think(Random random)
@@ -234,6 +246,17 @@ namespace CritterWorld
         // Launch this Critter.
         public void Startup()
         {
+            Health = 100;
+            Energy = 100;
+
+            ScoreDisplay.CritterNumber = _critterNumber;
+            ScoreDisplay.CurrentScore = CurrentScore;
+            ScoreDisplay.OverallScore = OverallScore;
+            ScoreDisplay.Energy = Energy;
+            ScoreDisplay.Health = Health;
+            ScoreDisplay.Escaped = false;
+            ScoreDisplay.Killed = false;
+
             if (thinkThread != null)
             {
                 return;
@@ -349,5 +372,26 @@ namespace CritterWorld
             }
             base.Kill();
         }
+    }
+
+    internal class EmptyScoreDisplay : IScoreDisplay
+    {
+        int IScoreDisplay.CritterNumber { set { } }
+
+        string IScoreDisplay.Name { set { } }
+
+        string IScoreDisplay.Author { set { } }
+
+        int IScoreDisplay.CurrentScore { set { } }
+
+        bool IScoreDisplay.Escaped { set { } }
+
+        int IScoreDisplay.Energy { set { } }
+
+        bool IScoreDisplay.Killed { set { } }
+
+        int IScoreDisplay.Health { set { } }
+
+        int IScoreDisplay.OverallScore { set { } }
     }
 }

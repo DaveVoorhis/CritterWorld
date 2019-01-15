@@ -78,7 +78,7 @@ namespace CritterWorld
             }
         }
 
-        public void Launch()
+        public void Launch(IScoreDisplay[] critterScorePanels)
         {
             if (Arena == null || TerrainMask == null)
             {
@@ -100,7 +100,8 @@ namespace CritterWorld
 
             for (int i = 0; i < CritterCount; i++)
             {
-                Critter critter = new Critter(i);
+                Critter critter = new Critter(i + 1);
+                critter.ScoreDisplay = critterScorePanels[i];
                 Arena.AddCritter(critter);
             }
 

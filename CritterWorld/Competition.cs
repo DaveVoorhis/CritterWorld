@@ -14,15 +14,16 @@ namespace CritterWorld
 
         private List<Level> levels = new List<Level>();
         private readonly Arena _arena;
-
+        private readonly IScoreDisplay[] _critterScorePanels;
         private int levelIndex = -1;
         private Level currentLevel;
 
         private Timer levelCheckTimer = new Timer();
 
-        public Competition(Arena arena)
+        public Competition(Arena arena, IScoreDisplay[] critterScorePanels)
         {
             _arena = arena;
+            _critterScorePanels = critterScorePanels;
         }
 
         public void Add(Level level)
@@ -44,7 +45,7 @@ namespace CritterWorld
             else
             {
                 currentLevel = levels[levelIndex];
-                currentLevel.Launch();
+                currentLevel.Launch(_critterScorePanels);
                 levelCheckTimer.Start();
                 FinishedLevel?.Invoke(this, new EventArgs());
             }

@@ -16,7 +16,10 @@ namespace CritterWorld
     public partial class Critterworld : Form
     {
         // Level duration in seconds.
-        const int levelDuration = 60 * 3; 
+        const int levelDuration = 60 * 3;
+
+        // Maximum number of Critters running at the same time.
+        const int maxCrittersRunning = 25;
 
         private int tickCount = 0;
         private Level level;
@@ -30,6 +33,8 @@ namespace CritterWorld
         private FormBorderStyle oldStyle;
 
         private bool isFullScreen = false;
+
+        private IScoreDisplay[] critterScorePanels = new IScoreDisplay[maxCrittersRunning];
 
         private bool Fullscreen
         {
@@ -90,7 +95,7 @@ namespace CritterWorld
             Shutdown();
             LevelTimerStart();
             level = new Level(arena, (Bitmap)Image.FromFile("Resources/TerrainMasks/Background05.png"), new Point(457, 440));
-            level.Launch();
+            level.Launch(critterScorePanels);
         }
 
         private void NextLevel()
@@ -124,7 +129,7 @@ namespace CritterWorld
         {
             Shutdown();
             LevelTimerStart();
-            competition = new Competition(arena);
+            competition = new Competition(arena, critterScorePanels);
             competition.Finished += (sndr, ev) => DisplayGameOver();
             competition.FinishedLevel += (sndr, ev) => LevelTimerStart();
             competition.Add(new Level((Bitmap)Image.FromFile("Resources/TerrainMasks/Background00.png"), new Point(345, 186)));
@@ -309,9 +314,6 @@ namespace CritterWorld
             labelWaiting.Location = new Point(panelScore.Right, dataGridViewLeaderboard.Bottom);
 
             dataGridViewWaiting.Bounds = new Rectangle(panelScore.Right, labelWaiting.Bottom, ClientRectangle.Width - arena.Width - panelScore.Width, heightOfDisplayArea - labelWaiting.Height - dataGridViewLeaderboard.Height - labelLeaderboard.Height);
-
-            Console.WriteLine("panelScore Height = " + panelScore.Height);
-            Console.WriteLine("panelScore Width = " + panelScore.Width);
         }
 
         // Use explicit layout to get around issues with HiDPI displays.
@@ -338,12 +340,12 @@ namespace CritterWorld
 
             ForceInitialLayout();
 
-
-            for (int i=0; i<25; i++)
+            for (int i = 0; i < maxCrittersRunning; i++)
             {
                 CritterScorePanel scorePanel = new CritterScorePanel();
                 scorePanel.Location = new Point(0, scorePanel.Height * i);
                 panelScore.Controls.Add(scorePanel);
+                critterScorePanels[i] = scorePanel;
             }
 
             menuFullScreen.Checked = Fullscreen;
