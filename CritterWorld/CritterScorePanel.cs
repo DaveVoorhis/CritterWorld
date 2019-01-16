@@ -45,7 +45,6 @@ namespace CritterWorld
             };
             timer.Tick += (e, evt) =>
             {
-                Console.WriteLine("Update critter " + critter.Name + " health = " + critter.Health);
                 UpdateScore(critter.CurrentScore, critter.OverallScore);
                 progressBarHealth.Value = critter.Health;
                 progressBarEnergy.Value = critter.Energy;
