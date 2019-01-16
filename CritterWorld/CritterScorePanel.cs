@@ -52,10 +52,12 @@ namespace CritterWorld
                 {
                     labelEscaped.Visible = true;
                     UpdateScore(critter.CurrentScore, critter.OverallScore);
+                    timer.Stop();
                 }
                 if (critter.IsDead)
                 {
                     labelDead.Visible = true;
+                    timer.Stop();
                 }
             };
             timer.Start();

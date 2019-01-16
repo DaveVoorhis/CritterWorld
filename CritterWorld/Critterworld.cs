@@ -16,17 +16,49 @@ namespace CritterWorld
     public partial class Critterworld : Form
     {
         // Level duration in seconds.
-        const int levelDuration = 10;
+        const int levelDuration = 60 * 3;
 
         // Maximum number of Critters running at the same time.
         const int maxCrittersRunning = 25;
 
+        // Available levels
+        private Level[] levels = new Level[]
+        {
+            new Level((Bitmap)Image.FromFile("Resources/TerrainMasks/Background00.png"), new Point(345, 186)),
+            new Level((Bitmap)Image.FromFile("Resources/TerrainMasks/Background01.png"), new Point(319, 247)),
+            new Level((Bitmap)Image.FromFile("Resources/TerrainMasks/Background02.png"), new Point(532, 32)),
+            new Level((Bitmap)Image.FromFile("Resources/TerrainMasks/Background03.png"), new Point(504, 269)),
+            new Level((Bitmap)Image.FromFile("Resources/TerrainMasks/Background04.png"), new Point(183, 279)),
+            new Level((Bitmap)Image.FromFile("Resources/TerrainMasks/Background05.png"), new Point(457, 440)),
+            new Level((Bitmap)Image.FromFile("Resources/TerrainMasks/Background06.png"), new Point(280, 360))
+        };
+
+        // Run this level when not running a competition
+        const int singleLevel = 5;
+
+        // Used to create animated activity indicator beside FPS display.
+        private static string tickLine = ".....";
         private int tickCount = 0;
+
+        // If we're not running a competition, we're running this level
         private Level level;
+
+        // If we're running a competition, this is not null
         private Competition competition;
 
-        private System.Timers.Timer fpsDisplayTimer;
+        // To update the FPS display
+        private System.Timers.Timer fpsDisplayTimer = null;
 
+        // To switch over from "GAME OVER" to splash
+        private System.Timers.Timer gameOverTimer = null;
+
+        // To terminate a level after levelDuration seconds...
+        private System.Timers.Timer levelTimer = null;
+
+        // ...by counting down a second at a time
+        private int countDown;
+
+        // Preserve window layout when going full screen
         private Size oldSize;
         private Point oldLocation;
         private FormWindowState oldState;
@@ -64,8 +96,6 @@ namespace CritterWorld
             }
         }
 
-        private static string tickLine = ".....";
-
         private String TickShow()
         {
             tickCount = (tickCount + 1) % tickLine.Length;
@@ -89,6 +119,10 @@ namespace CritterWorld
 
         private void Shutdown()
         {
+            if (gameOverTimer != null)
+            {
+                gameOverTimer.Stop();
+            }
             LevelTimerStop();
             arena.Shutdown();
             level = null;
@@ -120,7 +154,8 @@ namespace CritterWorld
         {
             Shutdown();
             LevelTimerStart();
-            level = new Level(arena, (Bitmap)Image.FromFile("Resources/TerrainMasks/Background05.png"), new Point(457, 440));
+            level = levels[singleLevel];
+            level.Arena = arena;
             level.Setup();
             AddCrittersToArena();
         }
@@ -159,13 +194,10 @@ namespace CritterWorld
             competition = new Competition(arena, () => AddCrittersToArena());
             competition.Finished += (sndr, ev) => DisplayGameOver();
             competition.FinishedLevel += (sndr, ev) => LevelTimerStart();
-            competition.Add(new Level((Bitmap)Image.FromFile("Resources/TerrainMasks/Background00.png"), new Point(345, 186)));
-            competition.Add(new Level((Bitmap)Image.FromFile("Resources/TerrainMasks/Background01.png"), new Point(319, 247)));
-            competition.Add(new Level((Bitmap)Image.FromFile("Resources/TerrainMasks/Background02.png"), new Point(532, 32)));
-            competition.Add(new Level((Bitmap)Image.FromFile("Resources/TerrainMasks/Background03.png"), new Point(504, 269)));
-            competition.Add(new Level((Bitmap)Image.FromFile("Resources/TerrainMasks/Background04.png"), new Point(183, 279)));
-            competition.Add(new Level((Bitmap)Image.FromFile("Resources/TerrainMasks/Background05.png"), new Point(457, 440)));
-            competition.Add(new Level((Bitmap)Image.FromFile("Resources/TerrainMasks/Background06.png"), new Point(280, 360)));
+            foreach (Level level in levels)
+            {
+                competition.Add(level);
+            }
             competition.Launch();
         }
 
@@ -198,10 +230,15 @@ namespace CritterWorld
             splashText.Mover = new TextGrower(1, 100, 3);
             arena.AddSprite(splashText);
             splashText.Position = new Point(arena.Width / 2, arena.Height / 2);
-            System.Timers.Timer gameOverTimer = new System.Timers.Timer();
-            gameOverTimer.AutoReset = false;
-            gameOverTimer.Interval = 5000;
-            gameOverTimer.Elapsed += (sender, e) => DisplaySplash();
+            if (gameOverTimer == null)
+            {
+                gameOverTimer = new System.Timers.Timer
+                {
+                    AutoReset = false,
+                    Interval = 5000
+                };
+                gameOverTimer.Elapsed += (sender, e) => DisplaySplash();
+            }
             gameOverTimer.Start();
             arena.Launch();
         }
@@ -281,9 +318,6 @@ namespace CritterWorld
             DisplayWanderingCritter();
             arena.Launch();
         }
-
-        private System.Timers.Timer levelTimer = null;
-        private int countDown;
 
         private void Tick()
         {
