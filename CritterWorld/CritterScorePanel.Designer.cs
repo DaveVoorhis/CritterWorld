@@ -41,13 +41,14 @@
             this.labelEscaped = new System.Windows.Forms.Label();
             this.labelDead = new System.Windows.Forms.Label();
             this.spriteSurfaceCritter = new SCG.TurboSprite.SpriteSurface(this.components);
+            this.labelNumber = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // labelScorePrompt
             // 
             this.labelScorePrompt.AutoSize = true;
             this.labelScorePrompt.Font = new System.Drawing.Font("Arial Narrow", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelScorePrompt.Location = new System.Drawing.Point(46, 2);
+            this.labelScorePrompt.Location = new System.Drawing.Point(79, 1);
             this.labelScorePrompt.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelScorePrompt.Name = "labelScorePrompt";
             this.labelScorePrompt.Size = new System.Drawing.Size(26, 13);
@@ -58,7 +59,7 @@
             // 
             this.labelScore.AutoSize = true;
             this.labelScore.Font = new System.Drawing.Font("Arial Narrow", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelScore.Location = new System.Drawing.Point(70, 2);
+            this.labelScore.Location = new System.Drawing.Point(109, 2);
             this.labelScore.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelScore.Name = "labelScore";
             this.labelScore.Size = new System.Drawing.Size(33, 13);
@@ -84,20 +85,20 @@
             // labelName
             // 
             this.labelName.Font = new System.Drawing.Font("Arial Narrow", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelName.Location = new System.Drawing.Point(46, 14);
+            this.labelName.Location = new System.Drawing.Point(48, 14);
             this.labelName.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelName.Name = "labelName";
-            this.labelName.Size = new System.Drawing.Size(188, 11);
+            this.labelName.Size = new System.Drawing.Size(186, 11);
             this.labelName.TabIndex = 8;
             this.labelName.Text = "Name";
             // 
             // labelAuthor
             // 
             this.labelAuthor.Font = new System.Drawing.Font("Arial Narrow", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelAuthor.Location = new System.Drawing.Point(46, 25);
+            this.labelAuthor.Location = new System.Drawing.Point(48, 25);
             this.labelAuthor.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelAuthor.Name = "labelAuthor";
-            this.labelAuthor.Size = new System.Drawing.Size(188, 13);
+            this.labelAuthor.Size = new System.Drawing.Size(186, 13);
             this.labelAuthor.TabIndex = 9;
             this.labelAuthor.Text = "Author";
             // 
@@ -161,10 +162,20 @@
             this.spriteSurfaceCritter.VirtualWidth = 0;
             this.spriteSurfaceCritter.WraparoundEdges = false;
             // 
+            // labelNumber
+            // 
+            this.labelNumber.AutoSize = true;
+            this.labelNumber.Location = new System.Drawing.Point(45, 2);
+            this.labelNumber.Name = "labelNumber";
+            this.labelNumber.Size = new System.Drawing.Size(25, 13);
+            this.labelNumber.TabIndex = 11;
+            this.labelNumber.Text = "999";
+            // 
             // CritterScorePanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.labelNumber);
             this.Controls.Add(this.labelDead);
             this.Controls.Add(this.labelEscaped);
             this.Controls.Add(this.labelAuthor);
@@ -197,5 +208,6 @@
         private System.Windows.Forms.Label labelName;
         private System.Windows.Forms.Label labelAuthor;
         private System.Windows.Forms.Label labelDead;
+        private System.Windows.Forms.Label labelNumber;
     }
 }

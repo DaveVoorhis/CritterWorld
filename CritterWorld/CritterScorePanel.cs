@@ -22,7 +22,19 @@ namespace CritterWorld
         {
             InitializeComponent();
 
-            // TODO - set image of critter in score area here
+            SpriteEngine spriteEngine = new SpriteEngine
+            {
+                Surface = spriteSurfaceCritter
+            };
+
+            PolygonSprite critterImage = new PolygonSprite(critter.Model)
+            {
+                Color = critter.Color,
+                Position = new Point(spriteSurfaceCritter.Width / 2, spriteSurfaceCritter.Height / 2)
+            };
+            spriteEngine.AddSprite(critterImage);
+
+            labelNumber.Text = critter.Number.ToString();
 
             Timer timer = new Timer
             {

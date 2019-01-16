@@ -40,12 +40,11 @@ namespace SCG.TurboSprite
         private int _lastAngle;
         private readonly PointF[][] _rotatedPoints;
         private readonly PointF[][] _drawnPoints;
-        private readonly PointF[][] _model;
 
         // Construct a polygon-based sprite with 1 or more arrays of points that can be selected to create animation.
         public PolygonSprite(PointF[][] model)
         {
-            _model = model;
+            Model = model;
             _lastAngle = -1;
             _lastFrame = 0;
             FrameCount = model.Length;
@@ -59,6 +58,8 @@ namespace SCG.TurboSprite
             }
             RotateAndAnimate();
         }
+
+        public PointF[][] Model { get; internal set; }
 
         // Construct a non-animated polygon-based sprite.
         public PolygonSprite(PointF[] points) : this(new PointF[][] { points }) {}
@@ -132,8 +133,8 @@ namespace SCG.TurboSprite
                 float cos = Sprite.Cos(FacingAngle);
                 for (int point = 0; point < _rotatedPoints[_lastFrame].Length; point++)
                 {
-                    _rotatedPoints[_lastFrame][point].X = _model[_lastFrame][point].X * cos - _model[_lastFrame][point].Y * sin;
-                    _rotatedPoints[_lastFrame][point].Y = _model[_lastFrame][point].Y * cos + _model[_lastFrame][point].X * sin;
+                    _rotatedPoints[_lastFrame][point].X = Model[_lastFrame][point].X * cos - Model[_lastFrame][point].Y * sin;
+                    _rotatedPoints[_lastFrame][point].Y = Model[_lastFrame][point].Y * cos + Model[_lastFrame][point].X * sin;
                 }
                 ObtainShape();
             }

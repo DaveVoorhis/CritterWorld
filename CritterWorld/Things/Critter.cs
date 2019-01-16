@@ -27,9 +27,9 @@ namespace CritterWorld
 
         private static Random rnd = new Random(Guid.NewGuid().GetHashCode());
 
-        private int _critterNumber;
-
         private readonly bool selectedToTestCrash = false;
+
+        public int Number { get; private set; }
 
         public int EscapeCount { get; private set; }
         public int BombCount { get; private set; }
@@ -43,9 +43,9 @@ namespace CritterWorld
         public bool IsEscaped { get; private set; }
         public bool IsDead { get; private set; }
 
-        public Critter(int critterNumber) : base((new CritterBody()).GetBody(1))
+        public Critter(int critterNumber) : base(new CritterBody().GetBody(1))
         {
-            _critterNumber = critterNumber;
+            Number = critterNumber;
 
             LineWidth = 1;
             Color = Sprite.RandomColor(127);
@@ -212,6 +212,19 @@ namespace CritterWorld
             smokeTimer.Start();
         }
 
+        // Create a number plate for this Critter at a given position
+        public TextSprite CreateNumberPlate()
+        {
+            return new TextSprite(Number.ToString(), "Arial", 14, FontStyle.Regular)
+            {
+                Position = Position,
+                IsFilled = true,
+                Color = Color.White,
+                FillColor = Color.White,
+                Alpha = 200
+            };
+        }
+
         private TextSprite numberPlate = null;
 
         // Attach a number plate to this Critter.
@@ -221,15 +234,8 @@ namespace CritterWorld
             {
                 return;
             }
-            numberPlate = new TextSprite(_critterNumber.ToString(), "Arial", 14, FontStyle.Regular)
-            {
-                Position = Position,
-                IsFilled = true,
-                Color = Color.White,
-                FillColor = Color.White,
-                Alpha = 200,
-                Mover = new SlaveMover(this)
-            };
+            numberPlate = CreateNumberPlate();
+            numberPlate.Mover = new SlaveMover(this);
             Engine.AddSprite(numberPlate);
         }
 

@@ -106,6 +106,12 @@ namespace SCG.TurboSprite
         // Transparency. 255 = opaque. 0 = transparent.
         public byte Alpha { get; set; } = 255;
 
+        // String alignment
+        public StringAlignment HorizontalAlignment { get; set; } = StringAlignment.Center;
+
+        // String alignment
+        public StringAlignment VerticalAlignment { get; set; } = StringAlignment.Center;
+
         // Render the sprite - draw the polygon
         protected internal override void Render(Graphics graphics)
         {
@@ -116,8 +122,8 @@ namespace SCG.TurboSprite
                 using (Font font = new Font(FontName, Size, Style))
                 using (StringFormat stringFormat = new StringFormat())
                 {
-                    stringFormat.Alignment = StringAlignment.Center;
-                    stringFormat.LineAlignment = StringAlignment.Center;
+                    stringFormat.Alignment = HorizontalAlignment;
+                    stringFormat.LineAlignment = VerticalAlignment;
                     path.AddString(Text, font.FontFamily, (int)font.Style, font.Size, Position, stringFormat);
                 }
                 ObtainShape();
