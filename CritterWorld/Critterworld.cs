@@ -16,7 +16,7 @@ namespace CritterWorld
     public partial class Critterworld : Form
     {
         // Level duration in seconds.
-        const int levelDuration = 60 * 3;
+        const int levelDuration = 10;
 
         // Maximum number of Critters running at the same time.
         const int maxCrittersRunning = 25;
@@ -76,7 +76,14 @@ namespace CritterWorld
         {
             if (IsHandleCreated)
             {
-                Invoke(new Action(() => panelScore.Controls.Clear()));
+                Invoke(new Action(() => {
+                    foreach (Control control in panelScore.Controls)
+                    {
+                        CritterScorePanel scorePanel = (CritterScorePanel)control;
+                        scorePanel.Shutdown();
+                    }
+                    panelScore.Controls.Clear();
+                }));
             }
         }
 
@@ -100,9 +107,11 @@ namespace CritterWorld
             {
                 Critter critter = new Critter(i + 1);
                 arena.AddCritter(critter);
-                CritterScorePanel scorePanel = new CritterScorePanel(critter);
-                scorePanel.Location = new Point(0, scorePanel.Height * i);
-                Invoke(new Action(() => panelScore.Controls.Add(scorePanel)));
+                Invoke(new Action(() => {
+                    CritterScorePanel scorePanel = new CritterScorePanel(critter);
+                    scorePanel.Location = new Point(0, scorePanel.Height * i);
+                    panelScore.Controls.Add(scorePanel);
+                }));
             }
             arena.Launch();
         }

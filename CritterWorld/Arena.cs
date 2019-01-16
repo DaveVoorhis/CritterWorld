@@ -133,6 +133,11 @@ namespace CritterWorld
 
         public void Launch()
         {
+            if (spriteSurfaceMain.Active)
+            {
+                return;
+            }
+
             spriteSurfaceMain.Active = true;
 
             System.Timers.Timer critterStartupTimer = new System.Timers.Timer();
@@ -154,7 +159,13 @@ namespace CritterWorld
 
         public void Shutdown()
         {
+            if (!spriteSurfaceMain.Active)
+            {
+                return;
+            }
+
             spriteSurfaceMain.Active = false;
+
             Sprite[] sprites = spriteEngineMain.Sprites.ToArray();
             foreach (Sprite sprite in sprites)
             {

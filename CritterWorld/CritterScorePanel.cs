@@ -13,6 +13,8 @@ namespace CritterWorld
 {
     public partial class CritterScorePanel : UserControl
     {
+        private Timer timer = null;
+
         private void UpdateScore(int currentScore, int overallScore)
         {
             labelScore.Text = currentScore + "/" + overallScore;
@@ -35,13 +37,15 @@ namespace CritterWorld
             spriteEngine.AddSprite(critterImage);
 
             labelNumber.Text = critter.Number.ToString();
-
-            Timer timer = new Timer
+            labelName.Text = critter.Name + " by " + critter.Author;
+ 
+            timer = new Timer
             {
                 Interval = 500
             };
             timer.Tick += (e, evt) =>
             {
+                Console.WriteLine("Update critter " + critter.Name + " health = " + critter.Health);
                 UpdateScore(critter.CurrentScore, critter.OverallScore);
                 progressBarHealth.Value = critter.Health;
                 progressBarEnergy.Value = critter.Energy;
@@ -49,15 +53,18 @@ namespace CritterWorld
                 {
                     labelEscaped.Visible = true;
                     UpdateScore(critter.CurrentScore, critter.OverallScore);
-                    timer.Stop();
                 }
                 if (critter.IsDead)
                 {
                     labelDead.Visible = true;
-                    timer.Stop();
                 }
             };
             timer.Start();
+        }
+
+        public void Shutdown()
+        {
+            timer.Stop();
         }
     }
 }

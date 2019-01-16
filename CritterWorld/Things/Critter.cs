@@ -31,6 +31,9 @@ namespace CritterWorld
 
         public int Number { get; private set; }
 
+        public string Name { get; set; } = GetRandomName();
+        public string Author { get; set; } = "Critterworld";
+
         public int EscapeCount { get; private set; }
         public int BombCount { get; private set; }
         public int CrashCount { get; private set; }
@@ -42,6 +45,20 @@ namespace CritterWorld
         public int Health { get; private set; }
         public bool IsEscaped { get; private set; }
         public bool IsDead { get; private set; }
+
+        public static string GetRandomName()
+        {
+            string[] consonants = { "b", "c", "d", "f", "ff", "g", "gh", "h", "j", "l", "m", "l", "n", "p", "ph", "q", "r", "s", "th", "tt", "t", "v", "w", "x" };
+            string[] vowels = { "a", "e", "i", "o", "u", "y", "ee", "ea", "io", "oi", "ae" };
+            string name = "";
+            int len = rnd.Next(2, 5);
+            while (len-- > 0)
+            {
+                name += consonants[rnd.Next(consonants.Length)];
+                name += vowels[rnd.Next(vowels.Length)];
+            }
+            return name[0].ToString().ToUpper() + name.Substring(1);
+        }
 
         public Critter(int critterNumber) : base(new CritterBody().GetBody(1))
         {
