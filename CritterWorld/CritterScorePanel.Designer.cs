@@ -47,22 +47,22 @@
             // labelScorePrompt
             // 
             this.labelScorePrompt.AutoSize = true;
-            this.labelScorePrompt.Font = new System.Drawing.Font("Arial Narrow", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelScorePrompt.Location = new System.Drawing.Point(79, 1);
+            this.labelScorePrompt.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelScorePrompt.Location = new System.Drawing.Point(75, 0);
             this.labelScorePrompt.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelScorePrompt.Name = "labelScorePrompt";
-            this.labelScorePrompt.Size = new System.Drawing.Size(26, 13);
+            this.labelScorePrompt.Size = new System.Drawing.Size(38, 13);
             this.labelScorePrompt.TabIndex = 1;
             this.labelScorePrompt.Text = "Score:";
             // 
             // labelScore
             // 
             this.labelScore.AutoSize = true;
-            this.labelScore.Font = new System.Drawing.Font("Arial Narrow", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelScore.Location = new System.Drawing.Point(109, 2);
+            this.labelScore.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelScore.Location = new System.Drawing.Point(112, 1);
             this.labelScore.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelScore.Name = "labelScore";
-            this.labelScore.Size = new System.Drawing.Size(33, 13);
+            this.labelScore.Size = new System.Drawing.Size(48, 13);
             this.labelScore.TabIndex = 2;
             this.labelScore.Text = "999/999";
             // 
@@ -165,9 +165,10 @@
             // labelNumber
             // 
             this.labelNumber.AutoSize = true;
-            this.labelNumber.Location = new System.Drawing.Point(45, 2);
+            this.labelNumber.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.labelNumber.Location = new System.Drawing.Point(45, 0);
             this.labelNumber.Name = "labelNumber";
-            this.labelNumber.Size = new System.Drawing.Size(25, 13);
+            this.labelNumber.Size = new System.Drawing.Size(27, 15);
             this.labelNumber.TabIndex = 11;
             this.labelNumber.Text = "999";
             // 
