@@ -112,7 +112,8 @@ namespace SCG.TurboSprite
                     _thrdAnimate = new Thread(AnimateProc)
                     {
                         IsBackground = true,
-                        Priority = ThreadPriority
+                        Priority = ThreadPriority,
+                        Name = "SCG.TurboSprite.Sprite._thrdAnimate"
                     };
 
                     // We need an animation update right away

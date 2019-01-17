@@ -37,6 +37,7 @@ namespace CritterWorld
         public int EscapeCount { get; private set; }
         public int BombCount { get; private set; }
         public int CrashCount { get; private set; }
+        public int AbortCount { get; private set; }
 
         public int OverallScore { get; private set; }
         public int CurrentScore { get; private set; }
@@ -116,6 +117,12 @@ namespace CritterWorld
         {
             CrashCount++;
             DeadReason = "Crashed";
+        }
+
+        public void Aborted()
+        {
+            AbortCount++;
+            DeadReason = "Too slow";
         }
 
         protected internal void Think(Random random)
@@ -322,6 +329,9 @@ namespace CritterWorld
                                 if (thinkTimeOverrunViolations >= maxThinkTimeOverrunViolations)
                                 {
                                     Console.WriteLine("You were warned " + thinkTimeOverrunViolations + " times about thinking for too long. Now you may not think again.");
+                                    Aborted();
+                                    Sound.PlayCrash();
+                                    StopAndSmoke(Color.DarkGreen, Color.LightGreen);
                                     break;
                                 }
                                 else
@@ -345,6 +355,7 @@ namespace CritterWorld
                 }
                 thinkThread = null;
             });
+            thinkThread.Name = Name;
             thinkThread.Start();
 
             Surface.Disposed += (e, evt) => thinkThread?.Abort();
