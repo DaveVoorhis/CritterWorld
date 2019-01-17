@@ -281,8 +281,7 @@ namespace CritterWorld
                 {
                     return;
                 }
-                double theta = Sprite.RadToDeg((float)Math.Atan2(spriteMover.SpeedY, spriteMover.SpeedX));
-                spriteMover.TargetFacingAngle = (int)theta + 90;
+                spriteMover.TargetFacingAngle = (int)Sprite.GetAngle(spriteMover.SpeedX, spriteMover.SpeedY) + 90;
             };
             int margin = 20;
             int speed = 4;

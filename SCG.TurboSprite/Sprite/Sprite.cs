@@ -37,10 +37,6 @@ namespace SCG.TurboSprite
     //Sprite class - defines behavior of all TurboSprite sprite objects
     public abstract class Sprite
     {
-        // Lookup table to degree to radian conversion
-        private static readonly float[] _sin = new float[360];
-        private static readonly float[] _cos = new float[360];
-
         private int _facingAngle;
         private RectangleF _shape = new RectangleF(-1, -1, -1, -1);
         private RectangleF _bounds = new RectangleF();
@@ -53,6 +49,10 @@ namespace SCG.TurboSprite
 
         private static Random rnd = new Random(Guid.NewGuid().GetHashCode());
 
+        // sin/cos tables
+        private static readonly float[] _sin = new float[360];
+        private static readonly float[] _cos = new float[360];
+
         // Static constructor populates the sin/cos lookup tables
         static Sprite()
         {
@@ -61,6 +61,47 @@ namespace SCG.TurboSprite
                 _sin[degree] = (float)Math.Sin(DegToRad(degree));
                 _cos[degree] = (float)Math.Cos(DegToRad(degree));
             }
+        }
+
+        // Get a random color byte value
+        private static byte RndByte(byte b1, byte b2)
+        {
+            if (b1 > b2)
+            {
+                return (byte)(rnd.Next(b1 - b2) + b2);
+            }
+            return (byte)(rnd.Next(b2 - b1) + b1);
+        }
+
+        // Obtain a random color within start to end range
+        public static Color RandomColorFromRange(Color startColor, Color endColor)
+        {
+            byte a = RndByte(startColor.A, endColor.A);
+            byte r = RndByte(startColor.R, endColor.R);
+            byte g = RndByte(startColor.G, endColor.G);
+            byte b = RndByte(startColor.B, endColor.B);
+            return Color.FromArgb(a, r, g, b);
+        }
+
+        // Obtain a random color given a minimum luminance value.
+        public static Color RandomColor(int minimumLuminance)
+        {
+            byte r = (byte)rnd.Next(minimumLuminance, 256);
+            byte g = (byte)rnd.Next(minimumLuminance, 256);
+            byte b = (byte)rnd.Next(minimumLuminance, 256);
+            return Color.FromArgb(255, r, g, b);
+        }
+
+        // Distance between a pair of points.
+        public static double GetDistance(float x1, float y1, float x2, float y2)
+        {
+            return Math.Sqrt(Math.Pow((x2 - x1), 2) + Math.Pow((y2 - y1), 2));
+        }
+
+        // Convert speed to direction in degrees.
+        public static float GetAngle(float speedX, float speedY)
+        {
+            return RadToDeg((float)Math.Atan2(speedY, speedX));
         }
 
         // Utility function to convert degrees to radians.
@@ -91,35 +132,6 @@ namespace SCG.TurboSprite
         public static float Cos(int degree)
         {
             return _cos[degree];
-        }
-
-        // Get a random color byte value
-        private static byte RndByte(byte b1, byte b2)
-        {
-            if (b1 > b2)
-            {
-                return (byte)(rnd.Next(b1 - b2) + b2);
-            }
-            return (byte)(rnd.Next(b2 - b1) + b1);
-        }
-
-        // Obtain a random color within start to end range
-        public static Color RandomColorFromRange(Color startColor, Color endColor)
-        {
-            byte a = RndByte(startColor.A, endColor.A);
-            byte r = RndByte(startColor.R, endColor.R);
-            byte g = RndByte(startColor.G, endColor.G);
-            byte b = RndByte(startColor.B, endColor.B);
-            return Color.FromArgb(a, r, g, b);
-        }
-
-        // Obtain a random color given a minimum luminance value.
-        public static Color RandomColor(int minimumLuminance)
-        {
-            byte r = (byte)rnd.Next(minimumLuminance, 256);
-            byte g = (byte)rnd.Next(minimumLuminance, 256);
-            byte b = (byte)rnd.Next(minimumLuminance, 256);
-            return Color.FromArgb(255, r, g, b);
         }
 
         // This can be used to associate user data with the Sprite.
@@ -214,7 +226,7 @@ namespace SCG.TurboSprite
             }
             set
             {
-                _facingAngle = NormaliseAngle(value);
+                _facingAngle = Sprite.NormaliseAngle(value);
             }
         }
 

@@ -45,7 +45,7 @@ namespace SCG.TurboSprite
         private int _targetFacingAngle;
 
         public event EventHandler<SpriteEventArgs> SpriteReachedTarget;
-        public event EventHandler<SpriteEventArgs> SpriteMoved;
+        public event EventHandler<SpriteMoveEventArgs> SpriteMoved;
 
         public float Speed { get; set; }
         public float SpeedX { get; set; }
@@ -203,10 +203,10 @@ namespace SCG.TurboSprite
             // If sprite moved, alert listeners
             if (SpriteMoved != null && (_sprite.X != LastPositionX || _sprite.Y != LastPositionY))
             {
-                SpriteMoved(this, new SpriteEventArgs(_sprite));
+                SpriteMoved(this, new SpriteMoveEventArgs(_sprite));
             }
             // If sprite has reached its target, alert listeners
-            if (SpriteReachedTarget != null && sprite.Position == Target)
+            if (SpriteReachedTarget != null && _sprite.Position == Target)
             {
                 SpriteReachedTarget(this, new SpriteEventArgs(_sprite));
             }

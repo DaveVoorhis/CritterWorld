@@ -61,7 +61,7 @@ namespace SCG.TurboSprite
 
         public PointF[][] Model { get; internal set; }
 
-        // Construct a non-animated polygon-based sprite.
+        // Construct a non-animated polygon-based Sprite.
         public PolygonSprite(PointF[] points) : this(new PointF[][] { points }) {}
 
         // Select the specific Points collection to display.

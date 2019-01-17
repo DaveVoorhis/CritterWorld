@@ -46,11 +46,6 @@ namespace SCG.TurboSprite
         public int StartDiameter { get; set; }
         public int EndDiameter { get; set; }
 
-        public static double GetDistance(double x1, double y1, double x2, double y2)
-        {
-            return Math.Sqrt(Math.Pow((x2 - x1), 2) + Math.Pow((y2 - y1), 2));
-        }
-
         public ParticleFountainSprite(int particles, Color startColor, Color endColor, int startDiam, int endDiam, int radius)
         {
             Radius = radius;
@@ -85,7 +80,7 @@ namespace SCG.TurboSprite
             {
                 int x = (int)(X - Surface.OffsetX + particle.X - particle.Diameter / 2);
                 int y = (int)(Y - Surface.OffsetY + particle.Y - particle.Diameter / 2);
-                if (GetDistance(x, y, X, Y) > Radius)
+                if (Sprite.GetDistance(x, y, X, Y) > Radius)
                 {
                     InitialiseParticle(particle);
                 }

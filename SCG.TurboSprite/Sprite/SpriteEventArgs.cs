@@ -45,6 +45,31 @@ namespace SCG.TurboSprite
         public Sprite Sprite { get; }
     }
 
+    public class SpriteMoveEventArgs : SpriteEventArgs
+    {
+        public SpriteMoveEventArgs(Sprite sprite) : base(sprite)
+        {
+        }
+
+        public float Distance
+        {
+            get
+            {
+                TargetMover mover = (TargetMover)Sprite.Mover;
+                return (float)Sprite.GetDistance(mover.LastPositionX, Sprite.X, mover.LastPositionY, Sprite.Y);
+            }
+        }
+
+        public float Speed
+        {
+            get
+            {
+                TargetMover mover = (TargetMover)Sprite.Mover;
+                return (float)Math.Sqrt((mover.SpeedX * mover.SpeedX) + (mover.SpeedY * mover.SpeedY));
+            }
+        }
+    }
+
     public class SpriteClickEventArgs : SpriteEventArgs
     {
         public SpriteClickEventArgs(Sprite sprite, MouseButtons button) : base(sprite)

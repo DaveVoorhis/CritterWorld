@@ -80,8 +80,7 @@ namespace CritterWorld
                 {
                     return;
                 }
-                double theta = Sprite.RadToDeg((float)Math.Atan2(spriteMover.SpeedY, spriteMover.SpeedX));
-                spriteMover.TargetFacingAngle = (int)theta + 90;
+                spriteMover.TargetFacingAngle = (int)Sprite.GetAngle(spriteMover.SpeedX, spriteMover.SpeedY) + 90;
             };
         }
 
@@ -284,6 +283,7 @@ namespace CritterWorld
             spriteMover.SpriteReachedTarget += (sender, spriteEvent) => AssignRandomDestination();
             spriteMover.SpriteMoved += (sender, spriteEvent) =>
             {
+                Console.WriteLine("Critter " + Name + " distance = " + spriteEvent.Distance + " speed = " + spriteEvent.Speed + " energy consumed = " + spriteEvent.Distance * spriteEvent.Speed);
                 if (moveCount-- == 0)
                 {
                     IncrementFrame();
