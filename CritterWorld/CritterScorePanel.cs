@@ -17,7 +17,7 @@ namespace CritterWorld
 
         private void UpdateScore(int currentScore, int overallScore)
         {
-            labelScore.Text = currentScore + "/" + overallScore;
+            labelScore.Text = "Score: " + currentScore + "/" + overallScore;
         }
 
         public CritterScorePanel(Critter critter)
@@ -57,6 +57,7 @@ namespace CritterWorld
                 if (critter.IsDead)
                 {
                     labelDead.Visible = true;
+                    labelScore.Text = critter.DeadReason;
                     timer.Stop();
                 }
             };

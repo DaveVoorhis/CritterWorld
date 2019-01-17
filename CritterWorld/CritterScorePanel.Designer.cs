@@ -30,7 +30,6 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CritterScorePanel));
-            this.labelScorePrompt = new System.Windows.Forms.Label();
             this.labelScore = new System.Windows.Forms.Label();
             this.progressBarEnergy = new System.Windows.Forms.ProgressBar();
             this.progressBarHealth = new System.Windows.Forms.ProgressBar();
@@ -43,27 +42,15 @@
             this.labelNumber = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
-            // labelScorePrompt
-            // 
-            this.labelScorePrompt.AutoSize = true;
-            this.labelScorePrompt.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelScorePrompt.Location = new System.Drawing.Point(75, 0);
-            this.labelScorePrompt.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.labelScorePrompt.Name = "labelScorePrompt";
-            this.labelScorePrompt.Size = new System.Drawing.Size(38, 13);
-            this.labelScorePrompt.TabIndex = 1;
-            this.labelScorePrompt.Text = "Score:";
-            // 
             // labelScore
             // 
-            this.labelScore.AutoSize = true;
             this.labelScore.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelScore.Location = new System.Drawing.Point(112, 1);
+            this.labelScore.Location = new System.Drawing.Point(75, 0);
             this.labelScore.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelScore.Name = "labelScore";
-            this.labelScore.Size = new System.Drawing.Size(48, 13);
-            this.labelScore.TabIndex = 2;
-            this.labelScore.Text = "999/999";
+            this.labelScore.Size = new System.Drawing.Size(88, 16);
+            this.labelScore.TabIndex = 1;
+            this.labelScore.Text = "Score:";
             // 
             // progressBarEnergy
             // 
@@ -172,7 +159,6 @@
             this.Controls.Add(this.labelHealth);
             this.Controls.Add(this.labelEnergy);
             this.Controls.Add(this.labelScore);
-            this.Controls.Add(this.labelScorePrompt);
             this.Controls.Add(this.spriteSurfaceCritter);
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "CritterScorePanel";
@@ -185,7 +171,6 @@
         #endregion
 
         private SCG.TurboSprite.SpriteSurface spriteSurfaceCritter;
-        private System.Windows.Forms.Label labelScorePrompt;
         private System.Windows.Forms.Label labelScore;
         private System.Windows.Forms.Label labelEscaped;
         private System.Windows.Forms.Label labelEnergy;

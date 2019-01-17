@@ -44,7 +44,9 @@ namespace CritterWorld
         public int Energy { get; private set; }
         public int Health { get; private set; }
         public bool IsEscaped { get; private set; }
-        public bool IsDead { get; private set; }
+
+        public string DeadReason { get; private set; } = null;
+        public bool IsDead { get { return DeadReason != null; } }
 
         public static string GetRandomName()
         {
@@ -107,13 +109,13 @@ namespace CritterWorld
         public void Bombed()
         {
             BombCount++;
-            IsDead = true;
+            DeadReason = "Bombed";
         }
 
         public void Crashed()
         {
             CrashCount++;
-            IsDead = true;
+            DeadReason = "Crashed";
         }
 
         protected internal void Think(Random random)
@@ -264,7 +266,7 @@ namespace CritterWorld
             Health = 100;
             Energy = 100;
             IsEscaped = false;
-            IsDead = false;
+            DeadReason = null;
 
             if (thinkThread != null)
             {
