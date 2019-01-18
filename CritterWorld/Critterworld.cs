@@ -43,7 +43,7 @@ namespace CritterWorld
         const int singleLevel = 5;
 
         // Log message queue.
-        private static ConcurrentQueue<string> logMessageQueue = new ConcurrentQueue<string>();
+        private static ConcurrentQueue<LogEntry> logMessageQueue = new ConcurrentQueue<LogEntry>();
 
         // Used to create animated activity indicator beside FPS display.
         private static string tickLine = ".....";
@@ -149,7 +149,7 @@ namespace CritterWorld
         private void AddCrittersToArena()
         {
             ClearScorePanel();
-            for (int i = 0; i < maxCrittersRunning && !(IsDisposed || Disposing); i++)
+            for (int i = 0; i < maxCrittersRunning; i++)
             {
                 Critter critter = new Critter(i + 1);
                 arena.AddCritter(critter);
@@ -407,22 +407,19 @@ namespace CritterWorld
             ForceLayout();
         }
 
-        public static void Log(string message)
+        internal static void Log(LogEntry logEntry)
         {
-            string timestamp = DateTime.Now.ToString("o", CultureInfo.CurrentCulture);
-            string msg = timestamp + ", " + message;
-            Console.WriteLine(msg);
-            logMessageQueue.Enqueue(msg);
+            logMessageQueue.Enqueue(logEntry);
         }
 
         private void RetrieveAndDisplayLogMessages()
         {
             using (StreamWriter output = File.AppendText(LogFileName))
             {
-                while (logMessageQueue.TryDequeue(out string msg))
+                while (logMessageQueue.TryDequeue(out LogEntry logEntry))
                 {
-                    output.WriteLine(msg);
-                    textLog.AppendText(msg + "\r\n");
+                    output.WriteLine(logEntry.ToCSV());
+                    textLog.AppendText(logEntry + "\r\n");
                     if (textLog.Text.Length > 128000)
                     {
                         String shortenedText = "..." + "\r\n" + textLog.Text.Substring(128000);
@@ -459,4 +456,43 @@ namespace CritterWorld
             logMessageTimer.Start();
         }
     }
+
+    internal class LogEntry
+    {
+        public LogEntry(string critterName, string author, string eventMessage, Exception exception)
+        {
+            Timestamp = DateTime.Now;
+            CritterName = critterName;
+            Author = author;
+            EventMessage = eventMessage;
+            Exception = exception;
+        }
+
+        public DateTime Timestamp { get; }
+        public string CritterName { get; }
+        public string Author { get; }
+        public string EventMessage { get; }
+        public Exception Exception { get; }
+
+        public bool Matches(LogEntry other)
+        {
+            return Timestamp.ToString("o") == other.Timestamp.ToString("o") && EventMessage == other.EventMessage && Exception == null;
+        }
+
+        private static string ToQuoted(string input)
+        {
+            return "\"" + input.Replace("\"", "\\\"").Replace("\n", "\\n").Replace("\r", "\\r").Replace("\t", "\\t") + "\"";
+        }
+
+        public override string ToString()
+        {
+            return Timestamp.ToString("o", CultureInfo.CurrentCulture) + ": " + CritterName + " by " + Author + " " + EventMessage + ((Exception != null) ? " due to exception: " + Exception.StackTrace : "");
+        }
+
+        public string ToCSV()
+        {
+            return Timestamp.ToString("o", CultureInfo.CurrentCulture) + ", " + ToQuoted(CritterName) + ", " + ToQuoted(Author) + ", " + ToQuoted(EventMessage) + ", " + ((Exception == null) ? ToQuoted("") : ToQuoted(Exception.StackTrace));
+        }
+    }
+
 }

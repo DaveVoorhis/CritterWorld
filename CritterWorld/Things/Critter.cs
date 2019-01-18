@@ -95,20 +95,15 @@ namespace CritterWorld
             };
         }
 
-        private static string ToQuoted(string input)
-        {
-            return "\"" + input.Replace("\"", "\\\"").Replace("\n", "\\n").Replace("\r", "\\r").Replace("\t", "\\t") + "\"";
-        }
+        private LogEntry previousLogEntry = null;
 
-        private string lastMessage = "";
-
-        public void Log(string message, Exception exception = null)
+        public void Log(String message, Exception exception = null)
         {
-            string msg = ToQuoted(Name) + ", " + ToQuoted(Author) + ", " + ToQuoted(message) + ", " + ((exception == null) ? ToQuoted("") : ToQuoted(exception.StackTrace));
-            if (!msg.Equals(lastMessage))
+            LogEntry newLogEntry = new LogEntry(Name, Author, message, exception);
+            if (previousLogEntry == null || !previousLogEntry.Matches(newLogEntry))
             {
-                lastMessage = msg;
-                Critterworld.Log(msg);
+                Critterworld.Log(newLogEntry);
+                previousLogEntry = newLogEntry;
             }
         }
 
