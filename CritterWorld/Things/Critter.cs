@@ -11,6 +11,7 @@ using System.Diagnostics;
 using System.IO;
 using System.CodeDom.Compiler;
 using System.CodeDom;
+using System.Text.RegularExpressions;
 
 namespace CritterWorld
 {
@@ -96,7 +97,7 @@ namespace CritterWorld
 
         private static string ToQuoted(string input)
         {
-            return "\"" + input + "\"";
+            return "\"" + input.Replace("\"", "\\\"").Replace("\n", "\\n").Replace("\r", "\\r").Replace("\t", "\\t") + "\"";
         }
 
         private string lastMessage = "";

@@ -149,7 +149,7 @@ namespace CritterWorld
         private void AddCrittersToArena()
         {
             ClearScorePanel();
-            for (int i = 0; i < maxCrittersRunning; i++)
+            for (int i = 0; i < maxCrittersRunning && !(IsDisposed || Disposing); i++)
             {
                 Critter critter = new Critter(i + 1);
                 arena.AddCritter(critter);
