@@ -82,6 +82,9 @@
       <DependentUpon>Arena.cs</DependentUpon>
     </Compile>
     <Compile Include="Version.cs" />
+    <Compile Include="Widgets\ColoredProgressBar.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <EmbeddedResource Include="CritterScorePanel.resx">
       <DependentUpon>CritterScorePanel.cs</DependentUpon>
     </EmbeddedResource>

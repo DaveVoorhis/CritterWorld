@@ -56,7 +56,7 @@ namespace SCG.TurboSprite
             get
             {
                 TargetMover mover = (TargetMover)Sprite.Mover;
-                return (float)Sprite.GetDistance(mover.LastPositionX, Sprite.X, mover.LastPositionY, Sprite.Y);
+                return (float)Sprite.GetDistance(mover.LastPositionX, mover.LastPositionY, Sprite.X, Sprite.Y);
             }
         }
 

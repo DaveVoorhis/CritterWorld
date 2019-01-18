@@ -1,4 +1,6 @@
-﻿namespace CritterWorld
+﻿using CritterWorld.Widgets;
+
+namespace CritterWorld
 {
     partial class CritterScorePanel
     {
@@ -31,8 +33,8 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CritterScorePanel));
             this.labelScore = new System.Windows.Forms.Label();
-            this.progressBarEnergy = new System.Windows.Forms.ProgressBar();
-            this.progressBarHealth = new System.Windows.Forms.ProgressBar();
+            this.progressBarEnergy = new ColoredProgressBar();
+            this.progressBarHealth = new ColoredProgressBar();
             this.labelName = new System.Windows.Forms.Label();
             this.labelHealth = new System.Windows.Forms.Label();
             this.labelEnergy = new System.Windows.Forms.Label();
@@ -175,8 +177,8 @@
         private System.Windows.Forms.Label labelEscaped;
         private System.Windows.Forms.Label labelEnergy;
         private System.Windows.Forms.Label labelHealth;
-        private System.Windows.Forms.ProgressBar progressBarEnergy;
-        private System.Windows.Forms.ProgressBar progressBarHealth;
+        private ColoredProgressBar progressBarEnergy;
+        private ColoredProgressBar progressBarHealth;
         private System.Windows.Forms.Label labelName;
         private System.Windows.Forms.Label labelDead;
         private System.Windows.Forms.Label labelNumber;

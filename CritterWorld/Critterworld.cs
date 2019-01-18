@@ -1,10 +1,13 @@
 ﻿using SCG.TurboSprite;
 using SCG.TurboSprite.SpriteMover;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -15,6 +18,9 @@ namespace CritterWorld
 {
     public partial class Critterworld : Form
     {
+
+        public string LogFileName { get; private set; } = "log.csv";
+
         // Level duration in seconds.
         const int levelDuration = 60 * 3;
 
@@ -36,6 +42,9 @@ namespace CritterWorld
         // Run this level when not running a competition
         const int singleLevel = 5;
 
+        // Log message queue.
+        private static ConcurrentQueue<string> logMessageQueue = new ConcurrentQueue<string>();
+
         // Used to create animated activity indicator beside FPS display.
         private static string tickLine = ".....";
         private int tickCount = 0;
@@ -48,6 +57,9 @@ namespace CritterWorld
 
         // To update the FPS display
         private System.Timers.Timer fpsDisplayTimer = null;
+
+        // To update the message log
+        private System.Timers.Timer logMessageTimer = null;
 
         // To switch over from "GAME OVER" to splash
         private System.Timers.Timer gameOverTimer = null;
@@ -176,6 +188,7 @@ namespace CritterWorld
         private void ExitApplication()
         {
             LevelTimerStop();
+            logMessageTimer.Stop();
             fpsDisplayTimer.Stop();
             Shutdown();
             Thread.Sleep(500);
@@ -394,6 +407,32 @@ namespace CritterWorld
             ForceLayout();
         }
 
+        public static void Log(string message)
+        {
+            string timestamp = DateTime.Now.ToString("o", CultureInfo.CurrentCulture);
+            string msg = timestamp + ", " + message;
+            Console.WriteLine(msg);
+            logMessageQueue.Enqueue(msg);
+        }
+
+        private void RetrieveAndDisplayLogMessages()
+        {
+            using (StreamWriter output = File.AppendText(LogFileName))
+            {
+                while (logMessageQueue.TryDequeue(out string msg))
+                {
+                    output.WriteLine(msg);
+                    textLog.AppendText(msg + "\r\n");
+                    if (textLog.Text.Length > 128000)
+                    {
+                        String shortenedText = "..." + "\r\n" + textLog.Text.Substring(128000);
+                        textLog.Text = "";
+                        textLog.AppendText(shortenedText);
+                    }
+                }
+            }
+        }
+
         public Critterworld()
         {
             InitializeComponent();
@@ -413,6 +452,11 @@ namespace CritterWorld
             fpsDisplayTimer.Interval = 250;
             fpsDisplayTimer.Elapsed += (sender, e) => Invoke(new Action(() => labelFPS.Text = arena.ActualFPS + " FPS" + TickShow()));
             fpsDisplayTimer.Start();
+
+            logMessageTimer = new System.Timers.Timer();
+            logMessageTimer.Interval = 250;
+            logMessageTimer.Elapsed += (sender, e) => Invoke(new Action(() => RetrieveAndDisplayLogMessages()));
+            logMessageTimer.Start();
         }
     }
 }

@@ -8,6 +8,9 @@ using SCG.TurboSprite;
 using System.Windows.Forms;
 using System.Threading;
 using System.Diagnostics;
+using System.IO;
+using System.CodeDom.Compiler;
+using System.CodeDom;
 
 namespace CritterWorld
 {
@@ -15,39 +18,46 @@ namespace CritterWorld
     {
         public const int maxThinkTimeMilliseconds = 1000;
         public const int maxThinkTimeOverrunViolations = 5;
-
-        public int thinkTimeOverrunViolations = 0;
-        public long thinkCount = 0;
-        public long totalThinkTime = 0;
-
-        private int moveCount = 0;
-
-        private Thread thinkThread = null;
-        private bool stopped = true;
-
-        private static Random rnd = new Random(Guid.NewGuid().GetHashCode());
-
-        private readonly bool selectedToTestCrash = false;
+        public const float movementEnergyConsumptionFactor = 250;  // the higher this is, the less movement consumes energy
+        public const float eatingAddsEnergy = 50.0F;       // each piece of food adds this much energy; maximum 100
+        public const float eatingAddsHealth = 10.0F;
+        public const float fightingDeductsHealth = 0.5F;
+        public const float bumpingTerrainDeductsHealth = 0.25F;
 
         public int Number { get; private set; }
 
         public string Name { get; set; } = GetRandomName();
         public string Author { get; set; } = "Critterworld";
 
-        public int EscapeCount { get; private set; }
-        public int BombCount { get; private set; }
-        public int CrashCount { get; private set; }
-        public int AbortCount { get; private set; }
+        public string NameAndAuthor { get { return Name + " by " + Author; } }
+
+        public int EscapedCount { get; private set; }
+        public int BombedCount { get; private set; }
+        public int CrashedCount { get; private set; }
+        public int TerminatedCount { get; private set; }
+        public int StarvedCount { get; private set; }
+        public int FatallyInjuredCount { get; private set; }
 
         public int OverallScore { get; private set; }
         public int CurrentScore { get; private set; }
 
-        public int Energy { get; private set; }
-        public int Health { get; private set; }
+        public float Energy { get; private set; }
+        public float Health { get; private set; }
+
         public bool IsEscaped { get; private set; }
 
         public string DeadReason { get; private set; } = null;
         public bool IsDead { get { return DeadReason != null; } }
+
+        private int thinkTimeOverrunViolations = 0;
+        private int moveCount = 0;
+
+        private Thread thinkThread = null;
+        private bool stopped = true;
+
+        private readonly bool selectedToTestCrash = false;
+
+        private static Random rnd = new Random(Guid.NewGuid().GetHashCode());
 
         public static string GetRandomName()
         {
@@ -84,9 +94,27 @@ namespace CritterWorld
             };
         }
 
+        private static string ToQuoted(string input)
+        {
+            return "\"" + input + "\"";
+        }
+
+        private string lastMessage = "";
+
+        public void Log(string message, Exception exception = null)
+        {
+            string msg = ToQuoted(Name) + ", " + ToQuoted(Author) + ", " + ToQuoted(message) + ", " + ((exception == null) ? ToQuoted("") : ToQuoted(exception.StackTrace));
+            if (!msg.Equals(lastMessage))
+            {
+                lastMessage = msg;
+                Critterworld.Log(msg);
+            }
+        }
+
         public void Escaped()
         {
-            EscapeCount++;
+            Log("escaped");
+            EscapedCount++;
             OverallScore += CurrentScore;
             Kill();
             IsEscaped = true;
@@ -94,34 +122,118 @@ namespace CritterWorld
 
         public void Scored()
         {
+            Log("scored");
             CurrentScore++;
         }
 
         public void Ate()
         {
-            Energy++;
-            if (Energy > 100)
+            Log("ate");
+            if (Energy + eatingAddsEnergy > 100)
             {
                 Energy = 100;
             }
+            else
+            {
+                Energy += eatingAddsEnergy;
+            }
+            if (Health + eatingAddsHealth > 100)
+            {
+                Health = 100;
+            }
+            else
+            {
+                Health += eatingAddsHealth;
+            }
+        }
+
+        public void ConsumeEnergy(float consumption)
+        {
+            if (Energy - consumption <= 0)
+            {
+                Energy = 0;
+                Starved();
+                Shutdown();
+            }
+            else
+            {
+                Energy -= consumption;
+            }
+        }
+
+        public void FightWith(string opponent)
+        {
+            Log("fought with " + opponent);
+            if (Health - fightingDeductsHealth <= 0)
+            {
+                Health = 0;
+                FatallyInjured();
+                Shutdown();
+            }
+            else
+            {
+                Health -= fightingDeductsHealth;
+            }
+        }
+
+        public void Bump()
+        {
+            Log("bumped into terrain");
+            if (Health - bumpingTerrainDeductsHealth <= 0)
+            {
+                Health = 0;
+                FatallyInjured();
+                Shutdown();
+            }
+            else
+            {
+                Health -= bumpingTerrainDeductsHealth;
+            }
+        }
+
+        public void FatallyInjured()
+        {
+            FatallyInjuredCount++;
+            DeadReason = "fatally injured";
+            Log(DeadReason);
+            Health = 0;
+            Energy = 0;
+        }
+
+        public void Starved()
+        {
+            StarvedCount++;
+            DeadReason = "starved";
+            Log(DeadReason);
+            Health = 0;
+            Energy = 0;
         }
 
         public void Bombed()
         {
-            BombCount++;
-            DeadReason = "Bombed";
+            BombedCount++;
+            DeadReason = "bombed";
+            Log(DeadReason);
+            Health = 0;
+            Energy = 0;
         }
 
         public void Crashed()
         {
-            CrashCount++;
-            DeadReason = "Crashed";
+            CrashedCount++;
+            DeadReason = "crashed";
+            Log(DeadReason);
+            Health = 0;
+            Energy = 0;
         }
 
-        public void Aborted()
+        public void Terminated()
         {
-            AbortCount++;
-            DeadReason = "Too slow";
+            TerminatedCount++;
+            DeadReason = "terminated for spending too long thinking";
+            Log(DeadReason);
+            Health = 0;
+            Energy = 0;
         }
 
         protected internal void Think(Random random)
@@ -174,21 +286,9 @@ namespace CritterWorld
             ((TargetMover)Mover)?.Bounceback();
         }
 
-        public long TotalThinkTime
-        {
-            get
-            {
-                return totalThinkTime;
-            }
-        }
+        public long TotalThinkTime { get; private set; } = 0;
 
-        public long ThinkCount
-        {
-            get
-            {
-                return thinkCount;
-            }
-        }
+        public long ThinkCount { get; private set; } = 0;
 
         public double AverageThinkTime
         {
@@ -283,7 +383,7 @@ namespace CritterWorld
             spriteMover.SpriteReachedTarget += (sender, spriteEvent) => AssignRandomDestination();
             spriteMover.SpriteMoved += (sender, spriteEvent) =>
             {
-                Console.WriteLine("Critter " + Name + " distance = " + spriteEvent.Distance + " speed = " + spriteEvent.Speed + " energy consumed = " + spriteEvent.Distance * spriteEvent.Speed);
+                ConsumeEnergy(spriteEvent.Distance * spriteEvent.Speed / movementEnergyConsumptionFactor);
                 if (moveCount-- == 0)
                 {
                     IncrementFrame();
@@ -297,6 +397,7 @@ namespace CritterWorld
             thinkThread = new Thread(() =>
             {
                 stopped = false;
+                Log("launched");
                 Stopwatch stopwatch = new Stopwatch();
                 Random rnd = new Random(Guid.NewGuid().GetHashCode());
                 while (Surface != null && !Surface.IsDisposed && !Surface.Disposing && !Dead && !stopped)
@@ -328,25 +429,25 @@ namespace CritterWorld
                             {
                                 if (thinkTimeOverrunViolations >= maxThinkTimeOverrunViolations)
                                 {
-                                    Console.WriteLine("You were warned " + thinkTimeOverrunViolations + " times about thinking for too long. Now you may not think again.");
-                                    Aborted();
+                                    Log("Was warned " + thinkTimeOverrunViolations + " times about thinking for too long. Now you may not think again.");
+                                    Terminated();
                                     Sound.PlayCrash();
                                     StopAndSmoke(Color.DarkGreen, Color.LightGreen);
                                     break;
                                 }
                                 else
                                 {
-                                    Console.WriteLine("Warning #" + (++thinkTimeOverrunViolations) + " you have exceeded the maximum think time of " + maxThinkTimeMilliseconds + " by " + (elapsed - maxThinkTimeMilliseconds) + " milliseconds.");
+                                    Log("Warning #" + (++thinkTimeOverrunViolations) + " you have exceeded the maximum think time of " + maxThinkTimeMilliseconds + " by " + (elapsed - maxThinkTimeMilliseconds) + " milliseconds.");
                                 }
                             }
-                            totalThinkTime += elapsed;
-                            thinkCount++;
+                            TotalThinkTime += elapsed;
+                            ThinkCount++;
                         }
                         catch (Exception e)
                         {
                             Crashed();
                             Sound.PlayCrash();
-                            Console.WriteLine("Critter halted due to exception whilst thinking: " + e);
+                            Log("Crashed due to exception whilst thinking: " + e, e);
                             StopAndSmoke(Color.Aquamarine, Color.Blue);
                             break;
                         }
@@ -373,6 +474,7 @@ namespace CritterWorld
                 numberPlate.FillColor = Color.LightGray;
                 numberPlate.Alpha = 255;
             }
+            Mover = null;
             stopped = true;
         }
 

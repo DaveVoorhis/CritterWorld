@@ -208,6 +208,9 @@ namespace CritterWorld
             critter1.Bounceback();
             critter2.Bounceback();
 
+            critter1.FightWith(critter2.NameAndAuthor);
+            critter2.FightWith(critter1.NameAndAuthor);
+
             critter1.AssignRandomDestination();
             critter2.AssignRandomDestination();
 
@@ -229,6 +232,8 @@ namespace CritterWorld
 
             critter.Bounceback();
             critter.AssignRandomDestination();
+
+            critter.Bump();
 
             terrain.Nudge();
 

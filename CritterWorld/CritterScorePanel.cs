@@ -37,7 +37,7 @@ namespace CritterWorld
             spriteEngine.AddSprite(critterImage);
 
             labelNumber.Text = critter.Number.ToString();
-            labelName.Text = critter.Name + " by " + critter.Author;
+            labelName.Text = critter.NameAndAuthor;
  
             timer = new Timer
             {
@@ -46,8 +46,10 @@ namespace CritterWorld
             timer.Tick += (e, evt) =>
             {
                 UpdateScore(critter.CurrentScore, critter.OverallScore);
-                progressBarHealth.Value = critter.Health;
-                progressBarEnergy.Value = critter.Energy;
+                progressBarHealth.Value = (int)critter.Health;
+                progressBarHealth.ForeColor = (progressBarHealth.Value < 25) ? Color.Red : Color.Green;
+                progressBarEnergy.Value = (int)critter.Energy;
+                progressBarEnergy.ForeColor = (progressBarEnergy.Value < 25) ? Color.Red : Color.Green;
                 if (critter.IsEscaped)
                 {
                     labelEscaped.Visible = true;
