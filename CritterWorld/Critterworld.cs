@@ -18,7 +18,7 @@ namespace CritterWorld
 {
     public partial class Critterworld : Form
     {
-
+        // Default name of log file.
         public string LogFileName { get; private set; } = "log.csv";
 
         // Level duration in seconds.
