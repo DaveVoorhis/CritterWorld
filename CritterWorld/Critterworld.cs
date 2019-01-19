@@ -77,6 +77,7 @@ namespace CritterWorld
         private FormBorderStyle oldStyle;
 
         private bool isFullScreen = false;
+        private bool exiting = false;
 
         private bool Fullscreen
         {
@@ -187,12 +188,8 @@ namespace CritterWorld
 
         private void ExitApplication()
         {
-            LevelTimerStop();
-            logMessageTimer.Stop();
-            fpsDisplayTimer.Stop();
-            Shutdown();
-            Thread.Sleep(500);
-            Application.Exit();
+            exiting = true;
+            DisplayGameOver();
         }
 
         private void MenuStart_Click(object sender, EventArgs e)
@@ -248,7 +245,7 @@ namespace CritterWorld
                 gameOverTimer = new System.Timers.Timer
                 {
                     AutoReset = false,
-                    Interval = 5000
+                    Interval = (exiting) ? 1000 : 5000
                 };
                 gameOverTimer.Elapsed += (sender, e) => DisplaySplash();
             }
@@ -325,10 +322,19 @@ namespace CritterWorld
         {
             Shutdown();
             LevelTimerStop();
-            DisplayCritterworldText();
-            DisplayVersion();
-            DisplayWanderingCritter();
-            arena.Launch();
+            if (exiting)
+            {
+                logMessageTimer.Stop();
+                fpsDisplayTimer.Stop();
+                Application.Exit();
+            }
+            else
+            {
+                DisplayCritterworldText();
+                DisplayVersion();
+                DisplayWanderingCritter();
+                arena.Launch();
+            }
         }
 
         private void Tick()
