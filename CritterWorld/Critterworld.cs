@@ -39,9 +39,6 @@ namespace CritterWorld
             new Level((Bitmap)Image.FromFile("Resources/TerrainMasks/Background06.png"), new Point(280, 360))
         };
 
-        // Run this level when not running a competition
-        const int singleLevel = 5;
-
         // Log message queue.
         private static ConcurrentQueue<LogEntry> logMessageQueue = new ConcurrentQueue<LogEntry>();
 
@@ -49,11 +46,11 @@ namespace CritterWorld
         private static string tickLine = ".....";
         private int tickCount = 0;
 
-        // If we're not running a competition, we're running this level
-        private Level level;
+        // Run this level
+        private int levelNumber = 0;
 
-        // If we're running a competition, this is not null
-        private Competition competition;
+        // The current running Level.
+        private Level level;
 
         // To update the FPS display
         private System.Timers.Timer fpsDisplayTimer = null;
@@ -67,6 +64,9 @@ namespace CritterWorld
         // To terminate a level after levelDuration seconds...
         private System.Timers.Timer levelTimer = null;
 
+        // To terminate a level when it no longer has any living Critters.
+        private System.Timers.Timer levelCheckTimer = null;
+
         // ...by counting down a second at a time
         private int countDown;
 
@@ -79,6 +79,7 @@ namespace CritterWorld
         // Environment state
         private bool isFullScreen = false;
         private bool exiting = false;
+        private bool IsCompetition { get; set; } = false;
 
         // Critter loader
         private CritterLoader critterLoader = new CritterLoader();
@@ -139,28 +140,23 @@ namespace CritterWorld
 
         private void Shutdown()
         {
+            LevelTimerStop();
+            if (levelCheckTimer != null)
+            {
+                levelCheckTimer.Stop();
+            }
             if (gameOverTimer != null)
             {
                 gameOverTimer.Stop();
             }
-            LevelTimerStop();
             arena.Shutdown();
             level = null;
-            if (competition != null)
-            {
-                competition.Shutdown();
-                competition = null;
-            }
             ClearScorePanel();
         }
 
         private void AddCrittersToArena()
         {
             ClearScorePanel();
-            if (waitingRoom.Count == 0)
-            {
-                waitingRoom = critterLoader.LoadCritters();
-            }
             for (int i = 0; i < maxCrittersRunning; i++)
             {
                 if (waitingRoom.Count == 0)
@@ -176,31 +172,75 @@ namespace CritterWorld
                     panelScore.Controls.Add(scorePanel);
                 }));
             }
-            arena.Launch();
         }
 
-        private void StartOneLevel()
+        private void Launch()
         {
-            Shutdown();
-            LevelTimerStart();
-            level = levels[singleLevel];
+            level = levels[levelNumber];
             level.Arena = arena;
             level.Setup();
-            waitingRoom = critterLoader.LoadCritters();
+
             AddCrittersToArena();
+
+            if (levelCheckTimer == null)
+            {
+                levelCheckTimer = new System.Timers.Timer();
+            }
+            levelCheckTimer.Interval = 5000;
+            levelCheckTimer.AutoReset = true;
+            levelCheckTimer.Elapsed += (e, evt) =>
+            {
+                if (level.CountOfActiveCritters == 0)
+                {
+                    NextHeat();
+                }
+            };
+            levelCheckTimer.Start();
+
+            LevelTimerStart();
+            arena.Launch();
         }
 
         private void NextLevel()
         {
-            if (competition != null)
+            Shutdown();
+            levelNumber++;
+            if (levelNumber >= levels.Length)
             {
-                LevelTimerStart();
-                competition.NextLevel();
+                if (IsCompetition)
+                {
+                    DisplayGameOver();
+                }
+                else
+                {
+                    levelNumber = 0;
+                    StartLevel();
+                }
             }
-            else if (level != null)
+            else
             {
-                StartOneLevel();
+                StartLevel();
             }
+        }
+
+        private void NextHeat()
+        {
+            if (waitingRoom.Count == 0)
+            {
+                NextLevel();
+            }
+            else
+            {
+                Shutdown();
+                Launch();
+            }
+        }
+
+        private void StartLevel()
+        {
+            Shutdown();
+            waitingRoom = critterLoader.LoadCritters();
+            NextHeat();
         }
 
         private void ExitApplication()
@@ -211,21 +251,16 @@ namespace CritterWorld
 
         private void MenuStart_Click(object sender, EventArgs e)
         {
-            StartOneLevel();
+            IsCompetition = false;
+            levelNumber = 0;
+            StartLevel();
         }
 
         private void MenuCompetionStart_Click(object sender, EventArgs e)
         {
-            Shutdown();
-            LevelTimerStart();
-            competition = new Competition(arena, () => AddCrittersToArena());
-            competition.Finished += (sndr, ev) => DisplayGameOver();
-            competition.FinishedLevel += (sndr, ev) => LevelTimerStart();
-            foreach (Level level in levels)
-            {
-                competition.Add(level);
-            }
-            competition.Launch();
+            IsCompetition = true;
+            levelNumber = 0;
+            StartLevel();
         }
 
         private void MenuFullScreen_Click(object sender, EventArgs e)
@@ -237,6 +272,11 @@ namespace CritterWorld
         private void MenuNextLevel_Click(object sender, EventArgs e)
         {
             NextLevel();
+        }
+
+        private void MenuNextHeat_Click(object sender, EventArgs e)
+        {
+            NextHeat();
         }
 
         private void MenuStop_Click(object sender, EventArgs e)
@@ -252,9 +292,10 @@ namespace CritterWorld
         private void DisplayGameOver()
         {
             Shutdown();
-            LevelTimerStop();
-            TextSprite splashText = new TextSprite((exiting) ? "GOODBYE!" : "GAME OVER", "Arial", 1, FontStyle.Regular);
-            splashText.Mover = new TextGrower(1, 100, 3);
+            TextSprite splashText = new TextSprite((exiting) ? "GOODBYE!" : "GAME OVER", "Arial", 1, FontStyle.Regular)
+            {
+                Mover = new TextGrower(1, 100, 3)
+            };
             arena.AddSprite(splashText);
             splashText.Position = new Point(arena.Width / 2, arena.Height / 2);
             if (gameOverTimer == null)
@@ -264,7 +305,7 @@ namespace CritterWorld
                     AutoReset = false,
                     Interval = (exiting) ? 1000 : 5000
                 };
-                gameOverTimer.Elapsed += (sender, e) => DisplaySplash();
+                gameOverTimer.Elapsed += (sender, e) => DisplaySplashOrExit();
             }
             gameOverTimer.Start();
             arena.Launch();
@@ -335,10 +376,9 @@ namespace CritterWorld
             route.Start();
         }
 
-        private void DisplaySplash()
+        private void DisplaySplashOrExit()
         {
             Shutdown();
-            LevelTimerStop();
             if (exiting)
             {
                 logMessageTimer.Stop();
@@ -359,7 +399,7 @@ namespace CritterWorld
             countDown--;
             if (countDown <= 0)
             {
-                NextLevel();
+                NextHeat();
             }
             else
             {
@@ -466,7 +506,7 @@ namespace CritterWorld
 
             labelVersion.Text = Version.VersionName;
 
-            DisplaySplash();
+            DisplaySplashOrExit();
 
             fpsDisplayTimer = new System.Timers.Timer();
             fpsDisplayTimer.Interval = 250;

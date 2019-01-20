@@ -38,7 +38,7 @@ using System.Drawing;
 
 namespace SCG.TurboSprite
 {
-    // Implements an animated surface where sprites can be registered
+    // Implements a control where sprites can be displayed and animated.
     public partial class SpriteSurface : Control
     {
         private int _desiredFPS = 10;

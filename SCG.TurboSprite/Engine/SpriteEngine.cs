@@ -111,6 +111,9 @@ namespace SCG.TurboSprite
         // The engine will detect collisions with other engines having the same tag
         public int DetectCollisionTag { get; set; }
 
+        // If true, sprites cannot be added. Typically used to prevent new sprites being added whilst a surface/engine is being shut down.
+        public bool Locked { get; set; }
+
         private void ThrowExceptionIfShapeless(Sprite sprite)
         {
             if (sprite.Shape.X == -1)
@@ -138,6 +141,10 @@ namespace SCG.TurboSprite
         // Add a sprite to the engine
         public void AddSprite(Sprite sprite)
         {
+            if (Locked)
+            {
+                return;
+            }
             ThrowExceptionIfShapeless(sprite);
             sprite._engine = this;
             sprite._surface = _surface;    
@@ -203,16 +210,24 @@ namespace SCG.TurboSprite
             int Height = _surface.VirtualSize.Height;          
             lock (_spriteList)
             {
-                foreach(Sprite sprite in Sprites)                 
+                foreach (Sprite sprite in Sprites)
                 {
                     if (sprite.X < 0)
+                    {
                         sprite.X = Width - 1;
+                    }
                     else if (sprite.X >= Width)
+                    {
                         sprite.X = 0;
+                    }
                     if (sprite.Y < 0)
+                    {
                         sprite.Y = Height - 1;
+                    }
                     else if (sprite.Y >= Height)
+                    {
                         sprite.Y = 0;
+                    }
                 }
             }
         }

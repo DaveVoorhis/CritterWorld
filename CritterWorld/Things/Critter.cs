@@ -238,6 +238,7 @@ namespace CritterWorld
             int rand = random.Next(0, 2500);
             if (rand == 25)
             {
+                Log("---------- shield! ---------");
                 Sound.PlayArc();
                 Sprite shockwave = new ShockWaveSprite(5, 20, 10, Color.DarkBlue, Color.LightBlue);
                 shockwave.Position = Position;
@@ -461,6 +462,16 @@ namespace CritterWorld
             AssignRandomDestination();
         }
 
+        private void ForceShutdown()
+        {
+            if (thinkThread == null)
+            {
+                return;
+            }
+            thinkThread.Abort();
+            thinkThread = null;
+        }
+
         // Shut down this Critter.
         public void Shutdown()
         {
@@ -472,6 +483,9 @@ namespace CritterWorld
             }
             Mover = null;
             stopped = true;
+            // Brutal, but really the best way to handle this. Otherwise, the thread can
+            // continue to interact with the environment.
+            ForceShutdown();
         }
 
         // True if this critter is stopped or dead

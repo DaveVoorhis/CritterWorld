@@ -159,11 +159,7 @@ namespace CritterWorld
 
         public void Shutdown()
         {
-            if (!spriteSurfaceMain.Active)
-            {
-                return;
-            }
-
+            spriteEngineMain.Locked = true;
             spriteSurfaceMain.Active = false;
 
             Sprite[] sprites = spriteEngineMain.Sprites.ToArray();
@@ -174,9 +170,10 @@ namespace CritterWorld
                     ((Critter)sprite).Shutdown();
                 }
             }
-            Thread.Sleep(500);
             spriteEngineMain.Purge();
             ResetLaunchPosition();
+
+            spriteEngineMain.Locked = false;
         }
 
         public int CountOfActiveCritters
