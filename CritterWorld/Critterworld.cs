@@ -253,7 +253,7 @@ namespace CritterWorld
         {
             Shutdown();
             LevelTimerStop();
-            TextSprite splashText = new TextSprite("GAME OVER", "Arial", 1, FontStyle.Regular);
+            TextSprite splashText = new TextSprite((exiting) ? "GOODBYE!" : "GAME OVER", "Arial", 1, FontStyle.Regular);
             splashText.Mover = new TextGrower(1, 100, 3);
             arena.AddSprite(splashText);
             splashText.Position = new Point(arena.Width / 2, arena.Height / 2);
