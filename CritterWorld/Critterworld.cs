@@ -477,18 +477,25 @@ namespace CritterWorld
 
         private void RetrieveAndDisplayLogMessages()
         {
-            using (StreamWriter output = File.AppendText(LogFileName))
+            while (logMessageQueue.TryDequeue(out LogEntry logEntry))
             {
-                while (logMessageQueue.TryDequeue(out LogEntry logEntry))
+                try
                 {
-                    output.WriteLine(logEntry.ToCSV());
-                    textLog.AppendText(logEntry + "\r\n");
-                    if (textLog.Text.Length > 128000)
+                    using (StreamWriter output = File.AppendText(LogFileName))
                     {
-                        String shortenedText = "..." + "\r\n" + textLog.Text.Substring(128000);
-                        textLog.Text = "";
-                        textLog.AppendText(shortenedText);
+                        output.WriteLine(logEntry.ToCSV());
                     }
+                }
+                catch (Exception e)
+                {
+                    textLog.AppendText("=== Unable to write to log file " + LogFileName + " due to " + e.Message + " ===\r\n");
+                }
+                textLog.AppendText(logEntry + "\r\n");
+                if (textLog.Text.Length > 128000)
+                {
+                    String shortenedText = "..." + "\r\n" + textLog.Text.Substring(128000);
+                    textLog.Text = "";
+                    textLog.AppendText(shortenedText);
                 }
             }
         }
