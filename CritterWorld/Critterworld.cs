@@ -501,7 +501,7 @@ namespace CritterWorld
 
         public bool Matches(LogEntry other)
         {
-            string formatString = "MM/dd/yyyy HH:mm:ss.fff";
+            string formatString = "MM/dd/yyyy HH:mm:ss.f";
             CultureInfo culture = CultureInfo.InvariantCulture;
             return Timestamp.ToString(formatString, culture) == other.Timestamp.ToString(formatString, culture) && EventMessage == other.EventMessage && Exception == null;
         }
