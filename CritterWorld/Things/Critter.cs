@@ -464,11 +464,7 @@ namespace CritterWorld
 
         private void ForceShutdown()
         {
-            if (thinkThread == null)
-            {
-                return;
-            }
-            thinkThread.Abort();
+            thinkThread?.Abort();
             thinkThread = null;
         }
 

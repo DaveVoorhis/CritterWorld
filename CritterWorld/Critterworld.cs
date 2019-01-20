@@ -84,9 +84,6 @@ namespace CritterWorld
         // Critter loader
         private CritterLoader critterLoader = new CritterLoader();
 
-        // Critters waiting to run.
-        private List<Critter> waitingRoom = new List<Critter>();
-
         private bool Fullscreen
         {
             get
@@ -132,6 +129,7 @@ namespace CritterWorld
                     {
                         CritterScorePanel scorePanel = (CritterScorePanel)control;
                         scorePanel.Shutdown();
+                        scorePanel.Dispose();
                     }
                     panelScore.Controls.Clear();
                 }));
@@ -159,17 +157,17 @@ namespace CritterWorld
             ClearScorePanel();
             for (int i = 0; i < maxCrittersRunning; i++)
             {
-                if (waitingRoom.Count == 0)
-                {
-                    break;
-                }
-                Critter critter = waitingRoom[0];
-                waitingRoom.RemoveAt(0);
-                arena.AddCritter(critter);
                 Invoke(new Action(() => {
-                    CritterScorePanel scorePanel = new CritterScorePanel(critter);
-                    scorePanel.Location = new Point(0, scorePanel.Height * i);
-                    panelScore.Controls.Add(scorePanel);
+                    if (critterBindingSourceWaiting.Count != 0)
+                    {
+                        Critter critter = (Critter)critterBindingSourceWaiting.List[0];
+                        critterBindingSourceWaiting.RemoveAt(0);
+                        arena.AddCritter(critter);
+                        critterBindingSourceLeaderboard.Add(critter);
+                        CritterScorePanel scorePanel = new CritterScorePanel(critter);
+                        scorePanel.Location = new Point(0, scorePanel.Height * i);
+                        panelScore.Controls.Add(scorePanel);
+                    }
                 }));
             }
         }
@@ -201,6 +199,17 @@ namespace CritterWorld
             arena.Launch();
         }
 
+        private void LoadCrittersIntoWaitingRoom()
+        {
+            List<Critter> critters = critterLoader.LoadCritters();
+            Invoke(new Action(() => {
+                foreach (Critter critter in critters)
+                {
+                    critterBindingSourceWaiting.Add(critter);
+                }
+            }));
+        }
+
         private void NextLevel()
         {
             Shutdown();
@@ -219,13 +228,17 @@ namespace CritterWorld
             }
             else
             {
-                StartLevel();
+                if (!IsCompetition)
+                {
+                    LoadCrittersIntoWaitingRoom();
+                }
+                NextHeat();
             }
         }
 
         private void NextHeat()
         {
-            if (waitingRoom.Count == 0)
+            if (critterBindingSourceWaiting.Count == 0)
             {
                 NextLevel();
             }
@@ -239,7 +252,7 @@ namespace CritterWorld
         private void StartLevel()
         {
             Shutdown();
-            waitingRoom = critterLoader.LoadCritters();
+            LoadCrittersIntoWaitingRoom();
             NextHeat();
         }
 
@@ -524,7 +537,11 @@ namespace CritterWorld
             logMessageTimer.Interval = 250;
             logMessageTimer.Elapsed += (sender, e) => Invoke(new Action(() => RetrieveAndDisplayLogMessages()));
             logMessageTimer.Start();
+
+            critterBindingSourceWaiting.Sort = "Name";
+            critterBindingSourceLeaderboard.Sort = "OverallScore DESC, Name ASC";
         }
+
     }
 
     internal class LogEntry
