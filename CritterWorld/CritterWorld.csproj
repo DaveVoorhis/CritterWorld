@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Competition.cs" />
+    <Compile Include="CritterLoader.cs" />
     <Compile Include="CritterScorePanel.cs">
       <SubType>UserControl</SubType>
     </Compile>

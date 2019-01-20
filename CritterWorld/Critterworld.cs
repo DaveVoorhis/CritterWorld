@@ -70,14 +70,21 @@ namespace CritterWorld
         // ...by counting down a second at a time
         private int countDown;
 
-        // Preserve window layout when going full screen
+        // Preserves window layout when going full screen
         private Size oldSize;
         private Point oldLocation;
         private FormWindowState oldState;
         private FormBorderStyle oldStyle;
 
+        // Environment state
         private bool isFullScreen = false;
         private bool exiting = false;
+
+        // Critter loader
+        private CritterLoader critterLoader = new CritterLoader();
+
+        // Critters waiting to run.
+        private List<Critter> waitingRoom = new List<Critter>();
 
         private bool Fullscreen
         {
@@ -150,9 +157,18 @@ namespace CritterWorld
         private void AddCrittersToArena()
         {
             ClearScorePanel();
+            if (waitingRoom.Count == 0)
+            {
+                waitingRoom = critterLoader.LoadCritters();
+            }
             for (int i = 0; i < maxCrittersRunning; i++)
             {
-                Critter critter = new Critter(i + 1);
+                if (waitingRoom.Count == 0)
+                {
+                    break;
+                }
+                Critter critter = waitingRoom[0];
+                waitingRoom.RemoveAt(0);
                 arena.AddCritter(critter);
                 Invoke(new Action(() => {
                     CritterScorePanel scorePanel = new CritterScorePanel(critter);
@@ -170,6 +186,7 @@ namespace CritterWorld
             level = levels[singleLevel];
             level.Arena = arena;
             level.Setup();
+            waitingRoom = critterLoader.LoadCritters();
             AddCrittersToArena();
         }
 
@@ -465,9 +482,10 @@ namespace CritterWorld
 
     internal class LogEntry
     {
-        public LogEntry(string critterName, string author, string eventMessage, Exception exception)
+        public LogEntry(int critterNumber, string critterName, string author, string eventMessage, Exception exception)
         {
             Timestamp = DateTime.Now;
+            CritterNumber = critterNumber;
             CritterName = critterName;
             Author = author;
             EventMessage = eventMessage;
@@ -475,6 +493,7 @@ namespace CritterWorld
         }
 
         public DateTime Timestamp { get; }
+        public int CritterNumber { get; }
         public string CritterName { get; }
         public string Author { get; }
         public string EventMessage { get; }
@@ -482,7 +501,9 @@ namespace CritterWorld
 
         public bool Matches(LogEntry other)
         {
-            return Timestamp.ToString("o") == other.Timestamp.ToString("o") && EventMessage == other.EventMessage && Exception == null;
+            string formatString = "MM/dd/yyyy HH:mm:ss.fff";
+            CultureInfo culture = CultureInfo.InvariantCulture;
+            return Timestamp.ToString(formatString, culture) == other.Timestamp.ToString(formatString, culture) && EventMessage == other.EventMessage && Exception == null;
         }
 
         private static string ToQuoted(string input)
@@ -492,12 +513,12 @@ namespace CritterWorld
 
         public override string ToString()
         {
-            return Timestamp.ToString("o", CultureInfo.CurrentCulture) + ": " + CritterName + " by " + Author + " " + EventMessage + ((Exception != null) ? " due to exception: " + Exception.StackTrace : "");
+            return Timestamp.ToString("o", CultureInfo.CurrentCulture) + ": #" + CritterNumber + " " + CritterName + " by " + Author + " " + EventMessage + ((Exception != null) ? " due to exception: " + Exception.StackTrace : "");
         }
 
         public string ToCSV()
         {
-            return Timestamp.ToString("o", CultureInfo.CurrentCulture) + ", " + ToQuoted(CritterName) + ", " + ToQuoted(Author) + ", " + ToQuoted(EventMessage) + ", " + ((Exception == null) ? ToQuoted("") : ToQuoted(Exception.StackTrace));
+            return Timestamp.ToString("o", CultureInfo.CurrentCulture) + ", " + CritterNumber + ", " + ToQuoted(CritterName) + ", " + ToQuoted(Author) + ", " + ToQuoted(EventMessage) + ", " + ((Exception == null) ? ToQuoted("") : ToQuoted(Exception.StackTrace));
         }
     }
 

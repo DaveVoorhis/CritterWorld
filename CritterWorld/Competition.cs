@@ -61,7 +61,7 @@ namespace CritterWorld
             levelCheckTimer.AutoReset = true;
             levelCheckTimer.Elapsed += (e, evt) =>
             {
-                if (currentLevel.CountOfActiveCritters <= 1)
+                if (currentLevel.CountOfActiveCritters == 0)
                 {
                     NextLevel();
                 }

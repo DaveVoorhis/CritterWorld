@@ -99,7 +99,7 @@ namespace CritterWorld
 
         public void Log(String message, Exception exception = null)
         {
-            LogEntry newLogEntry = new LogEntry(Name, Author, message, exception);
+            LogEntry newLogEntry = new LogEntry(Number, Name, Author, message, exception);
             if (previousLogEntry == null || !previousLogEntry.Matches(newLogEntry))
             {
                 Critterworld.Log(newLogEntry);
