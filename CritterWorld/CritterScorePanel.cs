@@ -20,6 +20,14 @@ namespace CritterWorld
             labelScore.Text = "Score: " + currentScore + "/" + overallScore;
         }
 
+        private void MakeProgressBarsInvisible()
+        {
+            labelHealth.Visible = false;
+            labelEnergy.Visible = false;
+            progressBarHealth.Visible = false;
+            progressBarEnergy.Visible = false;
+        }
+
         public CritterScorePanel(Critter critter)
         {
             InitializeComponent();
@@ -54,11 +62,13 @@ namespace CritterWorld
                 {
                     labelEscaped.Visible = true;
                     UpdateScore(critter.CurrentScore, critter.OverallScore);
+                    MakeProgressBarsInvisible();
                 }
                 if (critter.IsDead)
                 {
                     labelDead.Visible = true;
                     labelScore.Text = critter.DeadReason;
+                    MakeProgressBarsInvisible();
                 }
             };
             timer.Start();
@@ -67,6 +77,10 @@ namespace CritterWorld
         public void Shutdown()
         {
             timer.Stop();
+            foreach (Control control in Controls)
+            {
+                control.Dispose();
+            }
         }
     }
 }

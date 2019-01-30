@@ -44,7 +44,14 @@ namespace NAudio.FireAndForget
 
         private void AddMixerInput(ISampleProvider input)
         {
-            mixer.AddMixerInput(ConvertToRightChannelCount(input));
+            try
+            {
+                mixer.AddMixerInput(ConvertToRightChannelCount(input));
+            }
+            catch (InvalidOperationException ioe)
+            {
+                Console.WriteLine("Error: AudioPlaybackEngine failure due to " + ioe);
+            }
         }
 
         public void Dispose()
