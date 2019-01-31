@@ -128,10 +128,8 @@ namespace CritterWorld
                     foreach (Control control in panelScore.Controls)
                     {
                         CritterScorePanel scorePanel = (CritterScorePanel)control;
-                        scorePanel.Shutdown();
-                        scorePanel.Dispose();
+                        scorePanel.SetCritter(null);
                     }
-                    panelScore.Controls.Clear();
                 }));
             }
         }
@@ -164,9 +162,8 @@ namespace CritterWorld
                         critterBindingSourceWaiting.RemoveAt(0);
                         arena.AddCritter(critter);
                         critterBindingSourceLeaderboard.Add(critter);
-                        CritterScorePanel scorePanel = new CritterScorePanel(critter);
-                        scorePanel.Location = new Point(0, scorePanel.Height * i);
-                        panelScore.Controls.Add(scorePanel);
+                        CritterScorePanel scorePanel = (CritterScorePanel)panelScore.Controls[i];
+                        scorePanel.SetCritter(critter);
                     }
                 }));
             }
@@ -513,9 +510,34 @@ namespace CritterWorld
             }
         }
 
+        private void CreateCritterScorePanels()
+        {
+            for (int i = 0; i < maxCrittersRunning; i++)
+            {
+                CritterScorePanel scorePanel = new CritterScorePanel();
+                scorePanel.Location = new Point(0, scorePanel.Height * i);
+                panelScore.Controls.Add(scorePanel);
+            }
+            System.Windows.Forms.Timer scorePanelTimer = new System.Windows.Forms.Timer()
+            {
+                Interval = 500
+            };
+            scorePanelTimer.Tick += (e, evt) =>
+            {
+                foreach (Control control in panelScore.Controls)
+                {
+                    CritterScorePanel scorePanel = (CritterScorePanel)control;
+                    scorePanel.CritterUpdate();
+                }
+            };
+            scorePanelTimer.Start();
+        }
+
         public Critterworld()
         {
             InitializeComponent();
+
+            CreateCritterScorePanels();
 
             ForceInitialLayout();
 

@@ -13,73 +13,98 @@ namespace CritterWorld
 {
     public partial class CritterScorePanel : UserControl
     {
-        private Timer timer = null;
+        private SpriteEngine spriteEngine;
+        private PolygonSprite critterImage;
+        private Critter critter;
 
         private void UpdateScore(int currentScore, int overallScore)
         {
             labelScore.Text = "Score: " + currentScore + "/" + overallScore;
         }
 
-        private void MakeProgressBarsInvisible()
+        private void UpdateHealthAndEnergy(int health, int energy)
         {
-            labelHealth.Visible = false;
-            labelEnergy.Visible = false;
-            progressBarHealth.Visible = false;
-            progressBarEnergy.Visible = false;
+            progressBarHealth.Value = health;
+            progressBarHealth.ForeColor = (progressBarHealth.Value < 25) ? Color.Red : Color.Green;
+            progressBarEnergy.Value = energy;
+            progressBarEnergy.ForeColor = (progressBarEnergy.Value < 25) ? Color.Red : Color.Green;
         }
 
-        public CritterScorePanel(Critter critter)
+        private void MakeProgressBarsVisible(bool visible)
+        {
+            labelHealth.Visible = visible;
+            labelEnergy.Visible = visible;
+            progressBarHealth.Visible = visible;
+            progressBarEnergy.Visible = visible;
+        }
+
+        public CritterScorePanel()
         {
             InitializeComponent();
 
-            SpriteEngine spriteEngine = new SpriteEngine
+            spriteEngine = new SpriteEngine
             {
                 Surface = spriteSurfaceCritter
             };
 
-            PolygonSprite critterImage = new PolygonSprite(critter.Model)
-            {
-                Color = critter.Color,
-                Position = new Point(spriteSurfaceCritter.Width / 2, spriteSurfaceCritter.Height / 2)
-            };
-            spriteEngine.AddSprite(critterImage);
-
-            labelNumber.Text = critter.Number.ToString();
-            labelName.Text = critter.NameAndAuthor;
- 
-            timer = new Timer
-            {
-                Interval = 500
-            };
-            timer.Tick += (e, evt) =>
-            {
-                UpdateScore(critter.CurrentScore, critter.OverallScore);
-                progressBarHealth.Value = (int)critter.Health;
-                progressBarHealth.ForeColor = (progressBarHealth.Value < 25) ? Color.Red : Color.Green;
-                progressBarEnergy.Value = (int)critter.Energy;
-                progressBarEnergy.ForeColor = (progressBarEnergy.Value < 25) ? Color.Red : Color.Green;
-                if (critter.IsEscaped)
-                {
-                    labelEscaped.Visible = true;
-                    UpdateScore(critter.CurrentScore, critter.OverallScore);
-                    MakeProgressBarsInvisible();
-                }
-                if (critter.IsDead)
-                {
-                    labelDead.Visible = true;
-                    labelScore.Text = critter.DeadReason;
-                    MakeProgressBarsInvisible();
-                }
-            };
-            timer.Start();
+            SetCritter(null);
         }
 
-        public void Shutdown()
+        public void SetCritter(Critter theCritter)
         {
-            timer.Stop();
-            foreach (Control control in Controls)
+            critter = theCritter;
+            if (critter == null)
             {
-                control.Dispose();
+                MakeProgressBarsVisible(false);
+                labelNumber.Text = "000";
+                labelName.Text = "";
+                labelEscaped.Visible = false;
+                labelDead.Visible = false;
+                labelScore.Text = "";
+                UpdateScore(0, 0);
+                UpdateHealthAndEnergy(0, 0);
+                if (critterImage != null)
+                {
+                    spriteEngine.RemoveSprite(critterImage);
+                }
+            }
+            else
+            {
+                critterImage = new PolygonSprite(critter.Model)
+                {
+                    Color = critter.Color,
+                    Position = new Point(spriteSurfaceCritter.Width / 2, spriteSurfaceCritter.Height / 2)
+                };
+                spriteEngine.AddSprite(critterImage);
+
+                labelNumber.Text = critter.Number.ToString();
+                labelName.Text = critter.NameAndAuthor;
+
+                MakeProgressBarsVisible(true);
+
+                spriteSurfaceCritter.Active = true;
+            }
+        }
+
+        public void CritterUpdate()
+        {
+            if (critter == null)
+            {
+                return;
+            }
+            UpdateScore(critter.CurrentScore, critter.OverallScore);
+            UpdateHealthAndEnergy((int)critter.Health, (int)critter.Energy);
+            if (critter.IsEscaped)
+            {
+                labelEscaped.Visible = true;
+                UpdateScore(critter.CurrentScore, critter.OverallScore);
+                MakeProgressBarsVisible(false);
+            }
+            if (critter.IsDead)
+            {
+                labelDead.Visible = true;
+                labelScore.Text = critter.DeadReason;
+                MakeProgressBarsVisible(false);
             }
         }
     }
