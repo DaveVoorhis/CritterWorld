@@ -142,10 +142,6 @@ namespace CritterWorld
                     Critter critter = (Critter)critterBindingSourceWaiting.List[0];
                     critterBindingSourceWaiting.RemoveAt(0);
                     arena.AddCritter(critter);
-                    if (IsCompetition)
-                    {
-                        critterBindingSourceLeaderboard.Add(critter);
-                    }
                     CritterScorePanel scorePanel = (CritterScorePanel)panelScore.Controls[i];
                     scorePanel.SetCritter(critter);
                 }
@@ -198,10 +194,15 @@ namespace CritterWorld
 
         private void LoadCrittersIntoWaitingRoom()
         {
+            critterBindingSourceWaiting.Clear();
             List<Critter> critters = critterLoader.LoadCritters();
             foreach (Critter critter in critters)
             {
                 critterBindingSourceWaiting.Add(critter);
+                if (IsCompetition)
+                {
+                    critterBindingSourceLeaderboard.Add(critter);
+                }
             }
         }
 
@@ -223,7 +224,16 @@ namespace CritterWorld
             }
             else
             {
-                if (!IsCompetition)
+                if (IsCompetition)
+                {
+                    // copy Critters from Leader Board, because they're all there
+                    foreach (Critter critter in critterBindingSourceLeaderboard)
+                    {
+                        critter.Reset();
+                        critterBindingSourceWaiting.Add(critter);
+                    }
+                }
+                else
                 {
                     LoadCrittersIntoWaitingRoom();
                 }
@@ -259,6 +269,8 @@ namespace CritterWorld
 
         private void MenuStart_Click(object sender, EventArgs e)
         {
+            critterBindingSourceLeaderboard.Clear();
+            critterBindingSourceWaiting.Clear();
             IsCompetition = false;
             levelNumber = 0;
             StartLevel();
@@ -266,6 +278,8 @@ namespace CritterWorld
 
         private void MenuCompetionStart_Click(object sender, EventArgs e)
         {
+            critterBindingSourceLeaderboard.Clear();
+            critterBindingSourceWaiting.Clear();
             IsCompetition = true;
             levelNumber = 0;
             StartLevel();
@@ -289,6 +303,7 @@ namespace CritterWorld
 
         private void MenuStop_Click(object sender, EventArgs e)
         {
+            critterBindingSourceWaiting.Clear();
             DisplayGameOver();
         }
 
@@ -640,13 +655,6 @@ namespace CritterWorld
         public string Author { get; }
         public string EventMessage { get; }
         public Exception Exception { get; }
-
-        public bool Matches(LogEntry other)
-        {
-            string formatString = "MM/dd/yyyy HH:mm:ss.f";
-            CultureInfo culture = CultureInfo.InvariantCulture;
-            return Timestamp.ToString(formatString, culture) == other.Timestamp.ToString(formatString, culture) && EventMessage == other.EventMessage && Exception == null;
-        }
 
         private static string ToQuoted(string input)
         {

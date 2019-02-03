@@ -52,7 +52,7 @@ namespace CritterWorld
         public string DeadReason { get; private set; } = null;
         public bool IsDead { get { return DeadReason != null; } }
 
-        private readonly bool selectedToTestCrash = false;
+        private bool selectedToTestCrash = false;
 
         private int thinkTimeOverrunViolations = 0;
         private int moveCount = 0;
@@ -61,6 +61,9 @@ namespace CritterWorld
         private bool stopped = true;
 
         private static Random rnd = new Random(Guid.NewGuid().GetHashCode());
+
+        private TextSprite numberPlate = null;
+        private int numberPlateIncrement = 1;
 
         public static string GetRandomName()
         {
@@ -82,9 +85,6 @@ namespace CritterWorld
 
             LineWidth = 1;
             Color = Sprite.RandomColor(127);
-            FacingAngle = 90;
-
-            selectedToTestCrash = (rnd.Next(100) < CrashProbabilityPercentage);
 
             Processors += sprite =>
             {
@@ -95,6 +95,20 @@ namespace CritterWorld
                 }
                 spriteMover.TargetFacingAngle = (int)Sprite.GetAngle(spriteMover.SpeedX, spriteMover.SpeedY) + 90;
             };
+
+            Reset();
+        }
+
+        public void Reset()
+        {
+            numberPlate = null;
+            FacingAngle = 90;
+            selectedToTestCrash = (rnd.Next(100) < CrashProbabilityPercentage);
+            CurrentScore = 0;
+            Health = 100;
+            Energy = 100;
+            IsEscaped = false;
+            DeadReason = null;
         }
 
         public void Log(String message, Exception exception = null)
@@ -237,7 +251,7 @@ namespace CritterWorld
                 Sprite shockwave = new ShockWaveSprite(5, 20, 10, Color.DarkBlue, Color.LightBlue);
                 shockwave.Position = Position;
                 shockwave.Mover = new SlaveMover(this);
-                Engine.AddSprite(shockwave);
+                Engine?.AddSprite(shockwave);
             }
             else if (rand == 26 && selectedToTestCrash)
             {
@@ -341,8 +355,6 @@ namespace CritterWorld
             };
         }
 
-        private TextSprite numberPlate = null;
-
         // Attach a number plate to this Critter.
         public void AttachNumberPlate()
         {
@@ -352,18 +364,13 @@ namespace CritterWorld
             }
             numberPlate = CreateNumberPlate();
             numberPlate.Mover = new SlaveMover(this);
-            Engine.AddSprite(numberPlate);
+            Engine?.AddSprite(numberPlate);
         }
-
-        private int numberPlateIncrement = 1;
 
         // Launch this Critter.
         public void Startup()
         {
-            Health = 100;
-            Energy = 100;
-            IsEscaped = false;
-            DeadReason = null;
+            Reset();
 
             if (thinkThread != null)
             {
@@ -498,6 +505,7 @@ namespace CritterWorld
             if (numberPlate != null)
             {
                 numberPlate.Kill();
+                numberPlate = null;
             }
             base.Kill();
         }

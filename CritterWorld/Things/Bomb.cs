@@ -26,7 +26,7 @@ namespace CritterWorld
             }
             spark = new ParticleFountainSprite(10, Color.LightGray, Color.White, 1, 1, 3);
             spark.Position = new Point((int)(X - WidthHalf + 1), (int)(Y - HeightHalf + 1));
-            Engine.AddSprite(spark);
+            Engine?.AddSprite(spark);
         }
 
         public void ExtinguishFuse()
