@@ -142,7 +142,10 @@ namespace CritterWorld
                     Critter critter = (Critter)critterBindingSourceWaiting.List[0];
                     critterBindingSourceWaiting.RemoveAt(0);
                     arena.AddCritter(critter);
-                    critterBindingSourceLeaderboard.Add(critter);
+                    if (IsCompetition)
+                    {
+                        critterBindingSourceLeaderboard.Add(critter);
+                    }
                     CritterScorePanel scorePanel = (CritterScorePanel)panelScore.Controls[i];
                     scorePanel.SetCritter(critter);
                 }
