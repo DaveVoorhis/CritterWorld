@@ -97,16 +97,10 @@ namespace CritterWorld
             };
         }
 
-        private LogEntry previousLogEntry = null;
-
         public void Log(String message, Exception exception = null)
         {
             LogEntry newLogEntry = new LogEntry(Number, Name, Author, message, exception);
-            if (previousLogEntry == null || !previousLogEntry.Matches(newLogEntry))
-            {
-                Critterworld.Log(newLogEntry);
-                previousLogEntry = newLogEntry;
-            }
+            Critterworld.Log(newLogEntry);
         }
 
         public void Escaped()
@@ -161,7 +155,6 @@ namespace CritterWorld
 
         public void FightWith(string opponent)
         {
-            Log("fought with " + opponent);
             if (Health - fightingDeductsHealth <= 0)
             {
                 Health = 0;
@@ -176,7 +169,6 @@ namespace CritterWorld
 
         public void Bump()
         {
-            Log("bumped into terrain");
             if (Health - bumpingTerrainDeductsHealth <= 0)
             {
                 Health = 0;
