@@ -492,12 +492,17 @@ namespace CritterWorld
             }
         }
 
-        public override void Kill()
+        public void HardShutdown()
         {
             Shutdown();
             // Brutal, but really the best way to handle this. Otherwise, the thread can
             // continue to interact with the environment.
             ForceShutdown();
+        }
+
+        public override void Kill()
+        {
+            HardShutdown();
             if (numberPlate != null)
             {
                 numberPlate.Kill();

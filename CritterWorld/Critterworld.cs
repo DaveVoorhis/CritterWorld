@@ -7,7 +7,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
-using System.Text;
+using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using Timer = System.Windows.Forms.Timer;
@@ -84,6 +84,9 @@ namespace CritterWorld
         // Critter loader
         private CritterLoader critterLoader = new CritterLoader();
 
+        // True if a Critter has escaped and we need to sort the Leader Board.
+        private bool leaderBoardNeedsSorted;
+
         private bool Fullscreen
         {
             get
@@ -129,22 +132,6 @@ namespace CritterWorld
             }
         }
 
-        private void Shutdown()
-        {
-            LevelTimerStop();
-            if (levelCheckTimer != null)
-            {
-                levelCheckTimer.Stop();
-            }
-            if (gameOverTimer != null)
-            {
-                gameOverTimer.Stop();
-            }
-            arena.Shutdown();
-            level = null;
-            ClearScorePanel();
-        }
-
         private void AddCrittersToArena()
         {
             ClearScorePanel();
@@ -186,7 +173,24 @@ namespace CritterWorld
             levelCheckTimer.Start();
 
             LevelTimerStart();
+
             arena.Launch();
+        }
+
+        private void Shutdown()
+        {
+            LevelTimerStop();
+            if (levelCheckTimer != null)
+            {
+                levelCheckTimer.Stop();
+            }
+            if (gameOverTimer != null)
+            {
+                gameOverTimer.Stop();
+            }
+            arena.Shutdown();
+            level = null;
+            ClearScorePanel();
         }
 
         private void LoadCrittersIntoWaitingRoom()
@@ -540,6 +544,24 @@ namespace CritterWorld
             }
         }
 
+        private void SortLeaderboard()
+        {
+            // Kludge to sort leaderboard. Replace this later.
+            IList<Critter> unsortedCritters = (IList<Critter>)critterBindingSourceLeaderboard.List;
+            IEnumerable<Critter> sortedCritters = unsortedCritters.OrderByDescending(order => order.OverallScore).ToList();
+            critterBindingSourceLeaderboard.Clear();
+            foreach (Critter critter in sortedCritters)
+            {
+                critterBindingSourceLeaderboard.Add(critter);
+            }
+            leaderBoardNeedsSorted = false;
+        }
+
+        private void NotifyNeedToSortLeaderboard()
+        {
+            leaderBoardNeedsSorted = true;
+        }
+
         private void UpdateDisplay()
         {
             while (displayUpdating)
@@ -550,6 +572,10 @@ namespace CritterWorld
                     {
                         labelFPS.Text = arena.ActualFPS + " FPS" + TickShow();
                         UpdateCritterScorePanels();
+                        if (leaderBoardNeedsSorted)
+                        {
+                            SortLeaderboard();
+                        }
                     }));
                 }
                 Thread.Sleep(250);
@@ -581,15 +607,14 @@ namespace CritterWorld
 
             FormClosing += (sender, e) => ExitApplication();
 
+            arena.CritterEscaped += (sender, e) => NotifyNeedToSortLeaderboard();
+
             labelVersion.Text = Version.VersionName;
 
             DisplaySplashOrExit();
 
             LaunchDisplayUpdate();
             LaunchLogger();
-
-        //    critterBindingSourceWaiting.Sort = "Name";
-        //    critterBindingSourceLeaderboard.Sort = "OverallScore DESC, Name ASC";
         }
 
     }

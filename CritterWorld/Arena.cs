@@ -14,6 +14,8 @@ namespace CritterWorld
 {
     public partial class Arena : UserControl
     {
+        public event EventHandler<SpriteEventArgs> CritterEscaped;
+
         private Random rnd = new Random(Guid.NewGuid().GetHashCode());
 
         private int critterStartX;
@@ -167,7 +169,8 @@ namespace CritterWorld
             {
                 if (sprite is Critter)
                 {
-                    ((Critter)sprite).Shutdown();
+                    Critter critter = (Critter)sprite;
+                    critter.HardShutdown();
                 }
             }
             spriteEngineMain.Purge();
@@ -294,6 +297,7 @@ namespace CritterWorld
         {
             Sound.PlayCheer();
             critter.Escaped();
+            CritterEscaped?.Invoke(this, new SpriteEventArgs(critter));
         }
 
         private void Collide(object sender, SpriteCollisionEventArgs collision)
