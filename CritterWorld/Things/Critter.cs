@@ -17,6 +17,8 @@ namespace CritterWorld
 {
     public class Critter : PolygonSprite
     {
+        private readonly int CrashProbabilityPercentage = 15;
+
         public const int maxThinkTimeMilliseconds = 1000;
         public const int maxThinkTimeOverrunViolations = 5;
         public const float movementEnergyConsumptionFactor = 250;  // the higher this is, the less movement consumes energy
@@ -50,13 +52,13 @@ namespace CritterWorld
         public string DeadReason { get; private set; } = null;
         public bool IsDead { get { return DeadReason != null; } }
 
+        private readonly bool selectedToTestCrash = false;
+
         private int thinkTimeOverrunViolations = 0;
         private int moveCount = 0;
 
         private Thread thinkThread = null;
         private bool stopped = true;
-
-        private readonly bool selectedToTestCrash = false;
 
         private static Random rnd = new Random(Guid.NewGuid().GetHashCode());
 
@@ -82,7 +84,7 @@ namespace CritterWorld
             Color = Sprite.RandomColor(127);
             FacingAngle = 90;
 
-            selectedToTestCrash = (rnd.Next(10) == 5);
+            selectedToTestCrash = (rnd.Next(100) < CrashProbabilityPercentage);
 
             Processors += sprite =>
             {
@@ -444,8 +446,8 @@ namespace CritterWorld
                         {
                             Crashed();
                             Sound.PlayCrash();
+                            StopAndSmoke(Color.DarkBlue, Color.LightBlue);
                             Log("Crashed due to exception whilst thinking: " + e, e);
-                            StopAndSmoke(Color.Aquamarine, Color.Blue);
                             break;
                         }
                     }
@@ -479,9 +481,6 @@ namespace CritterWorld
             }
             Mover = null;
             stopped = true;
-            // Brutal, but really the best way to handle this. Otherwise, the thread can
-            // continue to interact with the environment.
-            ForceShutdown();
         }
 
         // True if this critter is stopped or dead
@@ -496,6 +495,9 @@ namespace CritterWorld
         public override void Kill()
         {
             Shutdown();
+            // Brutal, but really the best way to handle this. Otherwise, the thread can
+            // continue to interact with the environment.
+            ForceShutdown();
             if (numberPlate != null)
             {
                 numberPlate.Kill();

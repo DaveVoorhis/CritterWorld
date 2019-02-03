@@ -3,16 +3,14 @@ using SCG.TurboSprite.SpriteMover;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading;
-using System.Timers;
 using System.Windows.Forms;
+using Timer = System.Windows.Forms.Timer;
 
 namespace CritterWorld
 {
@@ -39,8 +37,12 @@ namespace CritterWorld
             new Level((Bitmap)Image.FromFile("Resources/TerrainMasks/Background06.png"), new Point(280, 360))
         };
 
+        // Logging thread and logging flag. Set logging to false to shut down logging thread.
+        private bool logging = false;
+        private Thread logThread = null;
+
         // Log message queue.
-        private static ConcurrentQueue<LogEntry> logMessageQueue = new ConcurrentQueue<LogEntry>();
+        private static BlockingCollection<LogEntry> logMessageQueue = new BlockingCollection<LogEntry>();
 
         // Used to create animated activity indicator beside FPS display.
         private static string tickLine = ".....";
@@ -52,20 +54,18 @@ namespace CritterWorld
         // The current running Level.
         private Level level;
 
-        // To update the FPS display
-        private System.Timers.Timer fpsDisplayTimer = null;
-
-        // To update the message log
-        private System.Timers.Timer logMessageTimer = null;
+        // Display update thread and flag. Set displayUpdating to false to shut down the update thread.
+        private bool displayUpdating = false;
+        private Thread displayUpdateThread = null;
 
         // To switch over from "GAME OVER" to splash
-        private System.Timers.Timer gameOverTimer = null;
+        private Timer gameOverTimer = null;
 
         // To terminate a level after levelDuration seconds...
-        private System.Timers.Timer levelTimer = null;
+        private Timer levelTimer = null;
 
         // To terminate a level when it no longer has any living Critters.
-        private System.Timers.Timer levelCheckTimer = null;
+        private Timer levelCheckTimer = null;
 
         // ...by counting down a second at a time
         private int countDown;
@@ -122,15 +122,10 @@ namespace CritterWorld
 
         private void ClearScorePanel()
         {
-            if (IsHandleCreated)
+            foreach (Control control in panelScore.Controls)
             {
-                Invoke(new Action(() => {
-                    foreach (Control control in panelScore.Controls)
-                    {
-                        CritterScorePanel scorePanel = (CritterScorePanel)control;
-                        scorePanel.SetCritter(null);
-                    }
-                }));
+                CritterScorePanel scorePanel = (CritterScorePanel)control;
+                scorePanel.SetCritter(null);
             }
         }
 
@@ -155,17 +150,15 @@ namespace CritterWorld
             ClearScorePanel();
             for (int i = 0; i < maxCrittersRunning; i++)
             {
-                Invoke(new Action(() => {
-                    if (critterBindingSourceWaiting.Count != 0)
-                    {
-                        Critter critter = (Critter)critterBindingSourceWaiting.List[0];
-                        critterBindingSourceWaiting.RemoveAt(0);
-                        arena.AddCritter(critter);
-                        critterBindingSourceLeaderboard.Add(critter);
-                        CritterScorePanel scorePanel = (CritterScorePanel)panelScore.Controls[i];
-                        scorePanel.SetCritter(critter);
-                    }
-                }));
+                if (critterBindingSourceWaiting.Count != 0)
+                {
+                    Critter critter = (Critter)critterBindingSourceWaiting.List[0];
+                    critterBindingSourceWaiting.RemoveAt(0);
+                    arena.AddCritter(critter);
+                    critterBindingSourceLeaderboard.Add(critter);
+                    CritterScorePanel scorePanel = (CritterScorePanel)panelScore.Controls[i];
+                    scorePanel.SetCritter(critter);
+                }
             }
         }
 
@@ -179,17 +172,17 @@ namespace CritterWorld
 
             if (levelCheckTimer == null)
             {
-                levelCheckTimer = new System.Timers.Timer();
-            }
-            levelCheckTimer.Interval = 5000;
-            levelCheckTimer.AutoReset = true;
-            levelCheckTimer.Elapsed += (e, evt) =>
-            {
-                if (level.CountOfActiveCritters == 0)
+                levelCheckTimer = new Timer();
+                levelCheckTimer.Interval = 5000;
+                levelCheckTimer.Tick += (e, evt) =>
                 {
-                    NextHeat();
-                }
-            };
+                    if (level.CountOfActiveCritters == 0)
+                    {
+                        NextHeat();
+                    }
+                };
+            }
+            levelCheckTimer.Stop();
             levelCheckTimer.Start();
 
             LevelTimerStart();
@@ -199,12 +192,10 @@ namespace CritterWorld
         private void LoadCrittersIntoWaitingRoom()
         {
             List<Critter> critters = critterLoader.LoadCritters();
-            Invoke(new Action(() => {
-                foreach (Critter critter in critters)
-                {
-                    critterBindingSourceWaiting.Add(critter);
-                }
-            }));
+            foreach (Critter critter in critters)
+            {
+                critterBindingSourceWaiting.Add(critter);
+            }
         }
 
         private void NextLevel()
@@ -310,12 +301,11 @@ namespace CritterWorld
             splashText.Position = new Point(arena.Width / 2, arena.Height / 2);
             if (gameOverTimer == null)
             {
-                gameOverTimer = new System.Timers.Timer
+                gameOverTimer = new Timer
                 {
-                    AutoReset = false,
                     Interval = (exiting) ? 1000 : 5000
                 };
-                gameOverTimer.Elapsed += (sender, e) => DisplaySplashOrExit();
+                gameOverTimer.Tick += (sender, e) => DisplaySplashOrExit();
             }
             gameOverTimer.Start();
             arena.Launch();
@@ -391,8 +381,8 @@ namespace CritterWorld
             Shutdown();
             if (exiting)
             {
-                logMessageTimer.Stop();
-                fpsDisplayTimer.Stop();
+                ShutdownLogger();
+                ShutdownDisplayUpdate();
                 Application.Exit();
             }
             else
@@ -413,7 +403,7 @@ namespace CritterWorld
             }
             else
             {
-                Invoke(new Action(() => levelTimeoutProgress.Value = countDown * 100 / levelDuration));
+                levelTimeoutProgress.Value = countDown * 100 / levelDuration;
             }
         }
 
@@ -421,15 +411,14 @@ namespace CritterWorld
         {
             if (levelTimer == null)
             {
-                levelTimer = new System.Timers.Timer();
+                levelTimer = new Timer();
                 levelTimer.Interval = 1000;
-                levelTimer.AutoReset = true;
-                levelTimer.Elapsed += (sender, e) => Tick();
+                levelTimer.Tick += (sender, e) => Tick();
             }
             levelTimer.Stop();
             levelTimer.Start();
             countDown = levelDuration;
-            Invoke(new Action(() => levelTimeoutProgress.Value = 100));
+            levelTimeoutProgress.Value = 100;
         }
 
         private void LevelTimerStop()
@@ -437,7 +426,7 @@ namespace CritterWorld
             if (levelTimer != null)
             {
                 levelTimer.Stop();
-                Invoke(new Action(() => levelTimeoutProgress.Value = 0));
+                levelTimeoutProgress.Value = 0;
             }
         }
 
@@ -482,13 +471,28 @@ namespace CritterWorld
 
         internal static void Log(LogEntry logEntry)
         {
-            logMessageQueue.Enqueue(logEntry);
+            logMessageQueue.Add(logEntry);
+        }
+
+        private void AppendToLogDisplay(string text)
+        {
+            textLog.Invoke(new Action(() => {
+                if (textLog.Text.Length > 128000)
+                {
+                    textLog.Text = "..." + textLog.Text.Substring(64000);
+                }
+                textLog.AppendText(text);
+            }));
         }
 
         private void RetrieveAndDisplayLogMessages()
         {
-            while (logMessageQueue.TryDequeue(out LogEntry logEntry))
+            foreach (LogEntry logEntry in logMessageQueue.GetConsumingEnumerable())
             {
+                if (!logging)
+                {
+                    break;
+                }
                 try
                 {
                     using (StreamWriter output = File.AppendText(LogFileName))
@@ -498,16 +502,23 @@ namespace CritterWorld
                 }
                 catch (Exception e)
                 {
-                    textLog.AppendText("=== Unable to write to log file " + LogFileName + " due to " + e.Message + " ===\r\n");
+                    AppendToLogDisplay("=== Unable to write to log file " + LogFileName + " due to " + e.Message + " ===\r\n");
                 }
-                textLog.AppendText(logEntry + "\r\n");
-                if (textLog.Text.Length > 128000)
-                {
-                    String shortenedText = "..." + "\r\n" + textLog.Text.Substring(128000);
-                    textLog.Text = "";
-                    textLog.AppendText(shortenedText);
-                }
+                AppendToLogDisplay(logEntry + "\r\n");
             }
+        }
+
+        private void LaunchLogger()
+        {
+            logging = true;
+            logThread = new Thread(() => RetrieveAndDisplayLogMessages());
+            logThread.Start();
+        }
+
+        public void ShutdownLogger()
+        {
+            logging = false;
+            Log(new LogEntry(0, "LogEnd", "Critterworld", "End of log"));
         }
 
         private void CreateCritterScorePanels()
@@ -518,19 +529,43 @@ namespace CritterWorld
                 scorePanel.Location = new Point(0, scorePanel.Height * i);
                 panelScore.Controls.Add(scorePanel);
             }
-            System.Windows.Forms.Timer scorePanelTimer = new System.Windows.Forms.Timer()
+        }
+
+        private void UpdateCritterScorePanels()
+        {
+            foreach (Control control in panelScore.Controls)
             {
-                Interval = 500
-            };
-            scorePanelTimer.Tick += (e, evt) =>
+                CritterScorePanel scorePanel = (CritterScorePanel)control;
+                scorePanel.CritterUpdate();
+            }
+        }
+
+        private void UpdateDisplay()
+        {
+            while (displayUpdating)
             {
-                foreach (Control control in panelScore.Controls)
+                if (IsHandleCreated)
                 {
-                    CritterScorePanel scorePanel = (CritterScorePanel)control;
-                    scorePanel.CritterUpdate();
+                    Invoke(new Action(() =>
+                    {
+                        labelFPS.Text = arena.ActualFPS + " FPS" + TickShow();
+                        UpdateCritterScorePanels();
+                    }));
                 }
-            };
-            scorePanelTimer.Start();
+                Thread.Sleep(250);
+            }
+        }
+
+        private void LaunchDisplayUpdate()
+        {
+            displayUpdating = true;
+            displayUpdateThread = new Thread(() => UpdateDisplay());
+            displayUpdateThread.Start();
+        }
+
+        private void ShutdownDisplayUpdate()
+        {
+            displayUpdating = false;
         }
 
         public Critterworld()
@@ -550,25 +585,18 @@ namespace CritterWorld
 
             DisplaySplashOrExit();
 
-            fpsDisplayTimer = new System.Timers.Timer();
-            fpsDisplayTimer.Interval = 250;
-            fpsDisplayTimer.Elapsed += (sender, e) => Invoke(new Action(() => labelFPS.Text = arena.ActualFPS + " FPS" + TickShow()));
-            fpsDisplayTimer.Start();
+            LaunchDisplayUpdate();
+            LaunchLogger();
 
-            logMessageTimer = new System.Timers.Timer();
-            logMessageTimer.Interval = 250;
-            logMessageTimer.Elapsed += (sender, e) => Invoke(new Action(() => RetrieveAndDisplayLogMessages()));
-            logMessageTimer.Start();
-
-            critterBindingSourceWaiting.Sort = "Name";
-            critterBindingSourceLeaderboard.Sort = "OverallScore DESC, Name ASC";
+        //    critterBindingSourceWaiting.Sort = "Name";
+        //    critterBindingSourceLeaderboard.Sort = "OverallScore DESC, Name ASC";
         }
 
     }
 
     internal class LogEntry
     {
-        public LogEntry(int critterNumber, string critterName, string author, string eventMessage, Exception exception)
+        public LogEntry(int critterNumber, string critterName, string author, string eventMessage, Exception exception = null)
         {
             Timestamp = DateTime.Now;
             CritterNumber = critterNumber;

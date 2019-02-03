@@ -22,11 +22,11 @@ namespace CritterWorld
             labelScore.Text = "Score: " + currentScore + "/" + overallScore;
         }
 
-        private void UpdateHealthAndEnergy(int health, int energy)
+        private void UpdateHealthAndEnergy(float health, float energy)
         {
-            progressBarHealth.Value = health;
+            progressBarHealth.Value = (int)health;
             progressBarHealth.ForeColor = (progressBarHealth.Value < 25) ? Color.Red : Color.Green;
-            progressBarEnergy.Value = energy;
+            progressBarEnergy.Value = (int)energy;
             progressBarEnergy.ForeColor = (progressBarEnergy.Value < 25) ? Color.Red : Color.Green;
         }
 
@@ -57,11 +57,13 @@ namespace CritterWorld
             {
                 MakeProgressBarsVisible(false);
                 labelNumber.Text = "000";
+                labelNumber.Visible = false;
                 labelName.Text = "";
+                labelName.Visible = false;
                 labelEscaped.Visible = false;
                 labelDead.Visible = false;
-                labelScore.Text = "";
                 UpdateScore(0, 0);
+                labelScore.Visible = false;
                 UpdateHealthAndEnergy(0, 0);
                 if (critterImage != null)
                 {
@@ -70,6 +72,10 @@ namespace CritterWorld
             }
             else
             {
+                labelNumber.Visible = true;
+                labelName.Visible = true;
+                labelScore.Visible = true;
+
                 critterImage = new PolygonSprite(critter.Model)
                 {
                     Color = critter.Color,
@@ -93,7 +99,7 @@ namespace CritterWorld
                 return;
             }
             UpdateScore(critter.CurrentScore, critter.OverallScore);
-            UpdateHealthAndEnergy((int)critter.Health, (int)critter.Energy);
+            UpdateHealthAndEnergy(critter.Health, critter.Energy);
             if (critter.IsEscaped)
             {
                 labelEscaped.Visible = true;

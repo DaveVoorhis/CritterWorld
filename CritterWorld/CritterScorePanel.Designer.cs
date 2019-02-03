@@ -131,7 +131,6 @@ namespace CritterWorld
             this.spriteSurfaceCritter.OffsetY = 0;
             this.spriteSurfaceCritter.Size = new System.Drawing.Size(38, 39);
             this.spriteSurfaceCritter.TabIndex = 0;
-            this.spriteSurfaceCritter.ThreadPriority = System.Threading.ThreadPriority.Normal;
             this.spriteSurfaceCritter.UseVirtualSize = false;
             this.spriteSurfaceCritter.VirtualHeight = 39;
             this.spriteSurfaceCritter.VirtualSize = new System.Drawing.Size(38, 39);

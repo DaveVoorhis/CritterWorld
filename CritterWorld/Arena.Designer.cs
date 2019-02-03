@@ -47,7 +47,6 @@
             this.spriteSurfaceMain.OffsetY = 0;
             this.spriteSurfaceMain.Size = new System.Drawing.Size(896, 629);
             this.spriteSurfaceMain.TabIndex = 0;
-            this.spriteSurfaceMain.ThreadPriority = System.Threading.ThreadPriority.AboveNormal;
             this.spriteSurfaceMain.UseVirtualSize = false;
             this.spriteSurfaceMain.VirtualHeight = 629;
             this.spriteSurfaceMain.VirtualSize = new System.Drawing.Size(896, 629);
