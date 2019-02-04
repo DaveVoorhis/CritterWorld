@@ -249,7 +249,7 @@ namespace SCG.TurboSprite
         }
 
         // Is the sprite dead?
-        public bool Dead { get; private set; }
+        public bool Dead { get; set; }
 
         // Sprite's position - integer and float types supported
         public float X { get; set; }

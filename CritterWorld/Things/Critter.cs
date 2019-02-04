@@ -109,6 +109,7 @@ namespace CritterWorld
             Energy = 100;
             IsEscaped = false;
             DeadReason = null;
+            Dead = false;
         }
 
         public void Log(String message, Exception exception = null)
