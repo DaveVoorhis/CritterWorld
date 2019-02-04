@@ -20,10 +20,19 @@ namespace CritterWorld
         public string LogFileName { get; private set; } = "log.csv";
 
         // Level duration in seconds.
-        const int levelDuration = 60 * 3;
+        const int levelDurationInSeconds = 60 * 3;
+
+        // Start time of current level. This plus levelDuration is when the level shall end.
+        DateTime levelStartTime;
 
         // Maximum number of Critters running at the same time.
         const int maxCrittersRunning = 25;
+
+        // Total number of Critters loaded to run
+        int critterCount = 0;
+
+        // Current heat number
+        int heatNumber = 0;
 
         // Available levels
         private Level[] levels = new Level[]
@@ -44,10 +53,6 @@ namespace CritterWorld
         // Log message queue.
         private static BlockingCollection<LogEntry> logMessageQueue = new BlockingCollection<LogEntry>();
 
-        // Used to create animated activity indicator beside FPS display.
-        private static string tickLine = ".....";
-        private int tickCount = 0;
-
         // Run this level
         private int levelNumber = 0;
 
@@ -61,14 +66,8 @@ namespace CritterWorld
         // To switch over from "GAME OVER" to splash
         private Timer gameOverTimer = null;
 
-        // To terminate a level after levelDuration seconds...
-        private Timer levelTimer = null;
-
-        // To terminate a level when it no longer has any living Critters.
-        private Timer levelCheckTimer = null;
-
-        // ...by counting down a second at a time
-        private int countDown;
+        // True if level timer is running.
+        private bool levelTimerRunning = false;
 
         // Preserves window layout when going full screen
         private Size oldSize;
@@ -117,12 +116,6 @@ namespace CritterWorld
             }
         }
 
-        private String TickShow()
-        {
-            tickCount = (tickCount + 1) % tickLine.Length;
-            return " " + tickLine.Substring(tickCount) + " " + tickLine.Substring(tickLine.Length - tickCount) + ".";
-        }
-
         private void ClearScorePanel()
         {
             foreach (Control control in panelScore.Controls)
@@ -154,22 +147,9 @@ namespace CritterWorld
             level.Arena = arena;
             level.Setup();
 
-            AddCrittersToArena();
+            labelLevelInfo.Text = "Level " + (levelNumber + 1) + " of " + levels.Length + " - Heat " + heatNumber + " of " + critterCount / maxCrittersRunning;
 
-            if (levelCheckTimer == null)
-            {
-                levelCheckTimer = new Timer();
-                levelCheckTimer.Interval = 5000;
-                levelCheckTimer.Tick += (e, evt) =>
-                {
-                    if (level.CountOfActiveCritters == 0)
-                    {
-                        NextHeat();
-                    }
-                };
-            }
-            levelCheckTimer.Stop();
-            levelCheckTimer.Start();
+            AddCrittersToArena();
 
             LevelTimerStart();
 
@@ -179,10 +159,6 @@ namespace CritterWorld
         private void Shutdown()
         {
             LevelTimerStop();
-            if (levelCheckTimer != null)
-            {
-                levelCheckTimer.Stop();
-            }
             if (gameOverTimer != null)
             {
                 gameOverTimer.Stop();
@@ -194,6 +170,7 @@ namespace CritterWorld
 
         private void LoadCrittersIntoWaitingRoom()
         {
+            critterCount = 0;
             critterBindingSourceWaiting.Clear();
             List<Critter> critters = critterLoader.LoadCritters();
             foreach (Critter critter in critters)
@@ -203,6 +180,7 @@ namespace CritterWorld
                 {
                     critterBindingSourceLeaderboard.Add(critter);
                 }
+                critterCount++;
             }
         }
 
@@ -245,10 +223,12 @@ namespace CritterWorld
         {
             if (critterBindingSourceWaiting.Count == 0)
             {
+                heatNumber = 1;
                 NextLevel();
             }
             else
             {
+                heatNumber++;
                 Shutdown();
                 Launch();
             }
@@ -256,6 +236,7 @@ namespace CritterWorld
 
         private void StartLevel()
         {
+            heatNumber = 0;
             Shutdown();
             LoadCrittersIntoWaitingRoom();
             NextHeat();
@@ -314,6 +295,7 @@ namespace CritterWorld
 
         private void DisplayGameOver()
         {
+            labelLevelInfo.Text = "";
             Shutdown();
             TextSprite splashText = new TextSprite((exiting) ? "GOODBYE!" : "GAME OVER", "Arial", 1, FontStyle.Regular)
             {
@@ -418,38 +400,26 @@ namespace CritterWorld
 
         private void Tick()
         {
-            countDown--;
-            if (countDown <= 0)
+            double secondsElapsed = (DateTime.Now - levelStartTime).TotalSeconds;
+            int secondsRemaining = Math.Max(levelDurationInSeconds - (int)secondsElapsed, 0);
+            levelTimeoutProgress.Value = secondsRemaining * 100 / levelDurationInSeconds;
+            if (secondsElapsed >= levelDurationInSeconds || (secondsElapsed > 5 && level.CountOfActiveCritters == 0))
             {
                 NextHeat();
-            }
-            else
-            {
-                levelTimeoutProgress.Value = countDown * 100 / levelDuration;
             }
         }
 
         private void LevelTimerStart()
         {
-            if (levelTimer == null)
-            {
-                levelTimer = new Timer();
-                levelTimer.Interval = 1000;
-                levelTimer.Tick += (sender, e) => Tick();
-            }
-            levelTimer.Stop();
-            levelTimer.Start();
-            countDown = levelDuration;
+            levelStartTime = DateTime.Now;
             levelTimeoutProgress.Value = 100;
+            levelTimerRunning = true;
         }
 
         private void LevelTimerStop()
         {
-            if (levelTimer != null)
-            {
-                levelTimer.Stop();
-                levelTimeoutProgress.Value = 0;
-            }
+            levelTimerRunning = false;
+            levelTimeoutProgress.Value = 0;
         }
 
         // Use explicit layout to get around issues with HiDPI displays.
@@ -588,11 +558,14 @@ namespace CritterWorld
                 {
                     Invoke(new Action(() =>
                     {
-                        labelFPS.Text = arena.ActualFPS + " FPS" + TickShow();
                         UpdateCritterScorePanels();
                         if (leaderBoardNeedsSorted)
                         {
                             SortLeaderboard();
+                        }
+                        if (levelTimerRunning)
+                        {
+                            Tick();
                         }
                     }));
                 }
@@ -615,6 +588,8 @@ namespace CritterWorld
         public Critterworld()
         {
             InitializeComponent();
+
+            labelLevelInfo.Text = "";
 
             CreateCritterScorePanels();
 

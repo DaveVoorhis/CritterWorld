@@ -34,7 +34,7 @@
             this.toolStripPadding1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.levelTimeoutProgress = new System.Windows.Forms.ToolStripProgressBar();
             this.toolStripPadding2 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.labelFPS = new System.Windows.Forms.ToolStripStatusLabel();
+            this.labelLevelInfo = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuLevelStart = new System.Windows.Forms.ToolStripMenuItem();
@@ -49,26 +49,26 @@
             this.menuFullScreen = new System.Windows.Forms.ToolStripMenuItem();
             this.textLog = new System.Windows.Forms.TextBox();
             this.dataGridViewLeaderboard = new System.Windows.Forms.DataGridView();
-            this.labelLeaderboard = new System.Windows.Forms.Label();
-            this.labelWaiting = new System.Windows.Forms.Label();
-            this.dataGridViewWaiting = new System.Windows.Forms.DataGridView();
-            this.panelScore = new System.Windows.Forms.Panel();
-            this.numberDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.nameDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.authorDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.critterBindingSourceWaiting = new System.Windows.Forms.BindingSource(this.components);
-            this.critterBindingSourceLeaderboard = new System.Windows.Forms.BindingSource(this.components);
-            this.arena = new CritterWorld.Arena();
             this.numberDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.authorDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.overallScoreDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.critterBindingSourceLeaderboard = new System.Windows.Forms.BindingSource(this.components);
+            this.labelLeaderboard = new System.Windows.Forms.Label();
+            this.labelWaiting = new System.Windows.Forms.Label();
+            this.dataGridViewWaiting = new System.Windows.Forms.DataGridView();
+            this.numberDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.nameDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.authorDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.critterBindingSourceWaiting = new System.Windows.Forms.BindingSource(this.components);
+            this.panelScore = new System.Windows.Forms.Panel();
+            this.arena = new CritterWorld.Arena();
             this.statusStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewLeaderboard)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.critterBindingSourceLeaderboard)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewWaiting)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.critterBindingSourceWaiting)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.critterBindingSourceLeaderboard)).BeginInit();
             this.SuspendLayout();
             // 
             // statusStrip
@@ -79,7 +79,7 @@
             this.toolStripPadding1,
             this.levelTimeoutProgress,
             this.toolStripPadding2,
-            this.labelFPS});
+            this.labelLevelInfo});
             this.statusStrip.Location = new System.Drawing.Point(0, 530);
             this.statusStrip.Name = "statusStrip";
             this.statusStrip.Size = new System.Drawing.Size(1330, 22);
@@ -95,7 +95,7 @@
             // toolStripPadding1
             // 
             this.toolStripPadding1.Name = "toolStripPadding1";
-            this.toolStripPadding1.Size = new System.Drawing.Size(215, 17);
+            this.toolStripPadding1.Size = new System.Drawing.Size(147, 17);
             this.toolStripPadding1.Spring = true;
             // 
             // levelTimeoutProgress
@@ -107,14 +107,14 @@
             // toolStripPadding2
             // 
             this.toolStripPadding2.Name = "toolStripPadding2";
-            this.toolStripPadding2.Size = new System.Drawing.Size(215, 17);
+            this.toolStripPadding2.Size = new System.Drawing.Size(147, 17);
             this.toolStripPadding2.Spring = true;
             // 
-            // labelFPS
+            // labelLevelInfo
             // 
-            this.labelFPS.Name = "labelFPS";
-            this.labelFPS.Size = new System.Drawing.Size(64, 17);
-            this.labelFPS.Text = "FPSFPSFPS";
+            this.labelLevelInfo.Name = "labelLevelInfo";
+            this.labelLevelInfo.Size = new System.Drawing.Size(170, 17);
+            this.labelLevelInfo.Text = "Level 999 of 999 - Heat 99 of 99";
             // 
             // menuStrip
             // 
@@ -245,6 +245,42 @@
             this.dataGridViewLeaderboard.Size = new System.Drawing.Size(177, 150);
             this.dataGridViewLeaderboard.TabIndex = 5;
             // 
+            // numberDataGridViewTextBoxColumn
+            // 
+            this.numberDataGridViewTextBoxColumn.DataPropertyName = "Number";
+            this.numberDataGridViewTextBoxColumn.HeaderText = "Number";
+            this.numberDataGridViewTextBoxColumn.Name = "numberDataGridViewTextBoxColumn";
+            this.numberDataGridViewTextBoxColumn.ReadOnly = true;
+            this.numberDataGridViewTextBoxColumn.Width = 69;
+            // 
+            // nameDataGridViewTextBoxColumn
+            // 
+            this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
+            this.nameDataGridViewTextBoxColumn.HeaderText = "Name";
+            this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
+            this.nameDataGridViewTextBoxColumn.ReadOnly = true;
+            this.nameDataGridViewTextBoxColumn.Width = 60;
+            // 
+            // authorDataGridViewTextBoxColumn
+            // 
+            this.authorDataGridViewTextBoxColumn.DataPropertyName = "Author";
+            this.authorDataGridViewTextBoxColumn.HeaderText = "Author";
+            this.authorDataGridViewTextBoxColumn.Name = "authorDataGridViewTextBoxColumn";
+            this.authorDataGridViewTextBoxColumn.ReadOnly = true;
+            this.authorDataGridViewTextBoxColumn.Width = 63;
+            // 
+            // overallScoreDataGridViewTextBoxColumn
+            // 
+            this.overallScoreDataGridViewTextBoxColumn.DataPropertyName = "OverallScore";
+            this.overallScoreDataGridViewTextBoxColumn.HeaderText = "Score";
+            this.overallScoreDataGridViewTextBoxColumn.Name = "overallScoreDataGridViewTextBoxColumn";
+            this.overallScoreDataGridViewTextBoxColumn.ReadOnly = true;
+            this.overallScoreDataGridViewTextBoxColumn.Width = 60;
+            // 
+            // critterBindingSourceLeaderboard
+            // 
+            this.critterBindingSourceLeaderboard.DataSource = typeof(CritterWorld.Critter);
+            // 
             // labelLeaderboard
             // 
             this.labelLeaderboard.AutoSize = true;
@@ -286,14 +322,6 @@
             this.dataGridViewWaiting.Size = new System.Drawing.Size(177, 150);
             this.dataGridViewWaiting.TabIndex = 7;
             // 
-            // panelScore
-            // 
-            this.panelScore.AutoScroll = true;
-            this.panelScore.Location = new System.Drawing.Point(868, 61);
-            this.panelScore.Name = "panelScore";
-            this.panelScore.Size = new System.Drawing.Size(199, 99);
-            this.panelScore.TabIndex = 9;
-            // 
             // numberDataGridViewTextBoxColumn1
             // 
             this.numberDataGridViewTextBoxColumn1.DataPropertyName = "Number";
@@ -322,9 +350,13 @@
             // 
             this.critterBindingSourceWaiting.DataSource = typeof(CritterWorld.Critter);
             // 
-            // critterBindingSourceLeaderboard
+            // panelScore
             // 
-            this.critterBindingSourceLeaderboard.DataSource = typeof(CritterWorld.Critter);
+            this.panelScore.AutoScroll = true;
+            this.panelScore.Location = new System.Drawing.Point(868, 61);
+            this.panelScore.Name = "panelScore";
+            this.panelScore.Size = new System.Drawing.Size(199, 99);
+            this.panelScore.TabIndex = 9;
             // 
             // arena
             // 
@@ -333,38 +365,6 @@
             this.arena.Name = "arena";
             this.arena.Size = new System.Drawing.Size(842, 490);
             this.arena.TabIndex = 3;
-            // 
-            // numberDataGridViewTextBoxColumn
-            // 
-            this.numberDataGridViewTextBoxColumn.DataPropertyName = "Number";
-            this.numberDataGridViewTextBoxColumn.HeaderText = "Number";
-            this.numberDataGridViewTextBoxColumn.Name = "numberDataGridViewTextBoxColumn";
-            this.numberDataGridViewTextBoxColumn.ReadOnly = true;
-            this.numberDataGridViewTextBoxColumn.Width = 69;
-            // 
-            // nameDataGridViewTextBoxColumn
-            // 
-            this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
-            this.nameDataGridViewTextBoxColumn.HeaderText = "Name";
-            this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
-            this.nameDataGridViewTextBoxColumn.ReadOnly = true;
-            this.nameDataGridViewTextBoxColumn.Width = 60;
-            // 
-            // authorDataGridViewTextBoxColumn
-            // 
-            this.authorDataGridViewTextBoxColumn.DataPropertyName = "Author";
-            this.authorDataGridViewTextBoxColumn.HeaderText = "Author";
-            this.authorDataGridViewTextBoxColumn.Name = "authorDataGridViewTextBoxColumn";
-            this.authorDataGridViewTextBoxColumn.ReadOnly = true;
-            this.authorDataGridViewTextBoxColumn.Width = 63;
-            // 
-            // overallScoreDataGridViewTextBoxColumn
-            // 
-            this.overallScoreDataGridViewTextBoxColumn.DataPropertyName = "OverallScore";
-            this.overallScoreDataGridViewTextBoxColumn.HeaderText = "Score";
-            this.overallScoreDataGridViewTextBoxColumn.Name = "overallScoreDataGridViewTextBoxColumn";
-            this.overallScoreDataGridViewTextBoxColumn.ReadOnly = true;
-            this.overallScoreDataGridViewTextBoxColumn.Width = 60;
             // 
             // Critterworld
             // 
@@ -389,9 +389,9 @@
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewLeaderboard)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.critterBindingSourceLeaderboard)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewWaiting)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.critterBindingSourceWaiting)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.critterBindingSourceLeaderboard)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -407,7 +407,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem menuExit;
         private Arena arena;
-        private System.Windows.Forms.ToolStripStatusLabel labelFPS;
+        private System.Windows.Forms.ToolStripStatusLabel labelLevelInfo;
         private System.Windows.Forms.ToolStripMenuItem menuCompetitionStart;
         private System.Windows.Forms.ToolStripMenuItem menuNextLevel;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
