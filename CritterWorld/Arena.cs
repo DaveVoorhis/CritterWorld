@@ -18,6 +18,8 @@ namespace CritterWorld
         private const int launchMarginX = 50;
         private const int launchMarginY = 50;
 
+        private System.Timers.Timer fpsTimer = null;
+
         public bool WillCollide(Sprite sprite)
         {
             return spriteEngineMain.WillCollide(sprite);
@@ -136,6 +138,22 @@ namespace CritterWorld
 
             spriteSurfaceMain.Active = true;
 
+            TextSprite fps = new TextSprite("999 FPS", "Arial", 10, FontStyle.Regular)
+            {
+                HorizontalAlignment = StringAlignment.Far,
+                VerticalAlignment = StringAlignment.Far,
+                Position = new Point(spriteSurfaceMain.Width - 5, spriteSurfaceMain.Height - 5),
+                Color = Color.White
+            };
+            spriteEngineMain.AddSprite(fps);
+
+            fpsTimer = new System.Timers.Timer
+            {
+                Interval = 250
+            };
+            fpsTimer.Elapsed += (sender, e) => fps.Text = spriteSurfaceMain.ActualFPS + " FPS";
+            fpsTimer.Start();
+
             System.Timers.Timer critterStartupTimer = new System.Timers.Timer();
             critterStartupTimer.Interval = 500;
             critterStartupTimer.AutoReset = false;
@@ -155,6 +173,12 @@ namespace CritterWorld
 
         public void Shutdown()
         {
+            if (fpsTimer != null)
+            {
+                fpsTimer.Stop();
+                fpsTimer = null;
+            }
+
             spriteEngineMain.Locked = true;
             spriteSurfaceMain.Active = false;
 
