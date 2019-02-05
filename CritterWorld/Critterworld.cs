@@ -63,7 +63,7 @@ namespace CritterWorld
         private bool displayUpdating = false;
         private Thread displayUpdateThread = null;
 
-        // To switch over from "GAME OVER" to splash
+        // To time how long "GAME OVER" is displayed before switching to attract mode
         private Timer gameOverTimer = null;
 
         // True if level timer is running.
@@ -260,55 +260,39 @@ namespace CritterWorld
             DisplayGameOver();
         }
 
-        private void MenuStart_Click(object sender, EventArgs e)
+        private void Start()
         {
             critterBindingSourceLeaderboard.Clear();
             critterBindingSourceWaiting.Clear();
+            levelNumber = 0;
+            menuNextHeat.Enabled = true;
+            menuNextLevel.Enabled = true;
+            menuStop.Enabled = true;
+            StartLevel();
+        }
+
+        private void StartFreerun()
+        {
             IsCompetition = false;
-            levelNumber = 0;
-            menuNextHeat.Enabled = true;
-            menuNextLevel.Enabled = true;
-            menuStop.Enabled = true;
-            StartLevel();
+            Start();
         }
 
-        private void MenuCompetionStart_Click(object sender, EventArgs e)
+        private void StartCompetition()
         {
-            critterBindingSourceLeaderboard.Clear();
-            critterBindingSourceWaiting.Clear();
             IsCompetition = true;
-            levelNumber = 0;
-            menuNextHeat.Enabled = true;
-            menuNextLevel.Enabled = true;
-            menuStop.Enabled = true;
-            StartLevel();
+            Start();
         }
 
-        private void MenuFullScreen_Click(object sender, EventArgs e)
+        private void ToggleFullscreen()
         {
             Fullscreen = !Fullscreen;
             menuFullScreen.Checked = Fullscreen;
         }
 
-        private void MenuNextLevel_Click(object sender, EventArgs e)
-        {
-            NextLevel();
-        }
-
-        private void MenuNextHeat_Click(object sender, EventArgs e)
-        {
-            NextHeat();
-        }
-
-        private void MenuStop_Click(object sender, EventArgs e)
+        private void Stop()
         {
             critterBindingSourceWaiting.Clear();
             DisplayGameOver();
-        }
-
-        private void MenuExit_Click(object sender, EventArgs e)
-        {
-            ExitApplication();
         }
 
         private void DisplayGameOver()
@@ -604,6 +588,41 @@ namespace CritterWorld
         private void ShutdownDisplayUpdate()
         {
             displayUpdating = false;
+        }
+
+        private void MenuStart_Click(object sender, EventArgs e)
+        {
+            StartFreerun();
+        }
+
+        private void MenuCompetionStart_Click(object sender, EventArgs e)
+        {
+            StartCompetition();
+        }
+
+        private void MenuFullScreen_Click(object sender, EventArgs e)
+        {
+            ToggleFullscreen();
+        }
+
+        private void MenuNextLevel_Click(object sender, EventArgs e)
+        {
+            NextLevel();
+        }
+
+        private void MenuNextHeat_Click(object sender, EventArgs e)
+        {
+            NextHeat();
+        }
+
+        private void MenuStop_Click(object sender, EventArgs e)
+        {
+            Stop();
+        }
+
+        private void MenuExit_Click(object sender, EventArgs e)
+        {
+            ExitApplication();
         }
 
         public Critterworld()
