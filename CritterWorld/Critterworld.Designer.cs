@@ -95,7 +95,7 @@
             // toolStripPadding1
             // 
             this.toolStripPadding1.Name = "toolStripPadding1";
-            this.toolStripPadding1.Size = new System.Drawing.Size(147, 17);
+            this.toolStripPadding1.Size = new System.Drawing.Size(162, 17);
             this.toolStripPadding1.Spring = true;
             // 
             // levelTimeoutProgress
@@ -107,7 +107,7 @@
             // toolStripPadding2
             // 
             this.toolStripPadding2.Name = "toolStripPadding2";
-            this.toolStripPadding2.Size = new System.Drawing.Size(147, 17);
+            this.toolStripPadding2.Size = new System.Drawing.Size(162, 17);
             this.toolStripPadding2.Spring = true;
             // 
             // labelLevelInfo
@@ -159,6 +159,7 @@
             // 
             // menuNextHeat
             // 
+            this.menuNextHeat.Enabled = false;
             this.menuNextHeat.Name = "menuNextHeat";
             this.menuNextHeat.Size = new System.Drawing.Size(220, 22);
             this.menuNextHeat.Text = "Next heat";
@@ -166,6 +167,7 @@
             // 
             // menuNextLevel
             // 
+            this.menuNextLevel.Enabled = false;
             this.menuNextLevel.Name = "menuNextLevel";
             this.menuNextLevel.Size = new System.Drawing.Size(220, 22);
             this.menuNextLevel.Text = "Next level";
@@ -178,6 +180,7 @@
             // 
             // menuStop
             // 
+            this.menuStop.Enabled = false;
             this.menuStop.Name = "menuStop";
             this.menuStop.Size = new System.Drawing.Size(220, 22);
             this.menuStop.Text = "Stop";

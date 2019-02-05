@@ -266,6 +266,9 @@ namespace CritterWorld
             critterBindingSourceWaiting.Clear();
             IsCompetition = false;
             levelNumber = 0;
+            menuNextHeat.Enabled = true;
+            menuNextLevel.Enabled = true;
+            menuStop.Enabled = true;
             StartLevel();
         }
 
@@ -275,6 +278,9 @@ namespace CritterWorld
             critterBindingSourceWaiting.Clear();
             IsCompetition = true;
             levelNumber = 0;
+            menuNextHeat.Enabled = true;
+            menuNextLevel.Enabled = true;
+            menuStop.Enabled = true;
             StartLevel();
         }
 
@@ -307,6 +313,9 @@ namespace CritterWorld
 
         private void DisplayGameOver()
         {
+            menuNextHeat.Enabled = false;
+            menuNextLevel.Enabled = false;
+            menuStop.Enabled = false;
             labelLevelInfo.Text = "";
             Shutdown();
             TextSprite splashText = new TextSprite((exiting) ? "GOODBYE!" : "GAME OVER", "Arial", 1, FontStyle.Regular)
