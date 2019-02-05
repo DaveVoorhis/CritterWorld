@@ -172,9 +172,9 @@ namespace CritterWorld
                 var sprites = spriteEngineMain.Sprites.ToArray();
                 foreach (Sprite sprite in sprites)
                 {
-                    if (sprite is Critter)
+                    if (sprite is Critter critter)
                     {
-                        ((Critter)sprite).Startup();
+                        critter.Startup();
                     }
                 }
             };
