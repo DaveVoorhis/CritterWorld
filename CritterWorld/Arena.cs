@@ -26,7 +26,10 @@ namespace CritterWorld
         private string ActiveFPSPrompt()
         {
             activeFPSPromptState = (activeFPSPromptState + 1) % fpsPrompt.Length;
-            return fpsPrompt.Substring(0, activeFPSPromptState) + fpsPrompt[activeFPSPromptState].ToString().ToLower() + fpsPrompt.Substring(activeFPSPromptState + 1);
+            return 
+                fpsPrompt.Substring(0, activeFPSPromptState) + 
+                fpsPrompt[activeFPSPromptState].ToString().ToLower() + 
+                fpsPrompt.Substring(activeFPSPromptState + 1);
         }
 
         public bool WillCollide(Sprite sprite)
@@ -55,59 +58,45 @@ namespace CritterWorld
             }
         }
 
-        public void AddGifts(int count)
-        {
-            for (int i = 0; i < count; i++)
-            {
-                Gift gift;
-                do
-                {
-                    int x = rnd.Next(launchMarginX, Surface.Width - launchMarginX);
-                    int y = rnd.Next(launchMarginY, Surface.Height - launchMarginY);
-                    gift = new Gift(new Point(x, y));
-                }
-                while (WillCollide(gift));
-                AddSprite(gift);
-            }
-        }
-
-        public void AddBombs(int count)
-        {
-            for (int i = 0; i < count; i++)
-            {
-                Bomb bomb;
-                do
-                {
-                    int x = rnd.Next(launchMarginX, Surface.Width - launchMarginX);
-                    int y = rnd.Next(launchMarginY, Surface.Height - launchMarginY);
-                    bomb = new Bomb(new Point(x, y));
-                }
-                while (WillCollide(bomb));
-                AddSprite(bomb);
-                bomb.LightFuse();
-            }
-        }
-
         public void AddTerrain(int arenaX1, int arenaX2, int arenaY1, int arenaY2)
         {
             Terrain terrainSprite = new Terrain(arenaX1, arenaX2, arenaY1, arenaY2);
             AddSprite(terrainSprite);
         }
 
-        public void AddFoods(int count)
+        private delegate Sprite CreateSprite(Point location);
+        private delegate void InitialiseSprite(Sprite sprite);
+
+        private void AddItem(int count, CreateSprite factory, InitialiseSprite initialiser = null)
         {
             for (int i = 0; i < count; i++)
             {
-                Food food;
+                Sprite sprite;
                 do
                 {
                     int x = rnd.Next(launchMarginX, Surface.Width - launchMarginX);
                     int y = rnd.Next(launchMarginY, Surface.Height - launchMarginY);
-                    food = new Food(new Point(x, y));
+                    sprite = factory(new Point(x, y));
                 }
-                while (WillCollide(food));
-                AddSprite(food);
+                while (WillCollide(sprite));
+                AddSprite(sprite);
+                initialiser?.Invoke(sprite);
             }
+        }
+
+        public void AddGifts(int count)
+        {
+            AddItem(count, location => new Gift(location));
+        }
+
+        public void AddBombs(int count)
+        {
+            AddItem(count, location => new Bomb(location), sprite => ((Bomb)sprite).LightFuse());
+        }
+
+        public void AddFoods(int count)
+        {
+            AddItem(count, location => new Food(location));
         }
 
         public void AddCritter(Critter critter)
@@ -123,13 +112,13 @@ namespace CritterWorld
                 critter.Position = new Point(critterStartX, critterStartY);
             }
             while (WillCollide(critter));
-            spriteEngineMain.AddSprite(critter);
+            AddSprite(critter);
         }
 
         public void AddEscapeHatch(Point position)
         {
             EscapeHatch escapeHatch = new EscapeHatch(position);
-            spriteEngineMain.AddSprite(escapeHatch);
+            AddSprite(escapeHatch);
         }
 
         public void ResetLaunchPosition()
@@ -155,7 +144,7 @@ namespace CritterWorld
                 Color = Color.Gray,
                 Alpha = 128
             };
-            spriteEngineMain.AddSprite(fps);
+            AddSprite(fps);
 
             fpsTimer = new System.Timers.Timer
             {
@@ -165,7 +154,7 @@ namespace CritterWorld
             fpsTimer.Start();
 
             System.Timers.Timer critterStartupTimer = new System.Timers.Timer();
-            critterStartupTimer.Interval = 500;
+            critterStartupTimer.Interval = 2000;
             critterStartupTimer.AutoReset = false;
             critterStartupTimer.Elapsed += (sender, e) =>
             {
