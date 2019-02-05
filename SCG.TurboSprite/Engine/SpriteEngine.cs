@@ -88,6 +88,18 @@ namespace SCG.TurboSprite
             }
         }
 
+        // The Sprites in the SpriteList as an Array
+        public Sprite[] SpriteArray
+        {
+            get
+            {
+                lock (_spriteList)
+                {
+                    return _spriteList.ToArray();
+                }
+            }
+        }
+
         // The Priority determines the order that the SpriteEngines are rendered
         public int Priority
         {
