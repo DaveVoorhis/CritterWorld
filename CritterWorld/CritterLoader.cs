@@ -12,7 +12,7 @@ namespace CritterWorld
         public List<Critter> LoadCritters()
         {
             var critters = new List<Critter>();
-            for (int i = 0; i < 250; i++)
+            for (int i = 0; i < 50; i++)
             {
                 Critter critter = new Critter(i + 1);
                 critters.Add(critter);

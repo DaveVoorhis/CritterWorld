@@ -169,7 +169,7 @@ namespace CritterWorld
             critterStartupTimer.AutoReset = false;
             critterStartupTimer.Elapsed += (sender, e) =>
             {
-                Sprite[] sprites = spriteEngineMain.Sprites.ToArray();
+                var sprites = spriteEngineMain.Sprites.ToArray();
                 foreach (Sprite sprite in sprites)
                 {
                     if (sprite is Critter)
@@ -192,12 +192,10 @@ namespace CritterWorld
             spriteEngineMain.Locked = true;
             spriteSurfaceMain.Active = false;
 
-            Sprite[] sprites = spriteEngineMain.Sprites.ToArray();
-            foreach (Sprite sprite in sprites)
+            foreach (Sprite sprite in spriteEngineMain.Sprites)
             {
-                if (sprite is Critter)
+                if (sprite is Critter critter)
                 {
-                    Critter critter = (Critter)sprite;
                     critter.HardShutdown();
                 }
             }
@@ -212,8 +210,7 @@ namespace CritterWorld
             get
             {
                 int count = 0;
-                Sprite[] sprites = spriteEngineMain.Sprites.ToArray();
-                foreach (Sprite sprite in sprites)
+                foreach (Sprite sprite in spriteEngineMain.Sprites)
                 {
                     if (sprite is Critter && !sprite.Dead && !((Critter)sprite).Stopped)
                     {

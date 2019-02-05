@@ -188,6 +188,7 @@ namespace CritterWorld
         {
             Shutdown();
             levelNumber++;
+            heatNumber = 0;
             if (levelNumber >= levels.Length)
             {
                 if (IsCompetition)
