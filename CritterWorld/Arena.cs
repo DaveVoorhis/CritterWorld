@@ -200,7 +200,7 @@ namespace CritterWorld
                 int count = 0;
                 foreach (Sprite sprite in spriteEngineMain.SpriteArray)
                 {
-                    if (sprite is Critter && !sprite.Dead && !((Critter)sprite).Stopped)
+                    if (sprite is Critter critter && !critter.Dead && !critter.Stopped)
                     {
                         count++;
                     }
@@ -317,49 +317,49 @@ namespace CritterWorld
         {
             Sprite sprite1 = collision.Sprite1;
             Sprite sprite2 = collision.Sprite2;
-            if (sprite1 is Critter && sprite2 is Critter)
+            if (sprite1 is Critter critter_a1 && sprite2 is Critter critter_a2)
             {
-                Collide((Critter)sprite1, (Critter)sprite2);
+                Collide(critter_a1, critter_a2);
             }
-            else if (sprite1 is Critter && sprite2 is Terrain)
+            else if (sprite1 is Critter critter_a3 && sprite2 is Terrain terrain)
             {
-                Collide((Critter)sprite1, (Terrain)sprite2);
+                Collide(critter_a3, terrain);
             }
-            else if (sprite1 is Terrain && sprite2 is Critter)
+            else if (sprite1 is Terrain terrain_a1 && sprite2 is Critter critter_a4)
             {
-                Collide((Critter)sprite2, (Terrain)sprite1);
+                Collide(critter_a4, terrain_a1);
             }
-            else if (sprite1 is Critter && sprite2 is Bomb)
+            else if (sprite1 is Critter critter_a5 && sprite2 is Bomb bomb_a1)
             {
-                Collide((Critter)sprite1, (Bomb)sprite2);
+                Collide(critter_a5, bomb_a1);
             }
-            else if (sprite1 is Bomb && sprite2 is Critter)
+            else if (sprite1 is Bomb bomb_a2 && sprite2 is Critter critter_a6)
             {
-                Collide((Critter)sprite2, (Bomb)sprite1);
+                Collide(critter_a6, bomb_a2);
             }
-            else if (sprite1 is Critter && sprite2 is Food)
+            else if (sprite1 is Critter critter_a7 && sprite2 is Food food_a1)
             {
-                Collide((Critter)sprite1, (Food)sprite2);
+                Collide(critter_a7, food_a1);
             }
-            else if (sprite1 is Food && sprite2 is Critter)
+            else if (sprite1 is Food food_a2 && sprite2 is Critter critter_a8)
             {
-                Collide((Critter)sprite2, (Food)sprite1);
+                Collide(critter_a8, food_a2);
             }
-            else if (sprite1 is Critter && sprite2 is Gift)
+            else if (sprite1 is Critter critter_a9 && sprite2 is Gift gift_a1)
             {
-                Collide((Critter)sprite1, (Gift)sprite2);
+                Collide(critter_a9, gift_a1);
             }
-            else if (sprite1 is Gift && sprite2 is Critter)
+            else if (sprite1 is Gift gift_a2 && sprite2 is Critter critter_a10)
             {
-                Collide((Critter)sprite2, (Gift)sprite1);
+                Collide(critter_a10, gift_a2);
             }
-            else if (sprite1 is Critter && sprite2 is EscapeHatch)
+            else if (sprite1 is Critter critter_a11 && sprite2 is EscapeHatch escapeHatch_a1)
             {
-                Collide((Critter)sprite1, (EscapeHatch)sprite2);
+                Collide(critter_a11, escapeHatch_a1);
             }
-            else if (sprite1 is EscapeHatch && sprite2 is Critter)
+            else if (sprite1 is EscapeHatch escapeHatch_a2 && sprite2 is Critter critter_a12)
             {
-                Collide((Critter)sprite2, (EscapeHatch)sprite1);
+                Collide(critter_a12, escapeHatch_a2);
             }
         }
 
