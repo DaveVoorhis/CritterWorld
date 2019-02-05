@@ -192,7 +192,8 @@ namespace CritterWorld
             spriteEngineMain.Locked = true;
             spriteSurfaceMain.Active = false;
 
-            foreach (Sprite sprite in spriteEngineMain.Sprites)
+            var sprites = spriteEngineMain.Sprites.ToArray();
+            foreach (Sprite sprite in sprites)
             {
                 if (sprite is Critter critter)
                 {
@@ -210,7 +211,8 @@ namespace CritterWorld
             get
             {
                 int count = 0;
-                foreach (Sprite sprite in spriteEngineMain.Sprites)
+                var sprites = spriteEngineMain.Sprites.ToArray();
+                foreach (Sprite sprite in sprites)
                 {
                     if (sprite is Critter && !sprite.Dead && !((Critter)sprite).Stopped)
                     {
