@@ -141,18 +141,29 @@ namespace CritterWorld
             }
         }
 
+        private void ShowLevelInformationInStatusBar()
+        {
+            string levelInfo;
+            if (IsCompetition)
+            {
+                levelInfo = "Competition Level " + (levelNumber + 1) + " of " + levels.Length;
+            }
+            else
+            {
+                levelInfo = "Free-run Level " + (levelNumber + 1);
+            }
+            labelLevelInfo.Text = levelInfo + " - Heat " + heatNumber + " of " + critterCount / maxCrittersRunning;
+        }
+
         private void Launch()
         {
             level = levels[levelNumber];
             level.Arena = arena;
             level.Setup();
 
-            labelLevelInfo.Text = "Level " + (levelNumber + 1) + " of " + levels.Length + " - Heat " + heatNumber + " of " + critterCount / maxCrittersRunning;
-
+            ShowLevelInformationInStatusBar();
             AddCrittersToArena();
-
             LevelTimerStart();
-
             arena.Launch();
         }
 
