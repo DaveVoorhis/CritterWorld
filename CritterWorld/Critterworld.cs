@@ -58,6 +58,9 @@ namespace CritterWorld
         // The current running Level.
         private Level level;
 
+        // If in free-run mode, how many cycles have run?
+        private int cycleCounter = 0;
+
         // Display update thread and flag. Set displayUpdating to false to shut down the update thread.
         private bool displayUpdating = false;
         private Thread displayUpdateThread = null;
@@ -149,7 +152,7 @@ namespace CritterWorld
             }
             else
             {
-                levelInfo = "Free-run Level " + (levelNumber + 1);
+                levelInfo = "Free-run Cycle " + cycleCounter + " - Level " + (levelNumber + 1);
             }
             labelLevelInfo.Text = levelInfo + " - Heat " + heatNumber + " of " + critterCount / maxCrittersRunning;
         }
@@ -208,6 +211,7 @@ namespace CritterWorld
                 else
                 {
                     levelNumber = 0;
+                    cycleCounter++;
                     StartLevel();
                 }
             }
@@ -273,6 +277,7 @@ namespace CritterWorld
         private void StartFreerun()
         {
             IsCompetition = false;
+            cycleCounter = 1;
             Start();
         }
 
@@ -352,12 +357,9 @@ namespace CritterWorld
             wanderer.Color = Sprite.RandomColor(127);
             wanderer.Processors += sprite =>
             {
-                if (sprite.Mover is TargetMover spriteMover)
+                if (sprite.Mover is TargetMover spriteMover && (spriteMover.SpeedX != 0 || spriteMover.SpeedY != 0))
                 {
-                    if (spriteMover.SpeedX != 0 || spriteMover.SpeedY != 0)
-                    {
-                        spriteMover.TargetFacingAngle = (int)Sprite.GetAngle(spriteMover.SpeedX, spriteMover.SpeedY) + 90;
-                    }
+                    spriteMover.TargetFacingAngle = (int)Sprite.GetAngle(spriteMover.SpeedX, spriteMover.SpeedY) + 90;
                 }
             };
             int margin = 20;
