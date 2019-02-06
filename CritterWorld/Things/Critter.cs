@@ -88,12 +88,8 @@ namespace CritterWorld
 
             Processors += sprite =>
             {
-                if (Mover is TargetMover spriteMover)
+                if (Mover is TargetMover spriteMover && (spriteMover.SpeedX != 0 || spriteMover.SpeedY != 0))
                 {
-                    if (spriteMover == null || (spriteMover.SpeedX == 0 && spriteMover.SpeedY == 0))
-                    {
-                        return;
-                    }
                     spriteMover.TargetFacingAngle = (int)Sprite.GetAngle(spriteMover.SpeedX, spriteMover.SpeedY) + 90;
                 }
             };
