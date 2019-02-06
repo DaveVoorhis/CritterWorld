@@ -55,8 +55,14 @@ namespace SCG.TurboSprite
         {
             get
             {
-                TargetMover mover = (TargetMover)Sprite.Mover;
-                return (float)Sprite.GetDistance(mover.LastPositionX, mover.LastPositionY, Sprite.X, Sprite.Y);
+                if (Sprite.Mover is TargetMover mover)
+                {
+                    return (float)Sprite.GetDistance(mover.LastPositionX, mover.LastPositionY, Sprite.X, Sprite.Y);
+                }
+                else
+                {
+                    return 0;
+                }
             }
         }
 
@@ -64,8 +70,14 @@ namespace SCG.TurboSprite
         {
             get
             {
-                TargetMover mover = (TargetMover)Sprite.Mover;
-                return (float)Math.Sqrt((mover.SpeedX * mover.SpeedX) + (mover.SpeedY * mover.SpeedY));
+                if (Sprite.Mover is TargetMover mover)
+                {
+                    return (float)Math.Sqrt((mover.SpeedX * mover.SpeedX) + (mover.SpeedY * mover.SpeedY));
+                }
+                else
+                {
+                    return 0;
+                }
             }
         }
     }

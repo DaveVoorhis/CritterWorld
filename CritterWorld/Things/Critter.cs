@@ -88,12 +88,14 @@ namespace CritterWorld
 
             Processors += sprite =>
             {
-                TargetMover spriteMover = (TargetMover)Mover;
-                if (spriteMover == null || (spriteMover.SpeedX == 0 && spriteMover.SpeedY == 0))
+                if (Mover is TargetMover spriteMover)
                 {
-                    return;
+                    if (spriteMover == null || (spriteMover.SpeedX == 0 && spriteMover.SpeedY == 0))
+                    {
+                        return;
+                    }
+                    spriteMover.TargetFacingAngle = (int)Sprite.GetAngle(spriteMover.SpeedX, spriteMover.SpeedY) + 90;
                 }
-                spriteMover.TargetFacingAngle = (int)Sprite.GetAngle(spriteMover.SpeedX, spriteMover.SpeedY) + 90;
             };
 
             Reset();
@@ -267,14 +269,12 @@ namespace CritterWorld
 
         public void AssignDestination(int destX, int destY)
         {
-            TargetMover mover = (TargetMover)Mover;
-            if (mover == null)
+            if (Mover is TargetMover mover)
             {
-                return;
+                mover.Speed = rnd.Next(10) + 1;
+                mover.Target = new Point(destX, destY);
+                mover.StopAtTarget = true;
             }
-            mover.Speed = rnd.Next(10) + 1;
-            mover.Target = new Point(destX, destY);
-            mover.StopAtTarget = true;
         }
 
         public void AssignRandomDestination()
@@ -289,7 +289,10 @@ namespace CritterWorld
         // creeping through obstacles when a collision is detected.
         public void Bounceback()
         {
-            ((TargetMover)Mover)?.Bounceback();
+            if (Mover is TargetMover mover)
+            {
+                mover.Bounceback();
+            }
         }
 
         public long TotalThinkTime { get; private set; } = 0;
@@ -315,7 +318,7 @@ namespace CritterWorld
         // emit smoke for a while.
         public void StopAndSmoke(Color startColor, Color endColor)
         {
-            Mover = null;
+            Mover = new NullMover();
             Shutdown();
             ParticleFountainSprite smoke = new ParticleFountainSprite(20, startColor, endColor, 1, 10, 10)
             {
@@ -479,7 +482,7 @@ namespace CritterWorld
                 numberPlate.FillColor = Color.LightGray;
                 numberPlate.Alpha = 255;
             }
-            Mover = null;
+            Mover = new NullMover();
             stopped = true;
         }
 

@@ -211,7 +211,7 @@ namespace CritterWorld
 
         private void Collide(Critter critter1, Critter critter2)
         {
-            if (critter1.Mover == null || critter2.Mover == null)
+            if (critter1.Mover is NullMover || critter2.Mover is NullMover)
             {
                 return;
             }
@@ -236,7 +236,7 @@ namespace CritterWorld
 
         private void Collide(Critter critter, Terrain terrain)
         {
-            if (critter.Mover == null)
+            if (critter.Mover is NullMover)
             {
                 return;
             }
@@ -272,7 +272,7 @@ namespace CritterWorld
                 Position = bomb.Position
             };
             AddSprite(explosion);
-            critter.Mover = null;
+            critter.Mover = new NullMover();
             System.Timers.Timer explosionTimer = new System.Timers.Timer
             {
                 Interval = 250,

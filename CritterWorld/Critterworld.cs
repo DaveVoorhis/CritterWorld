@@ -5,7 +5,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -353,12 +352,13 @@ namespace CritterWorld
             wanderer.Color = Sprite.RandomColor(127);
             wanderer.Processors += sprite =>
             {
-                TargetMover spriteMover = (TargetMover)sprite.Mover;
-                if (spriteMover == null || (spriteMover.SpeedX == 0 && spriteMover.SpeedY == 0))
+                if (sprite.Mover is TargetMover spriteMover)
                 {
-                    return;
+                    if (spriteMover.SpeedX != 0 || spriteMover.SpeedY != 0)
+                    {
+                        spriteMover.TargetFacingAngle = (int)Sprite.GetAngle(spriteMover.SpeedX, spriteMover.SpeedY) + 90;
+                    }
                 }
-                spriteMover.TargetFacingAngle = (int)Sprite.GetAngle(spriteMover.SpeedX, spriteMover.SpeedY) + 90;
             };
             int margin = 20;
             int speed = 4;
@@ -650,41 +650,6 @@ namespace CritterWorld
             LaunchLogger();
         }
 
-    }
-
-    internal class LogEntry
-    {
-        public LogEntry(int critterNumber, string critterName, string author, string eventMessage, Exception exception = null)
-        {
-            Timestamp = DateTime.Now;
-            CritterNumber = critterNumber;
-            CritterName = critterName;
-            Author = author;
-            EventMessage = eventMessage;
-            Exception = exception;
-        }
-
-        public DateTime Timestamp { get; }
-        public int CritterNumber { get; }
-        public string CritterName { get; }
-        public string Author { get; }
-        public string EventMessage { get; }
-        public Exception Exception { get; }
-
-        private static string ToQuoted(string input)
-        {
-            return "\"" + input.Replace("\"", "\\\"").Replace("\n", "\\n").Replace("\r", "\\r").Replace("\t", "\\t") + "\"";
-        }
-
-        public override string ToString()
-        {
-            return Timestamp.ToString("o", CultureInfo.CurrentCulture) + ": #" + CritterNumber + " " + CritterName + " by " + Author + " " + EventMessage + ((Exception != null) ? " due to exception: " + Exception.StackTrace : "");
-        }
-
-        public string ToCSV()
-        {
-            return Timestamp.ToString("o", CultureInfo.CurrentCulture) + ", " + CritterNumber + ", " + ToQuoted(CritterName) + ", " + ToQuoted(Author) + ", " + ToQuoted(EventMessage) + ", " + ((Exception == null) ? ToQuoted("") : ToQuoted(Exception.StackTrace));
-        }
     }
 
 }

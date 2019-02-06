@@ -59,6 +59,7 @@
     <Compile Include="Critterworld.Designer.cs">
       <DependentUpon>Critterworld.cs</DependentUpon>
     </Compile>
+    <Compile Include="LogEntry.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
