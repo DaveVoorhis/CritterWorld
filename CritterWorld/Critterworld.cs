@@ -638,7 +638,11 @@ namespace CritterWorld
             menuFullScreen.Checked = Fullscreen;
             menuFullScreen.ImageScaling = ToolStripItemImageScaling.None;       // fix alignment problem on HiDPI displays
 
-            FormClosing += (sender, e) => ExitApplication();
+            Closing += (sender, e) =>
+            {
+                e.Cancel = true;
+                ExitApplication();
+            };
 
             arena.CritterEscaped += (sender, e) => NotifyNeedToSortLeaderboard();
 
