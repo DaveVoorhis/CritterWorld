@@ -86,14 +86,6 @@ namespace CritterWorld
             LineWidth = 1;
             Color = Sprite.RandomColor(127);
 
-            Processors += sprite =>
-            {
-                if (Mover is TargetMover spriteMover && (spriteMover.SpeedX != 0 || spriteMover.SpeedY != 0))
-                {
-                    spriteMover.TargetFacingAngle = (int)Sprite.GetAngle(spriteMover.SpeedX, spriteMover.SpeedY) + 90;
-                }
-            };
-
             Reset();
         }
 
@@ -377,17 +369,29 @@ namespace CritterWorld
                 return;
             }
 
-            TargetMover spriteMover = new TargetMover();
-            spriteMover.SpriteReachedTarget += (sender, spriteEvent) => AssignRandomDestination();
-            spriteMover.SpriteMoved += (sender, spriteEvent) =>
+            void processor(Sprite sprite)
             {
-                ConsumeEnergy(spriteEvent.Distance * spriteEvent.Speed / movementEnergyConsumptionFactor);
+                if (Mover is TargetMover mover && (mover.SpeedX != 0 || mover.SpeedY != 0))
+                {
+                    mover.TargetFacingAngle = (int)GetAngle(mover.SpeedX, mover.SpeedY) + 90;
+                }
+            }
+
+            void moveHandler(object sender, SpriteMoveEventArgs mover)
+            {
+                ConsumeEnergy(mover.Distance * mover.Speed / movementEnergyConsumptionFactor);
                 if (moveCount-- == 0)
                 {
                     IncrementFrame();
-                    moveCount = 5 - Math.Min(5, (int)spriteMover.Speed);
+                    moveCount = 5 - Math.Min(5, (int)mover.Speed);
                 }
-            };
+            }
+
+            Processors += processor;
+
+            TargetMover spriteMover = new TargetMover();
+            spriteMover.SpriteReachedTarget += (sender, spriteEvent) => AssignRandomDestination();
+            spriteMover.SpriteMoved += moveHandler;
             Mover = spriteMover;
 
             AttachNumberPlate();
@@ -452,19 +456,27 @@ namespace CritterWorld
                     }
                     Thread.Sleep(5);
                 }
+                Processors -= processor;
                 thinkThread = null;
             });
             thinkThread.Name = Name;
             thinkThread.Start();
 
-            Surface.Disposed += (e, evt) => thinkThread?.Abort();
-            Died += (e, evt) => thinkThread?.Abort();
+            void doHardShutdown(object e, EventArgs args)
+            {
+                Processors -= processor;
+                HardShutdown();
+            }
+
+            Surface.Disposed += doHardShutdown;
+            Died += doHardShutdown;
 
             AssignRandomDestination();
         }
 
-        private void ForceShutdown()
+        public void HardShutdown()
         {
+            Shutdown();
             thinkThread?.Abort();
             thinkThread = null;
         }
@@ -489,14 +501,6 @@ namespace CritterWorld
             {
                 return Dead || stopped;
             }
-        }
-
-        public void HardShutdown()
-        {
-            Shutdown();
-            // Brutal, but really the best way to handle this. Otherwise, the thread can
-            // continue to interact with the environment.
-            ForceShutdown();
         }
 
         public override void Kill()

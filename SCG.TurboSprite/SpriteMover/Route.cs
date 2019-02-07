@@ -11,7 +11,7 @@ namespace SCG.TurboSprite.SpriteMover
     public class Route
     {
         public event EventHandler<EventArgs> Finished;
-        public event EventHandler<SpriteEventArgs> SpriteMoved;
+        public event EventHandler<SpriteEventMoved> SpriteMoved;
 
         private Sprite _sprite;
         private List<Destination> route = new List<Destination>();
@@ -41,7 +41,7 @@ namespace SCG.TurboSprite.SpriteMover
                 return;
             }
             TargetMover mover = new TargetMover();
-            mover.SpriteMoved += (e, evt) => SpriteMoved?.Invoke(this, new SpriteEventArgs(_sprite));
+            mover.SpriteMoved += (e, evt) => SpriteMoved?.Invoke(this, new SpriteEventMoved(_sprite));
             mover.SpriteReachedTarget += (e, evt) =>
             {
                 currentDestinationIndex++;

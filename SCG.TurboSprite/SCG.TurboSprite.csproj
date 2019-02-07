@@ -73,17 +73,11 @@
     <Compile Include="Engine\SpriteEngine.Designer.cs">
       <DependentUpon>SpriteEngine.cs</DependentUpon>
     </Compile>
-    <Compile Include="Surface\SpriteSurface.cs">
+    <Compile Include="Engine\SpriteSurface.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Surface\SpriteSurface.Designer.cs">
+    <Compile Include="Engine\SpriteSurface.Designer.cs">
       <DependentUpon>SpriteSurface.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Surface\SquareGridSpriteSurface.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Surface\SquareGridSpriteSurface.Designer.cs">
-      <DependentUpon>SquareGridSpriteSurface.cs</DependentUpon>
     </Compile>
     <Compile Include="Sprite\StarFieldSprite.cs" />
     <Compile Include="Sprite\SpriteEventArgs.cs" />

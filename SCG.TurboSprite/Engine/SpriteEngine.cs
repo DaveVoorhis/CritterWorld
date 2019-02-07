@@ -43,7 +43,7 @@ namespace SCG.TurboSprite
         private int _priority = 1;
         internal List<Sprite> _spriteList = new List<Sprite>();
 
-        public event EventHandler<SpriteEventArgs> SpriteRemoved;
+        public event EventHandler<SpriteEventRemoved> SpriteRemoved;
 
         public SpriteEngine()
         {
@@ -296,7 +296,7 @@ namespace SCG.TurboSprite
                     if (s.Dead)
                     {
                         DeleteSprite(s);
-                        SpriteRemoved?.Invoke(this, new SpriteEventArgs(s));
+                        SpriteRemoved?.Invoke(this, new SpriteEventRemoved(s));
                     }
                 }
             }

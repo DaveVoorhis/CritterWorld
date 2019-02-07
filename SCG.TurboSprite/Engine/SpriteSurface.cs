@@ -56,9 +56,6 @@ namespace SCG.TurboSprite
         private int _offsetX;
         private int _offsetY;
 
-        public event EventHandler<EventArgs> BeforeAnimationCycle;
-        public event EventHandler<PaintEventArgs> BeforeSpriteRender;
-        public event EventHandler<PaintEventArgs> AfterSpriteRender;
         public event EventHandler<SpriteCollisionEventArgs> SpriteCollision;
         public event EventHandler<SpriteClickEventArgs> SpriteClicked;
 
@@ -252,9 +249,6 @@ namespace SCG.TurboSprite
                     // Determine time stamp that next frame needs to be rendered
                     _nextFrameTime = DateTime.Now + _animationSpan;
 
-                    // Trigger event to client
-                    BeforeAnimationCycle?.Invoke(this, EventArgs.Empty);
-
                     // Process Sprite movement
                     lock (_engineList)
                     {
@@ -334,12 +328,6 @@ namespace SCG.TurboSprite
                         grBuffer.Clear(AutoBlankColor);
                     }
 
-                    // Allow client to hook in before sprites are rendered
-                    BeforeSpriteRender?.Invoke(this, new PaintEventArgs(grBuffer, e.ClipRectangle));
-
-                    // now give derived classes a chance
-                    DoBeforeSpriteRender(grBuffer);
-
                     // Render Sprites
                     Rectangle viewport = new Rectangle(OffsetX, OffsetY, Width, Height);
                     lock (_engineList)
@@ -359,11 +347,6 @@ namespace SCG.TurboSprite
                         }
                     }
 
-                    // Allow client to hook in after sprites are rendered
-                    AfterSpriteRender?.Invoke(this, new PaintEventArgs(grBuffer, e.ClipRectangle));
-
-                    DoAfterSpriteRender(grBuffer);
-
                     // Copy double buffer to primary Graphics object
                     grSurface.DrawImage(_buffer, 0, 0);
 
@@ -374,7 +357,9 @@ namespace SCG.TurboSprite
                     {
                         // Yes, update the number of actual frames per second we animated
                         if (_lastSecond != -1)
+                        {
                             ActualFPS = _frames;
+                        }
                         _frames = 1;
                         _lastSecond = _compareSecond;
                     }
@@ -419,7 +404,7 @@ namespace SCG.TurboSprite
             }
         }
 
-        // Register and de-register SpriteEngines - called by the SpriteEngine.Surface settor
+        // Register and de-register SpriteEngines - called by the SpriteEngine.Surface setter
         internal void RegisterSpriteEngine(SpriteEngine engine)
         {
             lock (_engineList)
@@ -449,13 +434,5 @@ namespace SCG.TurboSprite
             SpriteCollision?.Invoke(this, new SpriteCollisionEventArgs(sprite1, sprite2));
         }
 
-        // Protected methods provide hooks to derived classes
-        protected virtual void DoBeforeSpriteRender(Graphics g)
-        {
-        }
-
-        protected virtual void DoAfterSpriteRender(Graphics g)
-        {
-        }
     }
 }

@@ -8,7 +8,7 @@ namespace CritterWorld
 {
     public partial class Arena : UserControl
     {
-        public event EventHandler<SpriteEventArgs> CritterEscaped;
+        public event EventHandler<SpriteEventEscaped> CritterEscaped;
 
         private Random rnd = new Random(Guid.NewGuid().GetHashCode());
 
@@ -187,7 +187,10 @@ namespace CritterWorld
                     critter.HardShutdown();
                 }
             }
+
+            spriteEngineMain.Clear();
             spriteEngineMain.Purge();
+
             ResetLaunchPosition();
 
             spriteEngineMain.Locked = false;
@@ -310,7 +313,7 @@ namespace CritterWorld
         {
             Sound.PlayCheer();
             critter.Escaped();
-            CritterEscaped?.Invoke(this, new SpriteEventArgs(critter));
+            CritterEscaped?.Invoke(this, new SpriteEventEscaped(critter));
         }
 
         private void Collide(object sender, SpriteCollisionEventArgs collision)
@@ -369,10 +372,15 @@ namespace CritterWorld
 
             InitializeComponent();
 
-            spriteSurfaceMain.SpriteCollision += (sender, collisionEvent) => Collide(sender, collisionEvent);
+            spriteSurfaceMain.SpriteCollision += Collide;
 
             spriteSurfaceMain.WraparoundEdges = true;
         }
+    }
+
+    public class SpriteEventEscaped : SpriteEventArgs
+    {
+        public SpriteEventEscaped(Sprite sprite) : base(sprite) { }
     }
 }
 
