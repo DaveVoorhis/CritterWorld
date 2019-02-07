@@ -469,7 +469,6 @@ namespace CritterWorld
             }
 
             Surface.Disposed += doHardShutdown;
-            Died += doHardShutdown;
 
             AssignRandomDestination();
         }

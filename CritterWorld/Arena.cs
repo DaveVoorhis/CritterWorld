@@ -10,6 +10,8 @@ namespace CritterWorld
     {
         public event EventHandler<SpriteEventEscaped> CritterEscaped;
 
+        private const int critterLaunchSpacing = 29;
+
         private Random rnd = new Random(Guid.NewGuid().GetHashCode());
 
         private int critterStartX;
@@ -103,10 +105,10 @@ namespace CritterWorld
         {
             do
             {
-                critterStartY += 30;
-                if (critterStartY >= spriteSurfaceMain.Height - 30)
+                critterStartY += critterLaunchSpacing;
+                if (critterStartY >= spriteSurfaceMain.Height - critterLaunchSpacing)
                 {
-                    critterStartY = 30;
+                    critterStartY = critterLaunchSpacing;
                     critterStartX += 100;
                 }
                 critter.Position = new Point(critterStartX, critterStartY);

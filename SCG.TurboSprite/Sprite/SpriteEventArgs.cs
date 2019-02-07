@@ -50,11 +50,6 @@ namespace SCG.TurboSprite
         public SpriteEventRemoved(Sprite sprite) : base(sprite) { }
     }
 
-    public class SpriteEventDied : SpriteEventArgs
-    {
-        public SpriteEventDied(Sprite sprite) : base(sprite) { }
-    }
-
     public class SpriteMoveEventArgs : SpriteEventArgs
     {
         public SpriteMoveEventArgs(Sprite sprite) : base(sprite)
