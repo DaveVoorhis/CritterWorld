@@ -222,5 +222,4 @@ namespace SCG.TurboSprite
     {
         public SpriteEventMoved(Sprite sprite) : base(sprite) { }
     }
-
 }

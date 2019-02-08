@@ -10,7 +10,7 @@ namespace SCG.TurboSprite.SpriteMover
     // Cause a Sprite to visit a defined set of destinations.
     public class Route
     {
-        public event EventHandler<EventArgs> Finished;
+        public event EventHandler<EventRouteFinished> Finished;
         public event EventHandler<SpriteEventMoved> SpriteMoved;
 
         private Sprite _sprite;
@@ -50,7 +50,7 @@ namespace SCG.TurboSprite.SpriteMover
                     mover.Speed = 0;
                     if (!Repeat)
                     {
-                        Finished?.Invoke(this, new EventArgs());
+                        Finished?.Invoke(this, new EventRouteFinished());
                         return;
                     }
                     else
@@ -67,6 +67,8 @@ namespace SCG.TurboSprite.SpriteMover
             _sprite.Mover = mover;
         }
     }
+
+    public class EventRouteFinished : EventArgs { }
 
     public class Destination
     {
