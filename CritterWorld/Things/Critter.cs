@@ -476,7 +476,7 @@ namespace CritterWorld
         public void HardShutdown()
         {
             Shutdown();
-            thinkThread?.Abort();
+//            thinkThread?.Abort();
             thinkThread = null;
         }
 
