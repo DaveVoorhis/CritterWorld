@@ -10,7 +10,7 @@ namespace CritterWorld
     {
         public event EventHandler<SpriteEventEscaped> CritterEscaped;
 
-        private const int critterLaunchSpacing = 29;
+        private const int critterLaunchSpacing = 52;
 
         private Random rnd = new Random(Guid.NewGuid().GetHashCode());
 
