@@ -32,6 +32,7 @@ using System.ComponentModel;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using System.Linq;
 using System.Windows.Forms;
 using System.Threading;
 using System.Drawing;
@@ -277,10 +278,7 @@ namespace SCG.TurboSprite
                             }
                         }
                         // Remove dead sprites from engines
-                        foreach (SpriteEngine se in _engineList)
-                        {
-                            se.RemoveDeadSprites();
-                        }
+                        _engineList.ForEach(se => se.RemoveDeadSprites());
                     }
                     // Trigger a repaint of surface
                     Invalidate();
@@ -332,19 +330,12 @@ namespace SCG.TurboSprite
                     Rectangle viewport = new Rectangle(OffsetX, OffsetY, Width, Height);
                     lock (_engineList)
                     {
-                        foreach (SpriteEngine se in _engineList)
-                        {
+                        _engineList.ForEach(se => {
                             lock (se._spriteList)
                             {
-                                foreach (Sprite sprite in se.Sprites)
-                                {
-                                    if (sprite.Bounds.IntersectsWith(viewport))
-                                    {
-                                        sprite.Render(grBuffer);
-                                    }
-                                }
+                                se.Sprites.Where(sprite => sprite.Bounds.IntersectsWith(viewport)).ToList().ForEach(sprite => sprite.Render(grBuffer));
                             }
-                        }
+                        });
                     }
 
                     // Copy double buffer to primary Graphics object
@@ -389,19 +380,12 @@ namespace SCG.TurboSprite
                 return;
             }
             Point pt = new Point(e.X, e.Y);
-            foreach (SpriteEngine engine in _engineList)
-            {
+            _engineList.ForEach(engine => {
                 lock (engine._spriteList)
                 {
-                    foreach (Sprite sprite in engine.Sprites)
-                    {
-                        if (sprite.ClickBounds.Contains(pt))
-                        {
-                            SpriteClicked(this, new SpriteClickEventArgs(sprite, e.Button));
-                        }
-                    }
+                    engine.Sprites.Where(sprite => sprite.ClickBounds.Contains(pt)).ToList().ForEach(sprite => SpriteClicked(this, new SpriteClickEventArgs(sprite, e.Button)));
                 }
-            }
+            });
         }
 
         // Register and de-register SpriteEngines - called by the SpriteEngine.Surface setter

@@ -30,6 +30,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 
@@ -69,7 +70,7 @@ namespace SCG.TurboSprite
             float y1 = 0;
             float x2 = 0;
             float y2 = 0;
-            foreach (PointF point in path.PathPoints)
+            path.PathPoints.ToList().ForEach(point =>
             {
                 if (point.X < x1)
                 {
@@ -87,7 +88,7 @@ namespace SCG.TurboSprite
                 {
                     y2 = point.Y;
                 }
-            }
+            });
             Shape = new RectangleF(x1, y1, x2 - x1, y2 - y1);
         }
 

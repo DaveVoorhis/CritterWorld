@@ -68,7 +68,7 @@ namespace SCG.TurboSprite
         {
             using (Pen pen = new Pen(Color.Black))
             {
-                foreach (Wave wave in _waves)
+                _waves.ForEach(wave =>
                 {
                     wave.Radius += wave.ExpansionRate;
                     float w = wave.Radius * 2 + rnd.Next(6) - 3;
@@ -77,7 +77,7 @@ namespace SCG.TurboSprite
                     float y = Y - wave.Radius + rnd.Next(6) - 3;
                     pen.Color = wave.Color;
                     graphics.DrawEllipse(pen, x - Surface.OffsetX, y - Surface.OffsetY, w, h);
-                }
+                });
             }
         }
     }

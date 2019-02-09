@@ -67,7 +67,7 @@ namespace SCG.TurboSprite
         {
             particle.X = 0;
             particle.Y = 0;
-            particle.Color = Sprite.RandomColorFromRange(StartColor, EndColor);
+            particle.Color = RandomColorFromRange(StartColor, EndColor);
             particle.DirectionX = rnd.NextDouble() * 4 - 2;
             particle.DirectionY = rnd.NextDouble() * 4 - 2;
             particle.Diameter = rnd.Next(StartDiameter, EndDiameter);
@@ -76,11 +76,11 @@ namespace SCG.TurboSprite
         // Render the sprite
         protected internal override void Render(Graphics graphics)
         {
-            foreach (Particle particle in _particles)
+            _particles.ForEach(particle =>
             {
                 int x = (int)(X - Surface.OffsetX + particle.X - particle.Diameter / 2);
                 int y = (int)(Y - Surface.OffsetY + particle.Y - particle.Diameter / 2);
-                if (Sprite.GetDistance(x, y, X, Y) > Radius)
+                if (GetDistance(x, y, X, Y) > Radius)
                 {
                     InitialiseParticle(particle);
                 }
@@ -93,7 +93,7 @@ namespace SCG.TurboSprite
                 {
                     graphics.FillEllipse(brush, x, y, particle.Diameter * 2, particle.Diameter * 2);
                 }
-            }
+            });
         }
     }
 }

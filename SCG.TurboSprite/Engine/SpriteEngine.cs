@@ -30,6 +30,7 @@
 using System;
 using System.ComponentModel;
 using System.Collections.Generic;
+using System.Linq;
 using System.Diagnostics;
 using System.Text;
 using System.Drawing;
@@ -80,7 +81,7 @@ namespace SCG.TurboSprite
         // The Sprites that are contained in the SpriteList
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public IList<Sprite> Sprites
+        public List<Sprite> Sprites
         {
             get
             {
@@ -177,10 +178,7 @@ namespace SCG.TurboSprite
         {
             lock (_spriteList)
             {
-                foreach (Sprite sprite in _spriteList)
-                {
-                    sprite.Kill();
-                }
+                _spriteList.ForEach(sprite => sprite.Kill());
             }
         }
 
@@ -206,12 +204,12 @@ namespace SCG.TurboSprite
             // Execute the protected "MoveSprite" method for each sprite we have
             lock (_spriteList)
             {
-                foreach (Sprite sprite in Sprites)
+                Sprites.ForEach(sprite =>
                 {
                     sprite.PreProcess();
                     sprite.LaunchProcess();
                     sprite.Mover?.MoveSprite(sprite);
-                }
+                });
             }
         }
 
@@ -222,7 +220,7 @@ namespace SCG.TurboSprite
             int Height = _surface.VirtualSize.Height;          
             lock (_spriteList)
             {
-                foreach (Sprite sprite in Sprites)
+                Sprites.ForEach(sprite =>
                 {
                     if (sprite.X < 0)
                     {
@@ -240,7 +238,7 @@ namespace SCG.TurboSprite
                     {
                         sprite.Y = 0;
                     }
-                }
+                });
             }
         }
 
@@ -271,16 +269,7 @@ namespace SCG.TurboSprite
             {
                 lock (se._spriteList)
                 {
-                    foreach (Sprite s1 in Sprites)
-                    {
-                        foreach (Sprite s2 in se.Sprites)
-                        {
-                            if (s1.Bounds.IntersectsWith(s2.Bounds))
-                            {
-                                _surface.TriggerCollision(s1, s2);
-                            }
-                        }
-                    }
+                    Sprites.ForEach(s1 => Sprites.Where(s2 => s1.Bounds.IntersectsWith(s2.Bounds)).ToList().ForEach(s2 => _surface.TriggerCollision(s1, s2)));
                 }
             }
         }

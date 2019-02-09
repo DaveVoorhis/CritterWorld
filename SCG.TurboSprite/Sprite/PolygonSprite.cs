@@ -30,6 +30,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 using System.Drawing;
 
 namespace SCG.TurboSprite
@@ -88,7 +89,7 @@ namespace SCG.TurboSprite
             float y1 = 0;
             float x2 = 0;
             float y2 = 0;
-            foreach (PointF point in _rotatedPoints[_lastFrame])
+            _rotatedPoints[_lastFrame].ToList().ForEach(point =>
             {
                 if (point.X < x1)
                 {
@@ -106,7 +107,7 @@ namespace SCG.TurboSprite
                 {
                     y2 = point.Y;
                 }
-            }
+            });
             Shape = new RectangleF(x1, y1, x2 - x1, y2 - y1);
         }
 
