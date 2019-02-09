@@ -77,6 +77,7 @@ namespace SCG.TurboSprite
             }
         }
 
+        /*
         // The Sprites that are contained in the SpriteList
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -87,9 +88,10 @@ namespace SCG.TurboSprite
                 return _spriteList;
             }
         }
+        */
 
         // The Sprites in the SpriteList as an Array
-        public Sprite[] SpriteArray
+        public Sprite[] Sprites
         {
             get
             {
@@ -139,7 +141,7 @@ namespace SCG.TurboSprite
         public bool WillCollide(Sprite sprite)
         {
             ThrowExceptionIfShapeless(sprite);
-            for (int k = 0; k < Sprites.Count; k++)
+            for (int k = 0; k < Sprites.Length; k++)
             {
                 Sprite other = Sprites[k];
                 if (sprite.Bounds.IntersectsWith(other.Bounds))
@@ -249,10 +251,10 @@ namespace SCG.TurboSprite
         {
             lock (_spriteList)
             {
-                for (int i = 0; i < Sprites.Count; i++)
+                for (int i = 0; i < Sprites.Length; i++)
                 {
                     Sprite s1 = Sprites[i];
-                    for (int k = i + 1; k < Sprites.Count; k++)
+                    for (int k = i + 1; k < Sprites.Length; k++)
                     {
                         Sprite s2 = Sprites[k];
                         if (s1.Bounds.IntersectsWith(s2.Bounds))
@@ -290,7 +292,7 @@ namespace SCG.TurboSprite
         {
             lock (_spriteList)
             {
-                for (int i = 0; i < Sprites.Count; i++)
+                for (int i = 0; i < Sprites.Length; i++)
                 {
                     Sprite s = Sprites[i];
                     if (s.Dead)
