@@ -443,8 +443,8 @@ namespace CritterWorld
             arena.Height = ArenaHeight;
 
             Location = new Point(20, 20);
-            Width = Screen.PrimaryScreen.Bounds.Width - 50;
-            Height = Screen.PrimaryScreen.Bounds.Height - 50;
+            Width = Screen.PrimaryScreen.Bounds.Width - 20;
+            Height = Screen.PrimaryScreen.Bounds.Height - 20;
 
             ForceLayout();
         }
