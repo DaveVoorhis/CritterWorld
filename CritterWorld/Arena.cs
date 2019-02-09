@@ -156,7 +156,7 @@ namespace CritterWorld
             fpsTimer.Start();
 
             System.Timers.Timer critterStartupTimer = new System.Timers.Timer();
-            critterStartupTimer.Interval = 2000;
+            critterStartupTimer.Interval = 1000;
             critterStartupTimer.AutoReset = false;
             critterStartupTimer.Elapsed += (sender, e) =>
             {
