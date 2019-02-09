@@ -33,8 +33,8 @@ namespace CritterWorld
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CritterScorePanel));
             this.labelScore = new System.Windows.Forms.Label();
-            this.progressBarEnergy = new ColoredProgressBar();
-            this.progressBarHealth = new ColoredProgressBar();
+            this.progressBarEnergy = new CritterWorld.Widgets.ColoredProgressBar();
+            this.progressBarHealth = new CritterWorld.Widgets.ColoredProgressBar();
             this.labelName = new System.Windows.Forms.Label();
             this.labelHealth = new System.Windows.Forms.Label();
             this.labelEnergy = new System.Windows.Forms.Label();
@@ -131,6 +131,7 @@ namespace CritterWorld
             this.spriteSurfaceCritter.OffsetY = 0;
             this.spriteSurfaceCritter.Size = new System.Drawing.Size(38, 39);
             this.spriteSurfaceCritter.TabIndex = 0;
+            this.spriteSurfaceCritter.ThreadPriority = System.Threading.ThreadPriority.Normal;
             this.spriteSurfaceCritter.UseVirtualSize = false;
             this.spriteSurfaceCritter.VirtualHeight = 39;
             this.spriteSurfaceCritter.VirtualSize = new System.Drawing.Size(38, 39);

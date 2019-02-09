@@ -293,7 +293,17 @@ namespace CritterWorld
         private void Collide(Critter critter, EscapeHatch hatch)
         {
             Sound.PlayCheer();
+
+            Sprite shockwaveCritter = new ShockWaveSprite(5, 20, 20, Color.DarkGreen, Color.LightGreen);
+            shockwaveCritter.Position = critter.Position;
+            AddSprite(shockwaveCritter);
+
+            Sprite shockwaveHatch = new ShockWaveSprite(5, 30, 20, Color.DarkGreen, Color.LightGreen);
+            shockwaveHatch.Position = hatch.Position;
+            AddSprite(shockwaveHatch);
+
             critter.Escaped();
+
             CritterEscaped?.Invoke(this, new SpriteEventEscaped(critter));
         }
 

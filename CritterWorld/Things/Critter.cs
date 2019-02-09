@@ -12,15 +12,12 @@ using System.IO;
 using System.CodeDom.Compiler;
 using System.CodeDom;
 using System.Text.RegularExpressions;
+using System.Collections.Concurrent;
 
 namespace CritterWorld
 {
     public class Critter : PolygonSprite
     {
-        private readonly int CrashProbabilityPercentage = 15;
-
-        public const int maxThinkTimeMilliseconds = 1000;
-        public const int maxThinkTimeOverrunViolations = 5;
         public const float movementEnergyConsumptionFactor = 250;  // the higher this is, the less movement consumes energy
         public const float eatingAddsEnergy = 50.0F;       // each piece of food adds this much energy; maximum 100
         public const float eatingAddsHealth = 10.0F;
@@ -52,8 +49,6 @@ namespace CritterWorld
         public string DeadReason { get; private set; } = null;
         public bool IsDead { get { return DeadReason != null; } }
 
-        private bool selectedToTestCrash = false;
-
         private int moveCount = 0;
 
         private bool stopped = true;
@@ -62,6 +57,9 @@ namespace CritterWorld
 
         private TextSprite numberPlate = null;
         private int numberPlateIncrement = 1;
+
+        private readonly BlockingCollection<String> messagesFromController = new BlockingCollection<String>();
+        private readonly BlockingCollection<String> messagesToController = new BlockingCollection<String>();
 
         private static void CritterProcessor(Sprite sprite)
         {
@@ -127,7 +125,6 @@ namespace CritterWorld
         {
             numberPlate = null;
             FacingAngle = 90;
-            selectedToTestCrash = (rnd.Next(100) < CrashProbabilityPercentage);
             CurrentScore = 0;
             Health = 100;
             Energy = 100;
@@ -265,23 +262,13 @@ namespace CritterWorld
             Energy = 0;
         }
 
-        private void Think(Random random)
+        public void ShowShockwave()
         {
-            // Do things here.
-            int rand = random.Next(0, 2500);
-            if (rand == 25)
-            {
-                Log("---------- shield! ---------");
-                Sound.PlayArc();
-                Sprite shockwave = new ShockWaveSprite(5, 20, 10, Color.DarkBlue, Color.LightBlue);
-                shockwave.Position = Position;
-                shockwave.Mover = new SlaveMover(this);
-                Engine?.AddSprite(shockwave);
-            }
-            else if (rand == 26 && selectedToTestCrash)
-            {
-                throw new FormatException("test exception");
-            }
+            Sound.PlayArc();
+            Sprite shockwave = new ShockWaveSprite(5, 20, 50, Color.DarkBlue, Color.LightBlue);
+            shockwave.Position = Position;
+            shockwave.Mover = new SlaveMover(this);
+            Engine?.AddSprite(shockwave);
         }
 
         public void ClearDestination()
@@ -314,25 +301,6 @@ namespace CritterWorld
             if (Mover is TargetMover mover)
             {
                 mover.Bounceback();
-            }
-        }
-
-        public long TotalThinkTime { get; private set; } = 0;
-
-        public long ThinkCount { get; private set; } = 0;
-
-        public double AverageThinkTime
-        {
-            get
-            {
-                if (ThinkCount == 0)
-                {
-                    return double.NaN;
-                }
-                else
-                {
-                    return (double)TotalThinkTime / (double)ThinkCount;
-                }
             }
         }
 
