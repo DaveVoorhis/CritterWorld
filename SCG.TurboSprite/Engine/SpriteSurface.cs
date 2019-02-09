@@ -342,7 +342,7 @@ namespace SCG.TurboSprite
                     // Copy double buffer to primary Graphics object
                     grSurface.DrawImage(_buffer, 0, 0);
 
-                    // Has another second worth or animation time elapsed?
+                    // Has another second worth of animation time elapsed?
                     _dtStamp = DateTime.Now;
                     _compareSecond = _dtStamp.Second;
                     if (_compareSecond != _lastSecond)
