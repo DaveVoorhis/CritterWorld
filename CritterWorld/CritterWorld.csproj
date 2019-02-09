@@ -117,6 +117,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CritterController\CritterController.csproj">
+      <Project>{06DBFCFC-D8CF-474F-9A07-0FD1313BA9EA}</Project>
+      <Name>CritterController</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NAudio.Audio\NAudio.FireAndForget.csproj">
       <Project>{6e4cd41e-fd49-4b42-aef8-10eaa409f749}</Project>
       <Name>NAudio.FireAndForget</Name>

@@ -172,15 +172,24 @@ namespace CritterWorld
         {
             critterCount = 0;
             critterBindingSourceWaiting.Clear();
-            critterLoader.LoadCritters().ForEach(critter => 
+            List<Critter> loadedCritters = critterLoader.LoadCritters();
+            if (loadedCritters.Count == 0)
             {
-                critterBindingSourceWaiting.Add(critter);
-                if (IsCompetition)
+                DisplayGameOver();
+                MessageBox.Show("Unable to load any Critters. Check system log for details.", "Load Failure", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else
+            {
+                loadedCritters.ForEach(critter =>
                 {
-                    critterBindingSourceLeaderboard.Add(critter);
-                }
-                critterCount++;
-            });
+                    critterBindingSourceWaiting.Add(critter);
+                    if (IsCompetition)
+                    {
+                        critterBindingSourceLeaderboard.Add(critter);
+                    }
+                    critterCount++;
+                });
+            }
         }
 
         private void NextLevel()
@@ -215,6 +224,10 @@ namespace CritterWorld
                 else
                 {
                     LoadCrittersIntoWaitingRoom();
+                    if (critterCount == 0)
+                    {
+                        DisplayGameOver();
+                    }
                 }
                 NextHeat();
             }
@@ -240,7 +253,10 @@ namespace CritterWorld
             heatNumber = 0;
             Shutdown();
             LoadCrittersIntoWaitingRoom();
-            NextHeat();
+            if (critterCount > 0)
+            {
+                NextHeat();
+            }
         }
 
         private void ExitApplication()

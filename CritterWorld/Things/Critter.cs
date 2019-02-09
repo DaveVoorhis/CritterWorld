@@ -49,6 +49,9 @@ namespace CritterWorld
         public string DeadReason { get; private set; } = null;
         public bool IsDead { get { return DeadReason != null; } }
 
+        public BlockingCollection<string> MessagesFromBody { get; } = new BlockingCollection<string>();
+        public BlockingCollection<string> MessagesToBody { get; } = new BlockingCollection<string>();
+
         private int moveCount = 0;
 
         private bool stopped = true;
@@ -57,9 +60,6 @@ namespace CritterWorld
 
         private TextSprite numberPlate = null;
         private int numberPlateIncrement = 1;
-
-        private readonly BlockingCollection<String> messagesFromController = new BlockingCollection<String>();
-        private readonly BlockingCollection<String> messagesToController = new BlockingCollection<String>();
 
         private static void CritterProcessor(Sprite sprite)
         {
@@ -95,7 +95,7 @@ namespace CritterWorld
             }
         }
 
-        public static string GetRandomName()
+        internal static string GetRandomName()
         {
             string[] consonants = { "b", "c", "d", "f", "ff", "g", "gh", "h", "j", "l", "m", "l", "n", "p", "ph", "q", "r", "s", "th", "tt", "t", "v", "w", "x" };
             string[] vowels = { "a", "e", "i", "o", "u", "y", "ee", "ea", "io", "oi", "ae" };
@@ -109,7 +109,7 @@ namespace CritterWorld
             return name[0].ToString().ToUpper() + name.Substring(1);
         }
 
-        public Critter(int critterNumber) : base(new CritterBody().GetBody(1))
+        internal Critter(int critterNumber) : base(new CritterBody().GetBody(1))
         {
             Number = critterNumber;
 
@@ -121,7 +121,7 @@ namespace CritterWorld
             Processors += CritterProcessor;
         }
 
-        public void Reset()
+        internal void Reset()
         {
             numberPlate = null;
             FacingAngle = 90;
@@ -133,13 +133,13 @@ namespace CritterWorld
             Dead = false;
         }
 
-        public void Log(String message, Exception exception = null)
+        private void Log(String message, Exception exception = null)
         {
             LogEntry newLogEntry = new LogEntry(Number, Name, Author, message, exception);
             Critterworld.Log(newLogEntry);
         }
 
-        public void Escaped()
+        internal void Escaped()
         {
             Log("escaped");
             EscapedCount++;
@@ -148,13 +148,13 @@ namespace CritterWorld
             IsEscaped = true;
         }
 
-        public void Scored()
+        internal void Scored()
         {
             Log("scored");
             CurrentScore++;
         }
 
-        public void Ate()
+        internal void Ate()
         {
             Log("ate");
             if (Energy + eatingAddsEnergy > 100)
@@ -175,7 +175,7 @@ namespace CritterWorld
             }
         }
 
-        public void ConsumeEnergy(float consumption)
+        internal void ConsumeEnergy(float consumption)
         {
             if (Energy - consumption <= 0)
             {
@@ -189,7 +189,7 @@ namespace CritterWorld
             }
         }
 
-        public void FightWith(string opponent)
+        internal void FightWith(string opponent)
         {
             if (Health - fightingDeductsHealth <= 0)
             {
@@ -203,7 +203,7 @@ namespace CritterWorld
             }
         }
 
-        public void Bump()
+        internal void Bump()
         {
             if (Health - bumpingTerrainDeductsHealth <= 0)
             {
@@ -217,7 +217,7 @@ namespace CritterWorld
             }
         }
 
-        public void FatallyInjured()
+        internal void FatallyInjured()
         {
             FatallyInjuredCount++;
             DeadReason = "fatally injured";
@@ -226,7 +226,7 @@ namespace CritterWorld
             Energy = 0;
         }
 
-        public void Starved()
+        internal void Starved()
         {
             StarvedCount++;
             DeadReason = "starved";
@@ -235,7 +235,7 @@ namespace CritterWorld
             Energy = 0;
         }
 
-        public void Bombed()
+        internal void Bombed()
         {
             BombedCount++;
             DeadReason = "bombed";
@@ -244,7 +244,7 @@ namespace CritterWorld
             Energy = 0;
         }
 
-        public void Crashed()
+        internal void Crashed()
         {
             CrashedCount++;
             DeadReason = "crashed";
@@ -253,16 +253,16 @@ namespace CritterWorld
             Energy = 0;
         }
 
-        public void Terminated()
+        internal void Terminated(string reason)
         {
             TerminatedCount++;
-            DeadReason = "terminated for spending too long thinking";
+            DeadReason = "terminated for " + reason;
             Log(DeadReason);
             Health = 0;
             Energy = 0;
         }
 
-        public void ShowShockwave()
+        internal void ShowShockwave()
         {
             Sound.PlayArc();
             Sprite shockwave = new ShockWaveSprite(5, 20, 50, Color.DarkBlue, Color.LightBlue);
@@ -271,12 +271,12 @@ namespace CritterWorld
             Engine?.AddSprite(shockwave);
         }
 
-        public void ClearDestination()
+        internal void ClearDestination()
         {
             AssignDestination((int)X, (int)Y);
         }
 
-        public void AssignDestination(int destX, int destY)
+        internal void AssignDestination(int destX, int destY)
         {
             if (Mover is TargetMover mover)
             {
@@ -286,7 +286,7 @@ namespace CritterWorld
             }
         }
 
-        public void AssignRandomDestination()
+        internal void AssignRandomDestination()
         {
             int destX = rnd.Next(Surface.Width);
             int destY = rnd.Next(Surface.Height);
@@ -296,7 +296,7 @@ namespace CritterWorld
         // Bounce back to position before most recent move. 
         // Invoke after a collision to prevent "embedding" or slowly 
         // creeping through obstacles when a collision is detected.
-        public void Bounceback()
+        internal void Bounceback()
         {
             if (Mover is TargetMover mover)
             {
@@ -306,7 +306,7 @@ namespace CritterWorld
 
         // Something has crashed, burned out or blown up. Stop thinking, moving, or doing anything except
         // emit smoke for a while.
-        public void StopAndSmoke(Color startColor, Color endColor)
+        internal void StopAndSmoke(Color startColor, Color endColor)
         {
             Mover = new NullMover();
             Shutdown();
@@ -336,16 +336,16 @@ namespace CritterWorld
             smokeTimer.Start();
         }
 
-        public void Crash()
+        internal void Crash()
         {
             Crashed();
             Sound.PlayCrash();
             StopAndSmoke(Color.DarkBlue, Color.LightBlue);
-            Log("Crashed due to exception whilst thinking.");
+            Log("Crashed due to exception in user code.");
         }
 
         // Create a number plate for this Critter at a given position
-        public TextSprite CreateNumberPlate()
+        private TextSprite CreateNumberPlate()
         {
             return new TextSprite(Number.ToString(), "Arial", 14, FontStyle.Regular)
             {
@@ -358,7 +358,7 @@ namespace CritterWorld
         }
 
         // Attach a number plate to this Critter.
-        public void AttachNumberPlate()
+        private void AttachNumberPlate()
         {
             if (numberPlate != null)
             {
@@ -383,7 +383,7 @@ namespace CritterWorld
         }
 
         // Launch this Critter.
-        public void Launch()
+        internal void Launch()
         {
             Reset();
 
@@ -402,7 +402,7 @@ namespace CritterWorld
         }
 
         // Shut down this Critter.
-        public void Shutdown()
+        internal void Shutdown()
         {
             if (stopped)
             {
@@ -416,7 +416,7 @@ namespace CritterWorld
         }
 
         // True if this critter is stopped or dead
-        public bool Stopped
+        internal bool Stopped
         {
             get
             {

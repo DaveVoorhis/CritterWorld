@@ -6,8 +6,18 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SCG.TurboSprite", "SCG.TurboSprite\SCG.TurboSprite.csproj", "{4914C667-93CA-49E2-9340-F4C74889FA67}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CritterWorld", "CritterWorld\CritterWorld.csproj", "{5F529183-BC45-4EF1-8A73-C8F8FC423AAF}"
+	ProjectSection(ProjectDependencies) = postProject
+		{06DBFCFC-D8CF-474F-9A07-0FD1313BA9EA} = {06DBFCFC-D8CF-474F-9A07-0FD1313BA9EA}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NAudio.FireAndForget", "NAudio.Audio\NAudio.FireAndForget.csproj", "{6E4CD41E-FD49-4B42-AEF8-10EAA409F749}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CritterController", "CritterController\CritterController.csproj", "{06DBFCFC-D8CF-474F-9A07-0FD1313BA9EA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemonstrationCritters", "DemonstrationCritters\DemonstrationCritters.csproj", "{9BEABD20-1A39-4913-9765-D057124641E8}"
+	ProjectSection(ProjectDependencies) = postProject
+		{06DBFCFC-D8CF-474F-9A07-0FD1313BA9EA} = {06DBFCFC-D8CF-474F-9A07-0FD1313BA9EA}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +37,14 @@ Global
 		{6E4CD41E-FD49-4B42-AEF8-10EAA409F749}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6E4CD41E-FD49-4B42-AEF8-10EAA409F749}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6E4CD41E-FD49-4B42-AEF8-10EAA409F749}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06DBFCFC-D8CF-474F-9A07-0FD1313BA9EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06DBFCFC-D8CF-474F-9A07-0FD1313BA9EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06DBFCFC-D8CF-474F-9A07-0FD1313BA9EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06DBFCFC-D8CF-474F-9A07-0FD1313BA9EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9BEABD20-1A39-4913-9765-D057124641E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BEABD20-1A39-4913-9765-D057124641E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9BEABD20-1A39-4913-9765-D057124641E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9BEABD20-1A39-4913-9765-D057124641E8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
