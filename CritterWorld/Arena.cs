@@ -164,7 +164,7 @@ namespace CritterWorld
                 {
                     if (sprite is Critter critter)
                     {
-                        critter.Startup();
+                        critter.Launch();
                     }
                 }
             };
@@ -186,7 +186,7 @@ namespace CritterWorld
             {
                 if (sprite is Critter critter)
                 {
-                    critter.HardShutdown();
+                    critter.Shutdown();
                 }
             }
 

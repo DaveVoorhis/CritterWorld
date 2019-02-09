@@ -54,16 +54,48 @@ namespace CritterWorld
 
         private bool selectedToTestCrash = false;
 
-        private int thinkTimeOverrunViolations = 0;
         private int moveCount = 0;
 
-        private Thread thinkThread = null;
         private bool stopped = true;
 
         private static Random rnd = new Random(Guid.NewGuid().GetHashCode());
 
         private TextSprite numberPlate = null;
         private int numberPlateIncrement = 1;
+
+        private static void CritterProcessor(Sprite sprite)
+        {
+            if (sprite is Critter critter)
+            {
+                if (sprite.Mover is TargetMover mover && (mover.SpeedX != 0 || mover.SpeedY != 0))
+                {
+                    mover.TargetFacingAngle = (int)GetAngle(mover.SpeedX, mover.SpeedY) + 90;
+                }
+
+                if (critter.numberPlate != null)
+                {
+                    if (critter.stopped)
+                    {
+                        critter.numberPlate.Color = Color.LightGray;
+                        critter.numberPlate.FillColor = Color.LightGray;
+                        critter.numberPlate.Alpha = 255;
+                    }
+                    else
+                    {
+                        critter.numberPlate.Position = critter.Position;
+                        critter.numberPlate.Alpha += (byte)critter.numberPlateIncrement;
+                        if (critter.numberPlate.Alpha == 255)
+                        {
+                            critter.numberPlateIncrement = -1;
+                        }
+                        else if (critter.numberPlate.Alpha == 0)
+                        {
+                            critter.numberPlateIncrement = 1;
+                        }
+                    }
+                }
+            }
+        }
 
         public static string GetRandomName()
         {
@@ -87,6 +119,8 @@ namespace CritterWorld
             Color = Sprite.RandomColor(127);
 
             Reset();
+
+            Processors += CritterProcessor;
         }
 
         public void Reset()
@@ -231,7 +265,7 @@ namespace CritterWorld
             Energy = 0;
         }
 
-        protected internal void Think(Random random)
+        private void Think(Random random)
         {
             // Do things here.
             int rand = random.Next(0, 2500);
@@ -334,6 +368,14 @@ namespace CritterWorld
             smokeTimer.Start();
         }
 
+        public void Crash()
+        {
+            Crashed();
+            Sound.PlayCrash();
+            StopAndSmoke(Color.DarkBlue, Color.LightBlue);
+            Log("Crashed due to exception whilst thinking.");
+        }
+
         // Create a number plate for this Critter at a given position
         public TextSprite CreateNumberPlate()
         {
@@ -359,138 +401,50 @@ namespace CritterWorld
             Engine?.AddSprite(numberPlate);
         }
 
+        private static void MoveHandler(object sender, SpriteMoveEventArgs mover)
+        {
+            if (mover.Sprite is Critter critter)
+            {
+                critter.ConsumeEnergy(mover.Distance * mover.Speed / movementEnergyConsumptionFactor);
+                if (critter.moveCount-- == 0)
+                {
+                    critter.IncrementFrame();
+                    critter.moveCount = 5 - Math.Min(5, (int)mover.Speed);
+                }
+            }
+        }
+
         // Launch this Critter.
-        public void Startup()
+        public void Launch()
         {
             Reset();
 
-            if (thinkThread != null)
-            {
-                return;
-            }
-
-            void processor(Sprite sprite)
-            {
-                if (Mover is TargetMover mover && (mover.SpeedX != 0 || mover.SpeedY != 0))
-                {
-                    mover.TargetFacingAngle = (int)GetAngle(mover.SpeedX, mover.SpeedY) + 90;
-                }
-            }
-
-            void moveHandler(object sender, SpriteMoveEventArgs mover)
-            {
-                ConsumeEnergy(mover.Distance * mover.Speed / movementEnergyConsumptionFactor);
-                if (moveCount-- == 0)
-                {
-                    IncrementFrame();
-                    moveCount = 5 - Math.Min(5, (int)mover.Speed);
-                }
-            }
-
-            Processors += processor;
+            AttachNumberPlate();
 
             TargetMover spriteMover = new TargetMover();
             spriteMover.SpriteReachedTarget += (sender, spriteEvent) => AssignRandomDestination();
-            spriteMover.SpriteMoved += moveHandler;
+            spriteMover.SpriteMoved += MoveHandler;
             Mover = spriteMover;
 
-            AttachNumberPlate();
+            stopped = false;
 
-            thinkThread = new Thread(() =>
-            {
-                stopped = false;
-                Log("launched");
-                Stopwatch stopwatch = new Stopwatch();
-                Random rnd = new Random(Guid.NewGuid().GetHashCode());
-                while (Surface != null && !Surface.IsDisposed && !Surface.Disposing && !Dead && !stopped)
-                {
-                    if (Surface.Active)
-                    {
-                        try
-                        {
-                            if (numberPlate != null)
-                            {
-                                numberPlate.Position = Position;
-                                numberPlate.Alpha += (byte)numberPlateIncrement;
-                                if (numberPlate.Alpha == 255)
-                                {
-                                    numberPlateIncrement = -1;
-                                }
-                                else if (numberPlate.Alpha == 0)
-                                {
-                                    numberPlateIncrement = 1;
-                                }
-                            }
-
-                            stopwatch.Reset();
-                            stopwatch.Start();
-                            Think(rnd);
-                            stopwatch.Stop();
-                            long elapsed = stopwatch.ElapsedMilliseconds;
-                            if (elapsed > 1000)
-                            {
-                                if (thinkTimeOverrunViolations >= maxThinkTimeOverrunViolations)
-                                {
-                                    Log("Was warned " + thinkTimeOverrunViolations + " times about thinking for too long. Now you may not think again.");
-                                    Terminated();
-                                    Sound.PlayCrash();
-                                    StopAndSmoke(Color.DarkGreen, Color.LightGreen);
-                                    break;
-                                }
-                                else
-                                {
-                                    Log("Warning #" + (++thinkTimeOverrunViolations) + " you have exceeded the maximum think time of " + maxThinkTimeMilliseconds + " by " + (elapsed - maxThinkTimeMilliseconds) + " milliseconds.");
-                                }
-                            }
-                            TotalThinkTime += elapsed;
-                            ThinkCount++;
-                        }
-                        catch (Exception e)
-                        {
-                            Crashed();
-                            Sound.PlayCrash();
-                            StopAndSmoke(Color.DarkBlue, Color.LightBlue);
-                            Log("Crashed due to exception whilst thinking: " + e, e);
-                            break;
-                        }
-                    }
-                    Thread.Sleep(5);
-                }
-                Processors -= processor;
-                thinkThread = null;
-            });
-            thinkThread.Name = Name;
-            thinkThread.Start();
-
-            void doHardShutdown(object e, EventArgs args)
-            {
-                Processors -= processor;
-                HardShutdown();
-            }
-
-            Surface.Disposed += doHardShutdown;
+            Log("launched");
 
             AssignRandomDestination();
-        }
-
-        public void HardShutdown()
-        {
-            Shutdown();
-//            thinkThread?.Abort();
-            thinkThread = null;
         }
 
         // Shut down this Critter.
         public void Shutdown()
         {
-            if (numberPlate != null)
+            if (stopped)
             {
-                numberPlate.Color = Color.LightGray;
-                numberPlate.FillColor = Color.LightGray;
-                numberPlate.Alpha = 255;
+                return;
             }
+
             Mover = new NullMover();
             stopped = true;
+
+            Log("shutdown");
         }
 
         // True if this critter is stopped or dead
@@ -504,7 +458,7 @@ namespace CritterWorld
 
         public override void Kill()
         {
-            HardShutdown();
+            Shutdown();
             if (numberPlate != null)
             {
                 numberPlate.Kill();
