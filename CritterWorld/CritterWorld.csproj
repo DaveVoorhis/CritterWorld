@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Levels.cs" />
     <Compile Include="CritterLoader.cs" />
     <Compile Include="CritterScorePanel.cs">
       <SubType>UserControl</SubType>

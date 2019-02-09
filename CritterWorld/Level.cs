@@ -13,11 +13,11 @@ namespace CritterWorld
         private const int terrainDensity = 80;
         private const int critterSpriteScale = 1;
 
-        int FoodCount { get; set; } = 5;
+        public int FoodCount { get; set; } = 5;
 
-        int GiftCount { get; set; } = 5;
+        public int GiftCount { get; set; } = 5;
 
-        int BombCount { get; set; }  = 5;
+        public int BombCount { get; set; }  = 5;
 
         public Level() { }
 

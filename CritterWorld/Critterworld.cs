@@ -15,6 +15,9 @@ namespace CritterWorld
 {
     public partial class Critterworld : Form
     {
+        private const int ArenaWidth = 1100;
+        private const int ArenaHeight = 825;
+
         // Default name of log file.
         public string LogFileName { get; private set; } = "log.csv";
 
@@ -32,18 +35,6 @@ namespace CritterWorld
 
         // Current heat number
         int heatNumber = 0;
-
-        // Available levels
-        private Level[] levels = new Level[]
-        {
-            new Level((Bitmap)Image.FromFile("Resources/TerrainMasks/Background00.png"), new Point(345, 186)),
-            new Level((Bitmap)Image.FromFile("Resources/TerrainMasks/Background01.png"), new Point(319, 247)),
-            new Level((Bitmap)Image.FromFile("Resources/TerrainMasks/Background02.png"), new Point(532, 32)),
-            new Level((Bitmap)Image.FromFile("Resources/TerrainMasks/Background03.png"), new Point(504, 269)),
-            new Level((Bitmap)Image.FromFile("Resources/TerrainMasks/Background04.png"), new Point(183, 279)),
-            new Level((Bitmap)Image.FromFile("Resources/TerrainMasks/Background05.png"), new Point(457, 440)),
-            new Level((Bitmap)Image.FromFile("Resources/TerrainMasks/Background06.png"), new Point(280, 360))
-        };
 
         // Logging thread and logging flag. Set logging to false to shut down logging thread.
         private bool logging = false;
@@ -148,7 +139,7 @@ namespace CritterWorld
             string levelInfo;
             if (IsCompetition)
             {
-                levelInfo = "Competition Level " + (levelNumber + 1) + " of " + levels.Length;
+                levelInfo = "Competition Level " + (levelNumber + 1) + " of " + Levels.TheLevels.Length;
             }
             else
             {
@@ -159,7 +150,7 @@ namespace CritterWorld
 
         private void Launch()
         {
-            level = levels[levelNumber];
+            level = Levels.TheLevels[levelNumber];
             level.Arena = arena;
             level.Setup();
 
@@ -202,7 +193,7 @@ namespace CritterWorld
             Shutdown();
             levelNumber++;
             heatNumber = 0;
-            if (levelNumber >= levels.Length)
+            if (levelNumber >= Levels.TheLevels.Length)
             {
                 if (IsCompetition)
                 {
@@ -453,8 +444,8 @@ namespace CritterWorld
         // Use explicit layout to get around issues with HiDPI displays.
         private void ForceInitialLayout()
         {
-            arena.Width = 1024;
-            arena.Height = 768;
+            arena.Width = ArenaWidth;
+            arena.Height = ArenaHeight;
 
             Location = new Point(20, 20);
             Width = Screen.PrimaryScreen.Bounds.Width - 50;

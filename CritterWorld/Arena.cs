@@ -10,15 +10,17 @@ namespace CritterWorld
     {
         public event EventHandler<SpriteEventEscaped> CritterEscaped;
 
-        private const int critterLaunchSpacing = 52;
+        private const int critterLaunchSpacing = 31;
 
         private Random rnd = new Random(Guid.NewGuid().GetHashCode());
 
         private int critterStartX;
         private int critterStartY;
 
-        private const int launchMarginX = 50;
-        private const int launchMarginY = 50;
+        private const int launchMarginLeft = 150;
+        private const int launchMarginRight = 20;
+        private const int launchMarginTop = 20;
+        private const int launchMarginBottom = 20;
 
         private System.Timers.Timer fpsTimer = null;
 
@@ -76,8 +78,8 @@ namespace CritterWorld
                 Sprite sprite;
                 do
                 {
-                    int x = rnd.Next(launchMarginX, Surface.Width - launchMarginX);
-                    int y = rnd.Next(launchMarginY, Surface.Height - launchMarginY);
+                    int x = rnd.Next(launchMarginLeft, Surface.Width - launchMarginRight);
+                    int y = rnd.Next(launchMarginTop, Surface.Height - launchMarginBottom);
                     sprite = factory(new Point(x, y));
                 }
                 while (WillCollide(sprite));
