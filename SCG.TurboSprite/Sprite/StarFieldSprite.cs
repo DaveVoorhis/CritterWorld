@@ -65,7 +65,8 @@ namespace SCG.TurboSprite
             _q2 = numStars / 2;
             _q3 = numStars / 4;
 
-            Processors += sprite => {
+            Processors += sprite => 
+            {
                 for (int i = 0; i < _numStars; i++)
                 {
                     Star s = _starArray[i];

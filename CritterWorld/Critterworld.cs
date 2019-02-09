@@ -172,7 +172,8 @@ namespace CritterWorld
         {
             critterCount = 0;
             critterBindingSourceWaiting.Clear();
-            critterLoader.LoadCritters().ForEach(critter => {
+            critterLoader.LoadCritters().ForEach(critter => 
+            {
                 critterBindingSourceWaiting.Add(critter);
                 if (IsCompetition)
                 {
@@ -205,7 +206,8 @@ namespace CritterWorld
                 if (IsCompetition)
                 {
                     // copy Critters from Leader Board, because they're all there
-                    critterBindingSourceLeaderboard.OfType<Critter>().ToList().ForEach(critter => {
+                    critterBindingSourceLeaderboard.OfType<Critter>().ToList().ForEach(critter => 
+                    {
                         critter.Reset();
                         critterBindingSourceWaiting.Add(critter);
                     });
@@ -459,7 +461,8 @@ namespace CritterWorld
 
         private void AppendToLogDisplay(string text)
         {
-            textLog.Invoke(new Action(() => {
+            textLog.Invoke(new Action(() =>
+            {
                 if (textLog.Text.Length > 128000)
                 {
                     textLog.Text = "..." + textLog.Text.Substring(64000);

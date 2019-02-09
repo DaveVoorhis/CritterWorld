@@ -330,7 +330,8 @@ namespace SCG.TurboSprite
                     Rectangle viewport = new Rectangle(OffsetX, OffsetY, Width, Height);
                     lock (_engineList)
                     {
-                        _engineList.ForEach(se => {
+                        _engineList.ForEach(se => 
+                        {
                             lock (se._spriteList)
                             {
                                 se.Sprites.Where(sprite => sprite.Bounds.IntersectsWith(viewport)).ToList().ForEach(sprite => sprite.Render(grBuffer));
@@ -380,7 +381,8 @@ namespace SCG.TurboSprite
                 return;
             }
             Point pt = new Point(e.X, e.Y);
-            _engineList.ForEach(engine => {
+            _engineList.ForEach(engine => 
+            {
                 lock (engine._spriteList)
                 {
                     engine.Sprites.Where(sprite => sprite.ClickBounds.Contains(pt)).ToList().ForEach(sprite => SpriteClicked(this, new SpriteClickEventArgs(sprite, e.Button)));
