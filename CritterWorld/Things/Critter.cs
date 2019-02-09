@@ -31,6 +31,8 @@ namespace CritterWorld
 
         public string NameAndAuthor { get { return Name + " by " + Author; } }
 
+        public string NumberNameAndAuthor { get { return Number + ": " + NameAndAuthor; } }
+
         public int EscapedCount { get; private set; }
         public int BombedCount { get; private set; }
         public int CrashedCount { get; private set; }
@@ -49,8 +51,8 @@ namespace CritterWorld
         public string DeadReason { get; private set; } = null;
         public bool IsDead { get { return DeadReason != null; } }
 
-        public BlockingCollection<string> MessagesFromBody { get; } = new BlockingCollection<string>();
-        public BlockingCollection<string> MessagesToBody { get; } = new BlockingCollection<string>();
+        public ConcurrentQueue<string> MessagesFromBody { get; } = new ConcurrentQueue<string>();
+        public ConcurrentQueue<string> MessagesToBody { get; } = new ConcurrentQueue<string>();
 
         private int moveCount = 0;
 
@@ -91,6 +93,21 @@ namespace CritterWorld
                             critter.numberPlateIncrement = 1;
                         }
                     }
+
+                    while (critter.MessagesToBody.TryDequeue(out string msg))
+                    {
+                        Console.WriteLine("Message from controller for " + critter.NumberNameAndAuthor + ": " + msg);
+                        string[] commandParts = msg.Split(':');
+                        switch (commandParts[0])
+                        {
+                            case "RANDOM_DESTINATION":
+                                critter.AssignRandomDestination();
+                                break;
+                            default:
+                                critter.Notify("Unknown command:" + commandParts[0]);
+                                break;
+                        }
+                    }
                 }
             }
         }
@@ -121,6 +138,12 @@ namespace CritterWorld
             Processors += CritterProcessor;
         }
 
+        // Send message to controller
+        internal void Notify(string message)
+        {
+            MessagesFromBody.Enqueue(message);
+        }
+
         internal void Reset()
         {
             numberPlate = null;
@@ -142,6 +165,7 @@ namespace CritterWorld
         internal void Escaped()
         {
             Log("escaped");
+            Notify("ESCAPE:" + Position.ToString());
             EscapedCount++;
             OverallScore += CurrentScore;
             Kill();
@@ -152,6 +176,7 @@ namespace CritterWorld
         {
             Log("scored");
             CurrentScore++;
+            Notify("SCORED:" + Position.ToString() + ":" + CurrentScore);
         }
 
         internal void Ate()
@@ -173,6 +198,7 @@ namespace CritterWorld
             {
                 Health += eatingAddsHealth;
             }
+            Notify("ATE:" + Position.ToString() + ":" + Energy + ":" + Health);
         }
 
         internal void ConsumeEnergy(float consumption)
@@ -191,6 +217,7 @@ namespace CritterWorld
 
         internal void FightWith(string opponent)
         {
+            Notify("FIGHT:" + Position.ToString() + ":" + opponent);
             if (Health - fightingDeductsHealth <= 0)
             {
                 Health = 0;
@@ -205,6 +232,7 @@ namespace CritterWorld
 
         internal void Bump()
         {
+            Notify("BUMP:" + Position.ToString());
             if (Health - bumpingTerrainDeductsHealth <= 0)
             {
                 Health = 0;
@@ -219,6 +247,7 @@ namespace CritterWorld
 
         internal void FatallyInjured()
         {
+            Notify("FATALITY:" + Position.ToString());
             FatallyInjuredCount++;
             DeadReason = "fatally injured";
             Log(DeadReason);
@@ -228,6 +257,7 @@ namespace CritterWorld
 
         internal void Starved()
         {
+            Notify("STARVED:" + Position.ToString());
             StarvedCount++;
             DeadReason = "starved";
             Log(DeadReason);
@@ -237,6 +267,7 @@ namespace CritterWorld
 
         internal void Bombed()
         {
+            Notify("BOMBED:" + Position.ToString());
             BombedCount++;
             DeadReason = "bombed";
             Log(DeadReason);
@@ -244,8 +275,9 @@ namespace CritterWorld
             Energy = 0;
         }
 
-        internal void Crashed()
+        internal void Crashed(Exception e)
         {
+            Notify("CRASHED:" + Position.ToString() + ":" + e.ToString());
             CrashedCount++;
             DeadReason = "crashed";
             Log(DeadReason);
@@ -255,6 +287,7 @@ namespace CritterWorld
 
         internal void Terminated(string reason)
         {
+            Notify("TERMINATED:" + Position.ToString() + ":" + reason);
             TerminatedCount++;
             DeadReason = "terminated for " + reason;
             Log(DeadReason);
@@ -336,9 +369,9 @@ namespace CritterWorld
             smokeTimer.Start();
         }
 
-        internal void Crash()
+        internal void Crash(Exception e)
         {
-            Crashed();
+            Crashed(e);
             Sound.PlayCrash();
             StopAndSmoke(Color.DarkBlue, Color.LightBlue);
             Log("Crashed due to exception in user code.");
@@ -390,7 +423,7 @@ namespace CritterWorld
             AttachNumberPlate();
 
             TargetMover spriteMover = new TargetMover();
-            spriteMover.SpriteReachedTarget += (sender, spriteEvent) => AssignRandomDestination();
+            spriteMover.SpriteReachedTarget += (sender, spriteEvent) => Notify("REACHED_DESTINATION:" + spriteEvent.Sprite.Position.ToString());
             spriteMover.SpriteMoved += MoveHandler;
             Mover = spriteMover;
 
@@ -398,7 +431,7 @@ namespace CritterWorld
 
             Log("launched");
 
-            AssignRandomDestination();
+            Notify("LAUNCHED:" + Position.ToString());
         }
 
         // Shut down this Critter.
@@ -413,6 +446,8 @@ namespace CritterWorld
             stopped = true;
 
             Log("shutdown");
+
+            Notify("SHUTDOWN:" + Position.ToString());
         }
 
         // True if this critter is stopped or dead

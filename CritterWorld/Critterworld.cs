@@ -141,7 +141,14 @@ namespace CritterWorld
             {
                 levelInfo = "Free-run Cycle " + cycleCounter + " - Level " + (levelNumber + 1);
             }
-            labelLevelInfo.Text = levelInfo + " - Heat " + heatNumber + " of " + critterCount / maxCrittersRunning;
+            if (critterCount <= maxCrittersRunning)
+            {
+                labelLevelInfo.Text = levelInfo;
+            }
+            else
+            {
+                labelLevelInfo.Text = levelInfo + " - Heat " + heatNumber + " of " + (int)Math.Ceiling(critterCount / (double)maxCrittersRunning);
+            }
         }
 
         private void Launch()

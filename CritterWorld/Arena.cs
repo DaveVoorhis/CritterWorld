@@ -205,11 +205,8 @@ namespace CritterWorld
             critter1.Bounceback();
             critter2.Bounceback();
 
-            critter1.FightWith(critter2.NameAndAuthor);
-            critter2.FightWith(critter1.NameAndAuthor);
-
-            critter1.AssignRandomDestination();
-            critter2.AssignRandomDestination();
+            critter1.FightWith(critter2.NumberNameAndAuthor);
+            critter2.FightWith(critter1.NumberNameAndAuthor);
 
             Sprite fight = new ParticleExplosionSprite(10, Color.DarkRed, Color.Red, 1, 5, 10)
             {
@@ -228,8 +225,6 @@ namespace CritterWorld
             Sound.PlayZap();
 
             critter.Bounceback();
-            critter.AssignRandomDestination();
-
             critter.Bump();
 
             terrain.Nudge();

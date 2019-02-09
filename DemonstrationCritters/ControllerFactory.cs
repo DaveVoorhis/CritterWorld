@@ -13,7 +13,12 @@ namespace DemonstrationCritters
 
         public ICritterController[] GetCritterControllers()
         {
-            return new ICritterController[] { new Wanderer("Wanderer1"), new Wanderer("Wanderer2"), new Wanderer("Wanderer3") };
+            List<ICritterController> controllers = new List<ICritterController>();
+            for (int i = 0; i < 50; i++)
+            {
+                controllers.Add(new Wanderer("Wanderer" + (i + 1)));
+            }
+            return controllers.ToArray();
         }
     }
 }
