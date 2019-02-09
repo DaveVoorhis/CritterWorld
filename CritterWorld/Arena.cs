@@ -160,16 +160,7 @@ namespace CritterWorld
             System.Timers.Timer critterStartupTimer = new System.Timers.Timer();
             critterStartupTimer.Interval = 1000;
             critterStartupTimer.AutoReset = false;
-            critterStartupTimer.Elapsed += (sender, e) =>
-            {
-                foreach (Sprite sprite in spriteEngineMain.Sprites)
-                {
-                    if (sprite is Critter critter)
-                    {
-                        critter.Launch();
-                    }
-                }
-            };
+            critterStartupTimer.Elapsed += (sender, e) => spriteEngineMain.SpriteArray.OfType<Critter>().ToList().ForEach(critter => critter.Launch());
             critterStartupTimer.Start();
         }
 
@@ -184,13 +175,7 @@ namespace CritterWorld
             spriteEngineMain.Locked = true;
             spriteSurfaceMain.Active = false;
 
-            foreach (Sprite sprite in spriteEngineMain.Sprites)
-            {
-                if (sprite is Critter critter)
-                {
-                    critter.Shutdown();
-                }
-            }
+            spriteEngineMain.Sprites.OfType<Critter>().ToList().ForEach(critter => critter.Shutdown());
 
             spriteEngineMain.Clear();
             spriteEngineMain.Purge();
@@ -204,15 +189,7 @@ namespace CritterWorld
         {
             get
             {
-                int count = 0;
-                foreach (Sprite sprite in spriteEngineMain.Sprites)
-                {
-                    if (sprite is Critter critter && !critter.Dead && !critter.Stopped)
-                    {
-                        count++;
-                    }
-                }
-                return count;
+                return spriteEngineMain.SpriteArray.OfType<Critter>().Where(critter => !critter.Dead && !critter.Stopped).Count();
             }
         }
 

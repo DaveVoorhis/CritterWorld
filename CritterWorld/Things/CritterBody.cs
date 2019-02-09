@@ -99,15 +99,9 @@ namespace CritterWorld
             rightBody.Add(new Point(0, 7));
 
             List<PointF> outvector = new List<PointF>();
-            foreach (Point point in rightBody)
-            {
-                outvector.Add(point);
-            }
+            rightBody.ForEach(point => outvector.Add(point));
             rightBody.Reverse();
-            foreach (Point point in rightBody)
-            {
-                outvector.Add(new PointF(-point.X, point.Y));
-            }
+            rightBody.ForEach(point => outvector.Add(new PointF(-point.X, point.Y)));
 
             body1 = outvector.ToArray();
 
@@ -121,15 +115,9 @@ namespace CritterWorld
             }
 
             outvector.Clear();
-            foreach (Point point in rightBody)
-            {
-                outvector.Add(point);
-            }
+            rightBody.ForEach(point => outvector.Add(point));
             rightBody.Reverse();
-            foreach (Point point in rightBody)
-            {
-                outvector.Add(new PointF(-point.X, point.Y));
-            }
+            rightBody.ForEach(point => outvector.Add(new PointF(-point.X, point.Y)));
 
             body2 = outvector.ToArray();
 

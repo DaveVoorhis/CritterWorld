@@ -18,7 +18,7 @@ namespace CritterWorld
             {
                 FoodCount = 20,
                 GiftCount = 20,
-                BombCount = 2
+                BombCount = 0
             },
             new Level((Bitmap)Image.FromFile(MakeFilename("Background01.png")), new Point(600, 247))
             {

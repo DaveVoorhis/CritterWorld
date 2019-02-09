@@ -111,11 +111,7 @@ namespace CritterWorld
 
         private void ClearScorePanel()
         {
-            foreach (Control control in panelScore.Controls)
-            {
-                CritterScorePanel scorePanel = (CritterScorePanel)control;
-                scorePanel.SetCritter(null);
-            }
+            panelScore.Controls.OfType<CritterScorePanel>().ToList().ForEach(scorePanel => scorePanel.SetCritter(null));
         }
 
         private void AddCrittersToArena()
@@ -176,16 +172,14 @@ namespace CritterWorld
         {
             critterCount = 0;
             critterBindingSourceWaiting.Clear();
-            List<Critter> critters = critterLoader.LoadCritters();
-            foreach (Critter critter in critters)
-            {
+            critterLoader.LoadCritters().ForEach(critter => {
                 critterBindingSourceWaiting.Add(critter);
                 if (IsCompetition)
                 {
                     critterBindingSourceLeaderboard.Add(critter);
                 }
                 critterCount++;
-            }
+            });
         }
 
         private void NextLevel()
@@ -211,11 +205,10 @@ namespace CritterWorld
                 if (IsCompetition)
                 {
                     // copy Critters from Leader Board, because they're all there
-                    foreach (Critter critter in critterBindingSourceLeaderboard)
-                    {
+                    critterBindingSourceLeaderboard.OfType<Critter>().ToList().ForEach(critter => {
                         critter.Reset();
                         critterBindingSourceWaiting.Add(critter);
-                    }
+                    });
                 }
                 else
                 {
@@ -523,11 +516,7 @@ namespace CritterWorld
 
         private void UpdateCritterScorePanels()
         {
-            foreach (Control control in panelScore.Controls)
-            {
-                CritterScorePanel scorePanel = (CritterScorePanel)control;
-                scorePanel.CritterUpdate();
-            }
+            panelScore.Controls.OfType<CritterScorePanel>().ToList().ForEach(scorePanel => scorePanel.CritterUpdate());
         }
 
         private void SortLeaderboard()
@@ -536,10 +525,7 @@ namespace CritterWorld
             IList<Critter> unsortedCritters = (IList<Critter>)critterBindingSourceLeaderboard.List;
             IEnumerable<Critter> sortedCritters = unsortedCritters.OrderByDescending(order => order.OverallScore).ToList();
             critterBindingSourceLeaderboard.Clear();
-            foreach (Critter critter in sortedCritters)
-            {
-                critterBindingSourceLeaderboard.Add(critter);
-            }
+            sortedCritters.ToList().ForEach(critter => critterBindingSourceLeaderboard.Add(critter));
             leaderBoardNeedsSorted = false;
         }
 
