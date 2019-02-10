@@ -139,9 +139,38 @@ namespace CritterWorld
         }
 
         // Send message to controller
-        internal void Notify(string message)
+        private void Notify(string message)
         {
             MessagesFromBody.Enqueue(message);
+        }
+
+        // Send message to log
+        private void Log(String message, Exception exception = null)
+        {
+            LogEntry newLogEntry = new LogEntry(Number, Name, Author, message, exception);
+            Critterworld.Log(newLogEntry);
+        }
+
+        private void AssignDestination(int destX, int destY)
+        {
+            if (Mover is TargetMover mover)
+            {
+                mover.Speed = rnd.Next(10) + 1;
+                mover.Target = new Point(destX, destY);
+                mover.StopAtTarget = true;
+            }
+        }
+
+        private void ClearDestination()
+        {
+            AssignDestination((int)X, (int)Y);
+        }
+
+        private void AssignRandomDestination()
+        {
+            int destX = rnd.Next(Surface.Width);
+            int destY = rnd.Next(Surface.Height);
+            AssignDestination(destX, destY);
         }
 
         internal void Reset()
@@ -154,12 +183,6 @@ namespace CritterWorld
             IsEscaped = false;
             DeadReason = null;
             Dead = false;
-        }
-
-        private void Log(String message, Exception exception = null)
-        {
-            LogEntry newLogEntry = new LogEntry(Number, Name, Author, message, exception);
-            Critterworld.Log(newLogEntry);
         }
 
         internal void Escaped()
@@ -277,6 +300,8 @@ namespace CritterWorld
 
         internal void Crashed(Exception e)
         {
+            Sound.PlayCrash();
+            StopAndSmoke(Color.DarkBlue, Color.LightBlue);
             Notify("CRASHED:" + Position.ToString() + ":" + e.ToString());
             CrashedCount++;
             DeadReason = "crashed";
@@ -302,28 +327,6 @@ namespace CritterWorld
             shockwave.Position = Position;
             shockwave.Mover = new SlaveMover(this);
             Engine?.AddSprite(shockwave);
-        }
-
-        internal void ClearDestination()
-        {
-            AssignDestination((int)X, (int)Y);
-        }
-
-        internal void AssignDestination(int destX, int destY)
-        {
-            if (Mover is TargetMover mover)
-            {
-                mover.Speed = rnd.Next(10) + 1;
-                mover.Target = new Point(destX, destY);
-                mover.StopAtTarget = true;
-            }
-        }
-
-        internal void AssignRandomDestination()
-        {
-            int destX = rnd.Next(Surface.Width);
-            int destY = rnd.Next(Surface.Height);
-            AssignDestination(destX, destY);
         }
 
         // Bounce back to position before most recent move. 
@@ -367,14 +370,6 @@ namespace CritterWorld
                 }
             };
             smokeTimer.Start();
-        }
-
-        internal void Crash(Exception e)
-        {
-            Crashed(e);
-            Sound.PlayCrash();
-            StopAndSmoke(Color.DarkBlue, Color.LightBlue);
-            Log("Crashed due to exception in user code.");
         }
 
         // Create a number plate for this Critter at a given position
