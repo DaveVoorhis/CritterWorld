@@ -26,12 +26,13 @@ namespace CritterController
                 {
                     while (messagesFromBody.TryDequeue(out string msg))
                     {
-                        Console.WriteLine("Message from body for " + Name + ": " + msg);
+                        // Console.WriteLine("Message from body for " + Name + ": " + msg);
                         string[] msgParts = msg.Split(':');
                         switch (msgParts[0])
                         {
                             case "LAUNCHED":
                                 messagesToBody.Enqueue("RANDOM_DESTINATION");
+                                messagesToBody.Enqueue("DEBUG:1");
                                 break;
                             case "REACHED_DESTINATION":
                                 messagesToBody.Enqueue("RANDOM_DESTINATION");
@@ -39,7 +40,7 @@ namespace CritterController
                             case "FIGHT":
                                 messagesToBody.Enqueue("RANDOM_DESTINATION");
                                 break;
-                            case "BUMPED":
+                            case "BUMP":
                                 messagesToBody.Enqueue("RANDOM_DESTINATION");
                                 break;
                         }

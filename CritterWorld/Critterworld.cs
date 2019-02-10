@@ -15,17 +15,21 @@ namespace CritterWorld
 {
     public partial class Critterworld : Form
     {
-        private const int ArenaWidth = 1100;
-        private const int ArenaHeight = 825;
+        // Arena dimensions
+        public static int ArenaWidth { get; } = 1100;
+        public static int ArenaHeight { get; } = 825;
 
         // Default name of log file.
         public string LogFileName { get; private set; } = "log.csv";
 
         // Level duration in seconds.
-        const int levelDurationInSeconds = 60 * 3;
+        public const int LevelDurationInSeconds = 60 * 3;
 
         // Start time of current level. This plus levelDuration is when the level shall end.
         DateTime levelStartTime;
+
+        // Approximate time remaining on this level in seconds. (Use of static is questionable... But simplifies getting this value in Critter.)
+        public static int LevelTimeRemaining { get; private set; }
 
         // Maximum number of Critters running at the same time.
         const int maxCrittersRunning = 25;
@@ -417,9 +421,9 @@ namespace CritterWorld
         private void Tick()
         {
             double secondsElapsed = (DateTime.Now - levelStartTime).TotalSeconds;
-            int secondsRemaining = Math.Max(levelDurationInSeconds - (int)secondsElapsed, 0);
-            levelTimeoutProgress.Value = secondsRemaining * 100 / levelDurationInSeconds;
-            if (secondsElapsed >= levelDurationInSeconds || (secondsElapsed > 5 && level.CountOfActiveCritters == 0))
+            LevelTimeRemaining = Math.Max(LevelDurationInSeconds - (int)secondsElapsed, 0);
+            levelTimeoutProgress.Value = LevelTimeRemaining * 100 / LevelDurationInSeconds;
+            if (secondsElapsed >= LevelDurationInSeconds || (secondsElapsed > 5 && level.CountOfActiveCritters == 0))
             {
                 NextHeat();
             }
