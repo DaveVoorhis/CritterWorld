@@ -124,8 +124,10 @@ namespace CritterWorld
                                     }
                                     break;
                                 case "ANTENNA_SCAN":
+                                    critter.ScanWithAntenna(int.Parse(commandParts[1]));
                                     break;
                                 case "EYE_SCAN":
+                                    critter.LookAround(int.Parse(commandParts[1]));
                                     break;
                                 case "GET_HEALTH":
                                     {
@@ -213,6 +215,18 @@ namespace CritterWorld
                     }
                 }
             }
+        }
+
+        private void LookAround(int requestNumber)
+        {
+            // TODO - finish
+            Engine.SpriteArray.Where(sprite => true);
+        }
+
+        private void ScanWithAntenna(int requestNumber)
+        {
+            // TODO - finish
+            Engine.SpriteArray.Where(sprite => true);
         }
 
         internal static string GetRandomName()

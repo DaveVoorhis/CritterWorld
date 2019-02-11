@@ -28,11 +28,12 @@ namespace CritterController
                     {
                         // Console.WriteLine("Message from body for " + Name + ": " + msg);
                         string[] msgParts = msg.Split(':');
-                        switch (msgParts[0])
+                        string notification = msgParts[0];
+                        switch (notification)
                         {
                             case "LAUNCHED":
                                 messagesToBody.Enqueue("RANDOM_DESTINATION");
-                                messagesToBody.Enqueue("DEBUG:1");
+                                //messagesToBody.Enqueue("DEBUG:1");
                                 break;
                             case "REACHED_DESTINATION":
                                 messagesToBody.Enqueue("RANDOM_DESTINATION");
