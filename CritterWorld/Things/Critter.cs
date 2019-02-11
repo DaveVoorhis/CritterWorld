@@ -116,71 +116,31 @@ namespace CritterWorld
                                 critter.messageDebugging = debuggingMode != 0;
                                 break;
                             case "GET_LEVEL_DURATION":
-                                {
-                                    int requestNumber = int.Parse(commandParts[1]);
-                                    critter.Notify("LEVEL_DURATION:" + requestNumber + ":" + Critterworld.LevelDurationInSeconds);
-                                }
+                                critter.GetLevelDuration(int.Parse(commandParts[1]));
                                 break;
                             case "GET_LEVEL_TIME_REMAINING":
-                                {
-                                    int requestNumber = int.Parse(commandParts[1]);
-                                    critter.Notify("LEVEL_TIME_REMAINING:" + requestNumber + ":" + Critterworld.LevelTimeRemaining);
-                                }
+                                critter.GetLevelTimeRemaining(int.Parse(commandParts[1]));
                                 break;
                             case "SENSE":
                                 critter.Sense(int.Parse(commandParts[1]));
                                 break;
                             case "GET_HEALTH":
-                                {
-                                    int requestNumber = int.Parse(commandParts[1]);
-                                    critter.Notify("HEALTH:" + requestNumber + ":" + critter.Health);
-                                }
+                                critter.GetHealth(int.Parse(commandParts[1]));
                                 break;
                             case "GET_ENERGY":
-                                {
-                                    int requestNumber = int.Parse(commandParts[1]);
-                                    critter.Notify("ENERGY:" + requestNumber + ":" + critter.Energy);
-                                }
+                                critter.GetEnergy(int.Parse(commandParts[1]));
                                 break;
                             case "GET_LOCATION":
-                                {
-                                    int requestNumber = int.Parse(commandParts[1]);
-                                    critter.Notify("LOCATION:" + requestNumber + ":" + critter.Position);
-                                }
+                                critter.GetLocation(int.Parse(commandParts[1]));
                                 break;
                             case "GET_SPEED":
-                                {
-                                    int requestNumber = int.Parse(commandParts[1]);
-                                    if (critter.Mover is TargetMover theMover)
-                                    {
-                                        critter.Notify("SPEED:" + requestNumber + ":" + theMover.Speed + ":" + theMover.SpeedX + ":" + theMover.SpeedY);
-                                    }
-                                    else
-                                    {
-                                        critter.Notify("SPEED:" + requestNumber + ":" + 0 + ":" + 0 + ":" + 0);
-                                    }
-                                }
+                                critter.GetSpeed(int.Parse(commandParts[1]));
                                 break;
                             case "GET_ARENA_SIZE":
-                                {
-                                    int requestNumber = int.Parse(commandParts[1]);
-                                    critter.Notify("ARENA_SIZE:" + requestNumber + ":" + Critterworld.ArenaWidth + ":" + Critterworld.ArenaHeight);
-                                }
+                                critter.GetArenaSize(int.Parse(commandParts[1]));
                                 break;
                             case "SET_DESTINATION":
-                                {
-                                    int destX = int.Parse(commandParts[1]);
-                                    int destY = int.Parse(commandParts[2]);
-                                    int speed = int.Parse(commandParts[3]);
-                                    if (destX < 0 || destX > Critterworld.ArenaWidth - 1 || destY < 0 || destY > Critterworld.ArenaHeight - 1 || speed < 1 || speed > 10)
-                                    {
-                                        critter.Notify("SET_DESTINATION: Error: Invalid value in destination coordinate " + destX + ", " + destY + " at speed " + speed);
-                                    }
-                                    else
-                                    {
-                                        critter.AssignDestination(destX, destY, speed);
-                                    }
-                                }
+                                critter.SetDestination(int.Parse(commandParts[1]), int.Parse(commandParts[2]), int.Parse(commandParts[3]));
                                 break;
                             case "RANDOM_DESTINATION":
                                 critter.AssignRandomDestination();
@@ -189,20 +149,7 @@ namespace CritterWorld
                                 critter.ClearDestination();
                                 break;
                             case "SET_SPEED":
-                                {
-                                    if (critter.Mover is TargetMover theMover)
-                                    {
-                                        int speed = int.Parse(commandParts[3]);
-                                        if (speed < 1 || speed > 10)
-                                        {
-                                            critter.Notify("SET_SPEED: Error: Invalid speed " + speed);
-                                        }
-                                        else
-                                        {
-                                            theMover.Speed = speed;
-                                        }
-                                    }
-                                }
+                                critter.SetSpeed(int.Parse(commandParts[1]));
                                 break;
                             default:
                                 critter.Notify("ERROR: Unknown command:" + commandParts[0]);
@@ -231,6 +178,16 @@ namespace CritterWorld
             }
         }
 
+        private void GetLevelDuration(int requestNumber)
+        {
+            Notify("LEVEL_DURATION:" + requestNumber + ":" + Critterworld.LevelDurationInSeconds);
+        }
+
+        private void GetLevelTimeRemaining(int requestNumber)
+        {
+            Notify("LEVEL_TIME_REMAINING:" + requestNumber + ":" + Critterworld.LevelTimeRemaining);
+        }
+
         private void Sense(int requestNumber)
         {
             string sensorReading = string.Join("\n", Engine.SpriteArray
@@ -238,6 +195,65 @@ namespace CritterWorld
                 .Cast<ISignature>()
                 .Select(thing => thing.SensorSignature));
             Notify("SENSE:" + requestNumber + ":" + sensorReading);
+        }
+
+        private void GetHealth(int requestNumber)
+        {
+            Notify("HEALTH:" + requestNumber + ":" + Health);
+        }
+
+        private void GetEnergy(int requestNumber)
+        {
+            Notify("ENERGY:" + requestNumber + ":" + Energy);
+        }
+
+        private void GetLocation(int requestNumber)
+        {
+            Notify("LOCATION:" + requestNumber + ":" + Position);
+        }
+
+        private void GetSpeed(int requestNumber)
+        {
+            if (Mover is TargetMover theMover)
+            {
+                Notify("SPEED:" + requestNumber + ":" + theMover.Speed + ":" + theMover.SpeedX + ":" + theMover.SpeedY);
+            }
+            else
+            {
+                Notify("SPEED:" + requestNumber + ":" + 0 + ":" + 0 + ":" + 0);
+            }
+        }
+
+        private void GetArenaSize(int requestNumber)
+        {
+            Notify("ARENA_SIZE:" + requestNumber + ":" + Critterworld.ArenaWidth + ":" + Critterworld.ArenaHeight);
+        }
+
+        private void SetDestination(int destX, int destY, int speed)
+        {
+            if (destX < 0 || destX > Critterworld.ArenaWidth - 1 || destY < 0 || destY > Critterworld.ArenaHeight - 1 || speed < 1 || speed > 10)
+            {
+                Notify("SET_DESTINATION: Error: Invalid value in destination coordinate " + destX + ", " + destY + " at speed " + speed);
+            }
+            else
+            {
+                AssignDestination(destX, destY, speed);
+            }
+        }
+
+        private void SetSpeed(int speed)
+        {
+            if (Mover is TargetMover theMover)
+            {
+                if (speed < 1 || speed > 10)
+                {
+                    Notify("SET_SPEED: Error: Invalid speed " + speed);
+                }
+                else
+                {
+                    theMover.Speed = speed;
+                }
+            }
         }
 
         public string SensorSignature
