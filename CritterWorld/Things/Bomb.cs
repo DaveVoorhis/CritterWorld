@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace CritterWorld
 {
-    public class Bomb : BitmapSprite, ISensable
+    public class Bomb : BitmapSprite, ISensable, IVisible
     {
         private Sprite spark;
 
@@ -43,6 +43,11 @@ namespace CritterWorld
         {
             ExtinguishFuse();
             base.Kill();
+        }
+
+        public string SensorSignature
+        {
+            get { return "Bomb" + ":" + Position; }
         }
     }
 

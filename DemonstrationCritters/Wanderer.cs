@@ -26,7 +26,7 @@ namespace CritterController
                 {
                     while (messagesFromBody.TryDequeue(out string msg))
                     {
-                        // Console.WriteLine("Message from body for " + Name + ": " + msg);
+                        Console.WriteLine("Message from body for " + Name + ": " + msg);
                         string[] msgParts = msg.Split(':');
                         string notification = msgParts[0];
                         switch (notification)
@@ -40,6 +40,7 @@ namespace CritterController
                                 break;
                             case "FIGHT":
                                 messagesToBody.Enqueue("RANDOM_DESTINATION");
+                                messagesToBody.Enqueue("LOOK:2");
                                 break;
                             case "BUMP":
                                 messagesToBody.Enqueue("RANDOM_DESTINATION");

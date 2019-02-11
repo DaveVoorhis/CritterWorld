@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace CritterWorld
 {
-    // Flag interface for ThingS that a Critter can sense with its antennae.
-    interface ISensable : ISignature
+    // ThingS that a Critter can see.
+    interface IVisible : ISignature
     {
     }
 }

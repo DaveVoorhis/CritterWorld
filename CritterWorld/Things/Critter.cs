@@ -16,7 +16,7 @@ using System.Collections.Concurrent;
 
 namespace CritterWorld
 {
-    public class Critter : PolygonSprite
+    public class Critter : PolygonSprite, IVisible
     {
         public const float sightDistance = 100.0F;     // how far can critter see?
         public const float movementEnergyConsumptionFactor = 250;  // the higher this is, the less movement consumes energy
@@ -220,14 +220,27 @@ namespace CritterWorld
 
         private void Look(int requestNumber)
         {
-            // TODO - finish
-            Engine.SpriteArray.Where(sprite => sprite != this && GetDistance(sprite, this) <= sightDistance);
+            string sensorReading = string.Join("\n", Engine.SpriteArray
+                .OfType<IVisible>()
+                .Cast<Sprite>()
+                .Where(sprite => sprite != this && GetDistance(sprite, this) <= sightDistance)
+                .Cast<ISignature>()
+                .Select(thing => thing.SensorSignature));
+            Notify("LOOK:" + requestNumber + ":" + sensorReading);
         }
 
         private void Sense(int requestNumber)
         {
-            // TODO - finish
-            Engine.SpriteArray.OfType<ISensable>();
+            string sensorReading = string.Join("\n", Engine.SpriteArray
+                .OfType<ISensable>()
+                .Cast<ISignature>()
+                .Select(thing => thing.SensorSignature));
+            Notify("SENSE:" + requestNumber + ":" + sensorReading);
+        }
+
+        public string SensorSignature
+        {
+            get { return "Critter" + ":" + Position + ":" + NumberNameAndAuthor; }
         }
 
         internal static string GetRandomName()

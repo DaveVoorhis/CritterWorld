@@ -77,6 +77,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Things\Food.cs" />
     <Compile Include="Things\ISensable.cs" />
+    <Compile Include="Things\ISignature.cs" />
+    <Compile Include="Things\IVisible.cs" />
     <Compile Include="Things\Terrain.cs" />
     <Compile Include="Arena.cs">
       <SubType>UserControl</SubType>

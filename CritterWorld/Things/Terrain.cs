@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace CritterWorld
 {
-    public class Terrain : PolygonSprite
+    public class Terrain : PolygonSprite, IVisible
     {
         public Terrain(int X1, int X2, int Y1, int Y2) :
             base(new PointF[]
@@ -41,6 +41,12 @@ namespace CritterWorld
                 timer = null;
             }, null, 0, Timeout.Infinite);
         }
+
+        public string SensorSignature
+        {
+            get { return "Terrain" + ":" + Position; }
+        }
+
     }
 
 }

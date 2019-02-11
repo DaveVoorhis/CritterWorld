@@ -9,12 +9,18 @@ using System.Threading.Tasks;
 
 namespace CritterWorld
 {
-    public class Food : BitmapSprite, ISensable
+    public class Food : BitmapSprite, ISensable, IVisible
     {
         public Food(Point position) : base((Bitmap)Image.FromFile("Resources/Images/Kiwi-Fruit.png"))
         {
             Position = position;
         }
+
+        public string SensorSignature
+        {
+            get { return "Food" + ":" + Position; }
+        }
+
     }
 
 }
