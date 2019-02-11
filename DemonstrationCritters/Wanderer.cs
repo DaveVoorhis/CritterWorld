@@ -24,10 +24,10 @@ namespace CritterController
             {
                 while (true)
                 {
-                    while (messagesFromBody.TryDequeue(out string msg))
+                    while (messagesFromBody.TryDequeue(out string message))
                     {
-                        Console.WriteLine("Message from body for " + Name + ": " + msg);
-                        string[] msgParts = msg.Split(':');
+                        // Console.WriteLine("Message from body for " + Name + ": " + message);
+                        string[] msgParts = message.Split(':');
                         string notification = msgParts[0];
                         switch (notification)
                         {
@@ -37,13 +37,19 @@ namespace CritterController
                                 break;
                             case "REACHED_DESTINATION":
                                 messagesToBody.Enqueue("RANDOM_DESTINATION");
+                                messagesToBody.Enqueue("SENSE:3");
                                 break;
                             case "FIGHT":
                                 messagesToBody.Enqueue("RANDOM_DESTINATION");
-                                messagesToBody.Enqueue("LOOK:2");
                                 break;
                             case "BUMP":
                                 messagesToBody.Enqueue("RANDOM_DESTINATION");
+                                break;
+                            case "LOOK":
+                                Console.WriteLine(message);
+                                break;
+                            case "SENSE":
+                                Console.WriteLine(message);
                                 break;
                         }
                     }

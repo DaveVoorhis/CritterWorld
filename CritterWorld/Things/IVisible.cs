@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CritterWorld
 {
-    // ThingS that a Critter can see.
+    // Flag interface for ThingS that a Critter can see.
     interface IVisible : ISignature
     {
     }

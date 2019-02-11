@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace CritterWorld
 {
-    public class Bomb : BitmapSprite, ISensable, IVisible
+    public class Bomb : BitmapSprite, IVisible
     {
         private Sprite spark;
 
