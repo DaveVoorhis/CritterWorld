@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace CritterController
 {
-    public class Wanderer : ICritterController
+    public class Chaser : ICritterController
     {
         public string Name { get; set; }
 
-        public Wanderer(string name)
+        public Chaser(string name)
         {
             Name = name;
         }
@@ -37,12 +37,19 @@ namespace CritterController
                                 break;
                             case "REACHED_DESTINATION":
                                 messagesToBody.Enqueue("RANDOM_DESTINATION");
+                                messagesToBody.Enqueue("SENSE:3");
                                 break;
                             case "FIGHT":
                                 messagesToBody.Enqueue("RANDOM_DESTINATION");
                                 break;
                             case "BUMP":
                                 messagesToBody.Enqueue("RANDOM_DESTINATION");
+                                break;
+                            case "LOOK":
+                                Console.WriteLine(message);
+                                break;
+                            case "SENSE":
+                                Console.WriteLine(message);
                                 break;
                             case "ERROR":
                                 Console.WriteLine(message);

@@ -14,9 +14,10 @@ namespace DemonstrationCritters
         public ICritterController[] GetCritterControllers()
         {
             List<ICritterController> controllers = new List<ICritterController>();
-            for (int i = 0; i < 50; i++)
+            for (int i = 0; i < 25; i++)
             {
                 controllers.Add(new Wanderer("Wanderer" + (i + 1)));
+                controllers.Add(new Chaser("Chaser" + (i + 1)));
             }
             return controllers.ToArray();
         }
