@@ -96,6 +96,18 @@ namespace SCG.TurboSprite
             return Math.Sqrt(Math.Pow((x2 - x1), 2) + Math.Pow((y2 - y1), 2));
         }
 
+        // Distance betweeen a pair of points.
+        public static double GetDistance(PointF point1, PointF point2)
+        {
+            return GetDistance(point1.X, point1.Y, point2.X, point2.Y);
+        }
+
+        // Distance between a pair of sprites.
+        public static double GetDistance(Sprite sprite1, Sprite sprite2)
+        {
+            return GetDistance(sprite1.PositionF, sprite2.PositionF);
+        }
+
         // Convert speed to direction in degrees.
         public static float GetAngle(float speedX, float speedY)
         {

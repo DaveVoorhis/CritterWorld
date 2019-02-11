@@ -18,6 +18,7 @@ namespace CritterWorld
 {
     public class Critter : PolygonSprite
     {
+        public const float sightDistance = 100.0F;     // how far can critter see?
         public const float movementEnergyConsumptionFactor = 250;  // the higher this is, the less movement consumes energy
         public const float eatingAddsEnergy = 50.0F;       // each piece of food adds this much energy; maximum 100
         public const float eatingAddsHealth = 10.0F;
@@ -123,11 +124,11 @@ namespace CritterWorld
                                         critter.Notify("LEVEL_TIME_REMAINING:" + requestNumber + ":" + Critterworld.LevelTimeRemaining);
                                     }
                                     break;
-                                case "ANTENNA_SCAN":
-                                    critter.ScanWithAntenna(int.Parse(commandParts[1]));
+                                case "SENSE":
+                                    critter.Sense(int.Parse(commandParts[1]));
                                     break;
-                                case "EYE_SCAN":
-                                    critter.LookAround(int.Parse(commandParts[1]));
+                                case "LOOK":
+                                    critter.Look(int.Parse(commandParts[1]));
                                     break;
                                 case "GET_HEALTH":
                                     {
@@ -217,16 +218,16 @@ namespace CritterWorld
             }
         }
 
-        private void LookAround(int requestNumber)
+        private void Look(int requestNumber)
         {
             // TODO - finish
-            Engine.SpriteArray.Where(sprite => true);
+            Engine.SpriteArray.Where(sprite => sprite != this && GetDistance(sprite, this) <= sightDistance);
         }
 
-        private void ScanWithAntenna(int requestNumber)
+        private void Sense(int requestNumber)
         {
             // TODO - finish
-            Engine.SpriteArray.Where(sprite => true);
+            Engine.SpriteArray.OfType<ISensable>();
         }
 
         internal static string GetRandomName()

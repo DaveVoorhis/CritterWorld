@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace CritterWorld
 {
-    public class Gift : BitmapSprite
+    public class Gift : BitmapSprite, ISensable
     {
         public Gift(Point position) : base((Bitmap)Image.FromFile("Resources/Images/gift.png"))
         {
