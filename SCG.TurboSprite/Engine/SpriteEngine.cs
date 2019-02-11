@@ -81,7 +81,7 @@ namespace SCG.TurboSprite
         // The Sprites that are contained in the SpriteList
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public List<Sprite> Sprites
+        internal List<Sprite> Sprites
         {
             get
             {

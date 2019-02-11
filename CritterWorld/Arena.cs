@@ -175,7 +175,7 @@ namespace CritterWorld
             spriteEngineMain.Locked = true;
             spriteSurfaceMain.Active = false;
 
-            spriteEngineMain.Sprites.OfType<Critter>().ToList().ForEach(critter => critter.Shutdown());
+            spriteEngineMain.SpriteArray.OfType<Critter>().ToList().ForEach(critter => critter.Shutdown());
 
             spriteEngineMain.Clear();
             spriteEngineMain.Purge();
