@@ -115,8 +115,8 @@ namespace CritterWorld
                                 int debuggingMode = int.Parse(commandParts[1]);
                                 critter.messageDebugging = debuggingMode != 0;
                                 break;
-                            case "SENSE":
-                                critter.Sense(int.Parse(commandParts[1]));
+                            case "SCAN":
+                                critter.Scan(int.Parse(commandParts[1]));
                                 break;
                             case "GET_LEVEL_DURATION":
                                 critter.GetLevelDuration(int.Parse(commandParts[1]));
@@ -178,13 +178,13 @@ namespace CritterWorld
             }
         }
 
-        private void Sense(int requestNumber)
+        private void Scan(int requestNumber)
         {
             string sensorReading = string.Join("\t", Engine.SpriteArray
                 .OfType<ISensable>()
                 .Cast<ISignature>()
                 .Select(thing => thing.SensorSignature));
-            Notify("SENSE:" + requestNumber + "\n" + sensorReading);
+            Notify("SCAN:" + requestNumber + "\n" + sensorReading);
         }
 
         private void GetLevelDuration(int requestNumber)
@@ -610,7 +610,7 @@ namespace CritterWorld
 
             Log("launched");
 
-            Notify("LAUNCHED:" + Position.ToString());
+            Notify("LAUNCH:" + Position.ToString());
         }
 
         // Shut down this Critter.

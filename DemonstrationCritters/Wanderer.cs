@@ -31,7 +31,7 @@ namespace CritterController
                         string notification = msgParts[0];
                         switch (notification)
                         {
-                            case "LAUNCHED":
+                            case "LAUNCH":
                                 messagesToBody.Enqueue("RANDOM_DESTINATION");
                                 //messagesToBody.Enqueue("DEBUG:1");
                                 break;

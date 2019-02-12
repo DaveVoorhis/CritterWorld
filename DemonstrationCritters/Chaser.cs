@@ -31,13 +31,14 @@ namespace CritterController
                         string notification = msgParts[0];
                         switch (notification)
                         {
-                            case "LAUNCHED":
-                                messagesToBody.Enqueue("RANDOM_DESTINATION");
-                                //messagesToBody.Enqueue("DEBUG:1");
+                            case "LAUNCH":
+                                messagesToBody.Enqueue("SCAN");
+                                break;
+                            case "SCAN":
+                                Scan(message, messagesToBody);
                                 break;
                             case "REACHED_DESTINATION":
                                 messagesToBody.Enqueue("RANDOM_DESTINATION");
-                                //messagesToBody.Enqueue("SENSE:3");
                                 break;
                             case "FIGHT":
                                 messagesToBody.Enqueue("RANDOM_DESTINATION");
@@ -46,12 +47,7 @@ namespace CritterController
                                 messagesToBody.Enqueue("RANDOM_DESTINATION");
                                 break;
                             case "SEE":
-                                string[] newlinePartition = message.Split('\n');
-                                string[] whatISee = newlinePartition[1].Split('\t');
-                                foreach (String thing in whatISee)
-                                {
-                                    Console.WriteLine(Name + " sees " + thing);
-                                }
+                                See(message, messagesToBody);
                                 break;
                             case "SENSE":
                                 Console.WriteLine(message);
@@ -66,6 +62,51 @@ namespace CritterController
             });
             t.IsBackground = true;
             t.Start();
+        }
+
+        private void See(string message, ConcurrentQueue<string> messagesToBody)
+        {
+            string[] newlinePartition = message.Split('\n');
+            string[] whatISee = newlinePartition[1].Split('\t');
+            foreach (string thing in whatISee)
+            {
+                string[] thingAttributes = thing.Split(':');
+                switch (thingAttributes[0])
+                {
+                    case "Food":
+                        break;
+                    case "Gift":
+                        break;
+                    case "Bomb":
+                        break;
+                    case "EscapeHatch":
+                        break;
+                    case "Terrain":
+                        break;
+                }
+            }
+        }
+
+        private void Scan(string message, ConcurrentQueue<string> messagesToBody)
+        {
+            string[] newlinePartition = message.Split('\n');
+            string[] whatISee = newlinePartition[1].Split('\t');
+            foreach (string thing in whatISee)
+            {
+                string[] thingAttributes = thing.Split(':');
+                switch (thingAttributes[0])
+                {
+                    case "Food":
+                        break;
+                    case "Gift":
+                        break;
+                    case "EscapeHatch":
+                        break;
+                    case "Terrain":
+                        break;
+                }
+            }
+
         }
 
         public void Shutdown()
