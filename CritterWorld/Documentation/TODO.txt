@@ -1,1 +1,2 @@
-﻿
+﻿- Improve Critter setup UI demo.
+- Add save/load file spec to ICritterController.
