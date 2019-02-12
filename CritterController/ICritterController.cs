@@ -7,10 +7,13 @@ using System.Threading.Tasks;
 
 namespace CritterController
 {
+    public delegate void Send(string message);
+
     public interface ICritterController
     {
         string Name { get; }
-        void Receive(string message, ConcurrentQueue<string> sender);
+        Send Responder { get; set; }
+        void Receive(string message);
         void LaunchUI();
     }
 }

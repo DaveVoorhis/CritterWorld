@@ -30,6 +30,8 @@ namespace DemonstrationCritters
 
         public string Name { get; set; }
 
+        public Send Responder { get; set; } 
+
         public Chaser(string name)
         {
             Name = name;
@@ -53,7 +55,7 @@ namespace DemonstrationCritters
             settings.Focus();
         }
 
-        public void Receive(string message, ConcurrentQueue<string> messagesToBody)
+        public void Receive(string message)
         {
             Log("Message from body for " + Name + ": " + message);
             string[] msgParts = message.Split(':');
@@ -61,19 +63,19 @@ namespace DemonstrationCritters
             switch (notification)
             {
                 case "LAUNCH":
-                    messagesToBody.Enqueue("RANDOM_DESTINATION");
-                    messagesToBody.Enqueue("SCAN:1");
+                    Responder.Invoke("RANDOM_DESTINATION");
+                    Responder.Invoke("SCAN:1");
                     break;
                 case "SCAN":
-                    Scan(message, messagesToBody);
+                    Scan(message);
                     break;
                 case "REACHED_DESTINATION":
                 case "FIGHT":
                 case "BUMP":
-                    messagesToBody.Enqueue("RANDOM_DESTINATION");
+                    Responder.Invoke("RANDOM_DESTINATION");
                     break;
                 case "SEE":
-                    See(message, messagesToBody);
+                    See(message);
                     break;
                 case "ERROR":
                     Console.WriteLine(message);
@@ -81,13 +83,13 @@ namespace DemonstrationCritters
             }
         }
 
-        private void SetDestination(Point coordinate, int speed, ConcurrentQueue<string> messagesToBody)
+        private void SetDestination(Point coordinate, int speed)
         {
             string message = "SET_DESTINATION:" + coordinate.X + ":" + coordinate.Y + ":" + speed;
-            messagesToBody.Enqueue(message);
+            Responder.Invoke(message);
         }
 
-        private void See(string message, ConcurrentQueue<string> messagesToBody)
+        private void See(string message)
         {
             string[] newlinePartition = message.Split('\n');
             string[] whatISee = newlinePartition[1].Split('\t');
@@ -99,7 +101,7 @@ namespace DemonstrationCritters
                     Log("I see nothing. Aim for the escape hatch.");
                     if (goal != new Point(-1, -1))
                     {
-                        SetDestination(goal, 5, messagesToBody);
+                        SetDestination(goal, 5);
                     }
                 }
                 else
@@ -109,17 +111,17 @@ namespace DemonstrationCritters
                     {
                         case "Food":
                             Log("Food is at " + location);
-                            SetDestination(location, 5, messagesToBody);
+                            SetDestination(location, 5);
                             break;
                         case "Gift":
                             Log("Gift is at " + location);
-                            SetDestination(location, 5, messagesToBody);
+                            SetDestination(location, 5);
                             break;
                         case "Bomb":
                             Log("Bomb is at " + location);
                             break;
                         case "EscapeHatch":
-                            SetDestination(location, 5, messagesToBody);
+                            SetDestination(location, 5);
                             Log("EscapeHatch is at " + location);
                             break;
                         case "Terrain":
@@ -133,7 +135,7 @@ namespace DemonstrationCritters
                             Log("Critter at " + location + " is #" + critterNumber + " who is " + nameAndAuthor + " with strength " + strength + " is " + (isDead ? "dead" : "alive"));
                             if (strength == "Weak" && !isDead)
                             {
-                                SetDestination(location, 10, messagesToBody);
+                                SetDestination(location, 10);
                             }
                             break;
                     }
@@ -141,7 +143,7 @@ namespace DemonstrationCritters
             }
         }
 
-        private void Scan(string message, ConcurrentQueue<string> messagesToBody)
+        private void Scan(string message)
         {
             string[] newlinePartition = message.Split('\n');
             string[] whatISee = newlinePartition[1].Split('\t');

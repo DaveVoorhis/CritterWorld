@@ -15,6 +15,8 @@ namespace DemonstrationCritters
 
         public string Name { get; set; }
 
+        public Send Responder { get; set; }
+
         public Wanderer(string name)
         {
             Name = name;
@@ -22,10 +24,10 @@ namespace DemonstrationCritters
 
         public void LaunchUI()
         {
-
+            // TODO - need to provide this.
         }
 
-        public void Receive(string message, ConcurrentQueue<string> messagesToBody)
+        public void Receive(string message)
         {
             if (Debugging)
             {
@@ -36,16 +38,16 @@ namespace DemonstrationCritters
             switch (notification)
             {
                 case "LAUNCH":
-                    messagesToBody.Enqueue("RANDOM_DESTINATION");
+                    Responder.Invoke("RANDOM_DESTINATION");
                     if (Debugging)
                     {
-                        messagesToBody.Enqueue("DEBUG:1");
+                        Responder.Invoke("DEBUG:1");
                     }
                     break;
                 case "REACHED_DESTINATION":
                 case "FIGHT":
                 case "BUMP":
-                    messagesToBody.Enqueue("RANDOM_DESTINATION");
+                    Responder.Invoke("RANDOM_DESTINATION");
                     break;
                 case "ERROR":
                     Console.WriteLine(message);

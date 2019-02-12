@@ -632,11 +632,12 @@ namespace CritterWorld
                 controllerThreadRunning = true;
                 while (controllerThreadRunning)
                 {
-                    while (MessagesFromBody.TryDequeue(out string message))
+                    controller.Responder = messageToBody => MessagesToBody.Enqueue(messageToBody);
+                    while (MessagesFromBody.TryDequeue(out string messageFromBody))
                     {
                         try
                         {
-                            controller.Receive(message, MessagesToBody);
+                            controller.Receive(messageFromBody);
                         }
                         catch (Exception e)
                         {
@@ -670,6 +671,11 @@ namespace CritterWorld
             Notify("SHUTDOWN:" + Position.ToString());
 
             controllerThreadRunning = false;
+            
+            // Clear message queues
+            string ignore;
+            while (MessagesFromBody.TryDequeue(out ignore)) ;
+            while (MessagesToBody.TryDequeue(out ignore)) ;
         }
 
         // True if this critter is stopped or dead

@@ -65,10 +65,10 @@ namespace CritterWorld
                                             {
                                                 critter.Color = familyColor;
                                             }
-                                            critter.Author = critterFactory.Author.Trim();
+                                            critter.Author = critterFactory.Author.Trim().Replace(':', '_').Replace('\t', '_').Replace('\n', '_');
                                             if (controller.Name != null)
                                             {
-                                                critter.Name = controller.Name.Trim();
+                                                critter.Name = controller.Name.Trim().Replace(':', '_').Replace('\t', '_').Replace('\n', '_');
                                             }
                                             critters.Add(critter);
                                         }
