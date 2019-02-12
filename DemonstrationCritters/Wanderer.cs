@@ -13,7 +13,7 @@ namespace CritterController
 {
     public class Wanderer : ICritterController
     {
-        private bool Debugging = false;
+        private readonly bool Debugging = false;
 
         public string Name { get; set; }
 

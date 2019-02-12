@@ -172,10 +172,11 @@ namespace CritterWorld
                 .Where(sprite => sprite != this && GetDistance(sprite, this) <= sightDistance)
                 .Cast<ISignature>()
                 .Select(thing => thing.SensorSignature));
-            if (sensorReading.Length > 0)
+            if (sensorReading.Length == 0)
             {
-                Notify("SEE:\n" + sensorReading);
+                sensorReading = "Nothing";
             }
+            Notify("SEE:\n" + sensorReading);
         }
 
         private void Scan(int requestNumber)
@@ -281,7 +282,7 @@ namespace CritterWorld
 
         public string SensorSignature
         {
-            get { return "Critter" + ":" + Position + ":" + NumberNameAndAuthor + ":" + HealthStatus; }
+            get { return "Critter" + ":" + Position + ":" + NumberNameAndAuthor + ":" + HealthStatus + ":" + (IsDead ? "Dead" : "Alive"); }
         }
 
         internal static string GetRandomName()
