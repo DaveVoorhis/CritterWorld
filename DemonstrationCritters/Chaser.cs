@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -18,6 +19,16 @@ namespace CritterController
             Name = name;
         }
 
+        private static Point PointFrom(string coordinate)
+        {
+            string[] coordinateParts = coordinate.Substring(1, coordinate.Length - 2).Split(',');
+            string rawX = coordinateParts[0].Substring(2);
+            string rawY = coordinateParts[1].Substring(2);
+            int x = int.Parse(rawX);
+            int y = int.Parse(rawY);
+            return new Point(x, y);
+        }
+
         public void Launch(ConcurrentQueue<string> messagesFromBody, ConcurrentQueue<string> messagesToBody)
         {
             Thread t = new Thread(() => 
@@ -32,25 +43,19 @@ namespace CritterController
                         switch (notification)
                         {
                             case "LAUNCH":
+                                messagesToBody.Enqueue("RANDOM_DESTINATION");
                                 messagesToBody.Enqueue("SCAN");
                                 break;
                             case "SCAN":
                                 Scan(message, messagesToBody);
                                 break;
                             case "REACHED_DESTINATION":
-                                messagesToBody.Enqueue("RANDOM_DESTINATION");
-                                break;
                             case "FIGHT":
-                                messagesToBody.Enqueue("RANDOM_DESTINATION");
-                                break;
                             case "BUMP":
                                 messagesToBody.Enqueue("RANDOM_DESTINATION");
                                 break;
                             case "SEE":
                                 See(message, messagesToBody);
-                                break;
-                            case "SENSE":
-                                Console.WriteLine(message);
                                 break;
                             case "ERROR":
                                 Console.WriteLine(message);
@@ -71,17 +76,29 @@ namespace CritterController
             foreach (string thing in whatISee)
             {
                 string[] thingAttributes = thing.Split(':');
+                Point location = PointFrom(thingAttributes[1]);
                 switch (thingAttributes[0])
                 {
                     case "Food":
+                        Console.WriteLine("Food is at " + location);
                         break;
                     case "Gift":
+                        Console.WriteLine("Gift is at " + location);
                         break;
                     case "Bomb":
+                        Console.WriteLine("Bomb is at " + location);
                         break;
                     case "EscapeHatch":
+                        Console.WriteLine("EscapeHatch is at " + location);
                         break;
                     case "Terrain":
+                        Console.WriteLine("Terrain is at " + location);
+                        break;
+                    case "Critter":
+                        int critterNumber = int.Parse(thingAttributes[2]);
+                        string nameAndAuthor = thingAttributes[3];
+                        string strength = thingAttributes[4];
+                        Console.WriteLine("Critter at " + location + " is #" + critterNumber + " who is " + nameAndAuthor + " with strength " + strength);
                         break;
                 }
             }
@@ -94,15 +111,11 @@ namespace CritterController
             foreach (string thing in whatISee)
             {
                 string[] thingAttributes = thing.Split(':');
+                Point location = PointFrom(thingAttributes[1]);
                 switch (thingAttributes[0])
                 {
-                    case "Food":
-                        break;
-                    case "Gift":
-                        break;
                     case "EscapeHatch":
-                        break;
-                    case "Terrain":
+                        Console.WriteLine("Escape hatch is at " + location);
                         break;
                 }
             }

@@ -7,10 +7,14 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
+
+
 namespace CritterController
 {
     public class Wanderer : ICritterController
     {
+        private bool Debugging = false;
+
         public string Name { get; set; }
 
         public Wanderer(string name)
@@ -26,21 +30,23 @@ namespace CritterController
                 {
                     while (messagesFromBody.TryDequeue(out string message))
                     {
-                        // Console.WriteLine("Message from body for " + Name + ": " + message);
+                        if (Debugging)
+                        {
+                            Console.WriteLine("Message from body for " + Name + ": " + message);
+                        }
                         string[] msgParts = message.Split(':');
                         string notification = msgParts[0];
                         switch (notification)
                         {
                             case "LAUNCH":
                                 messagesToBody.Enqueue("RANDOM_DESTINATION");
-                                //messagesToBody.Enqueue("DEBUG:1");
+                                if (Debugging)
+                                {
+                                    messagesToBody.Enqueue("DEBUG:1");
+                                }
                                 break;
                             case "REACHED_DESTINATION":
-                                messagesToBody.Enqueue("RANDOM_DESTINATION");
-                                break;
                             case "FIGHT":
-                                messagesToBody.Enqueue("RANDOM_DESTINATION");
-                                break;
                             case "BUMP":
                                 messagesToBody.Enqueue("RANDOM_DESTINATION");
                                 break;

@@ -32,7 +32,7 @@ namespace CritterWorld
 
         public string NameAndAuthor { get { return Name + " by " + Author; } }
 
-        public string NumberNameAndAuthor { get { return Number + ": " + NameAndAuthor; } }
+        public string NumberNameAndAuthor { get { return Number + ":" + NameAndAuthor; } }
 
         public int EscapedCount { get; private set; }
         public int BombedCount { get; private set; }
