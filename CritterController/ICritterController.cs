@@ -10,7 +10,7 @@ namespace CritterController
     public interface ICritterController
     {
         string Name { get; }
-        void Launch(ConcurrentQueue<String> messagesFromBody, ConcurrentQueue<String> messagesToBody);
-        void Shutdown();
+        void Receive(string message, ConcurrentQueue<string> sender);
+        void LaunchUI();
     }
 }

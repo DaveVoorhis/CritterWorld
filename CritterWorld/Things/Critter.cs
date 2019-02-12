@@ -13,6 +13,7 @@ using System.CodeDom.Compiler;
 using System.CodeDom;
 using System.Text.RegularExpressions;
 using System.Collections.Concurrent;
+using CritterController;
 
 namespace CritterWorld
 {
@@ -63,6 +64,10 @@ namespace CritterWorld
 
         private TextSprite numberPlate = null;
         private int numberPlateIncrement = 1;
+
+        private ICritterController controller = null;
+        Thread controllerThread = null;
+        bool controllerThreadRunning = true;
 
         private bool messageDebugging = false;
 
@@ -161,6 +166,18 @@ namespace CritterWorld
                         critter.Notify("ERROR: Possible invalid command syntax in " + message + " caused " + e);
                     }
                 }
+            }
+        }
+
+        public void LaunchSettingsUI()
+        {
+            try
+            {
+                controller.LaunchUI();
+            }
+            catch (Exception e)
+            {
+                Notify("ERROR: Unable to launch UI: " + e);
             }
         }
 
@@ -299,9 +316,10 @@ namespace CritterWorld
             return name[0].ToString().ToUpper() + name.Substring(1);
         }
 
-        internal Critter(int critterNumber) : base(new CritterBody().GetBody(1))
+        internal Critter(int critterNumber, ICritterController critterController) : base(new CritterBody().GetBody(1))
         {
             Number = critterNumber;
+            controller = critterController;
 
             LineWidth = 1;
             Color = Sprite.RandomColor(127);
@@ -609,6 +627,28 @@ namespace CritterWorld
 
             stopped = false;
 
+            controllerThread = new Thread(() =>
+            {
+                controllerThreadRunning = true;
+                while (controllerThreadRunning)
+                {
+                    while (MessagesFromBody.TryDequeue(out string message))
+                    {
+                        try
+                        {
+                            controller.Receive(message, MessagesToBody);
+                        }
+                        catch (Exception e)
+                        {
+                            Crashed(e);
+                        }
+                    }
+                    Thread.Sleep(5);
+                }
+            });
+            controllerThread.IsBackground = true;
+            controllerThread.Start();
+
             Log("launched");
 
             Notify("LAUNCH:" + Position.ToString());
@@ -628,6 +668,8 @@ namespace CritterWorld
             Log("shutdown");
 
             Notify("SHUTDOWN:" + Position.ToString());
+
+            controllerThreadRunning = false;
         }
 
         // True if this critter is stopped or dead

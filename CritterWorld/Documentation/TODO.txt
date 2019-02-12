@@ -1,2 +1,1 @@
-﻿- Implement UI
-- Slightly restructure API to allow Critter code to detect CritterController crashes, etc.
+﻿

@@ -163,6 +163,7 @@
     <Content Include="Resources\Images\poop.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Resources\Images\settings.png" />
     <Content Include="Resources\Images\tennisball.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

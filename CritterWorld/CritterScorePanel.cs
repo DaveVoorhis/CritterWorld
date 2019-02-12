@@ -68,6 +68,7 @@ namespace CritterWorld
                 labelDead.Visible = false;
                 UpdateScore(0, 0);
                 labelScore.Visible = false;
+                iconSettings.Visible = false;
                 UpdateHealthAndEnergy(0, 0);
                 if (critterImage != null)
                 {
@@ -79,6 +80,8 @@ namespace CritterWorld
                 labelNumber.Visible = true;
                 labelName.Visible = true;
                 labelScore.Visible = true;
+
+                iconSettings.Visible = true;
 
                 critterImage = new PolygonSprite(critter.Model)
                 {
@@ -118,5 +121,9 @@ namespace CritterWorld
             }
         }
 
+        private void IconSettings_Click(object sender, EventArgs e)
+        {
+            critter.LaunchSettingsUI();
+        }
     }
 }

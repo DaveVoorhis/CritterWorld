@@ -56,7 +56,7 @@ namespace CritterWorld
                                         else
                                         {
                                             Console.WriteLine("Loaded controller " + controller.Name + " by " + critterFactory.Author + " from " + file);
-                                            Critter critter = new Critter(critterNumber++);
+                                            Critter critter = new Critter(critterNumber++, controller);
                                             if (familyColor == Color.Black)
                                             {
                                                 familyColor = critter.Color;
@@ -70,7 +70,6 @@ namespace CritterWorld
                                             {
                                                 critter.Name = controller.Name.Trim();
                                             }
-                                            controller.Launch(critter.MessagesFromBody, critter.MessagesToBody);
                                             critters.Add(critter);
                                         }
                                     }

@@ -34,6 +34,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -43,6 +44,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ControllerFactory.cs" />
+    <Compile Include="ChaserSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ChaserSettings.Designer.cs">
+      <DependentUpon>ChaserSettings.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Chaser.cs" />
     <Compile Include="Wanderer.cs" />
@@ -55,6 +62,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ChaserSettings.resx">
+      <DependentUpon>ChaserSettings.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

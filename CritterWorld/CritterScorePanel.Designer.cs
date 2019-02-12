@@ -42,6 +42,7 @@ namespace CritterWorld
             this.labelDead = new System.Windows.Forms.Label();
             this.spriteSurfaceCritter = new SCG.TurboSprite.SpriteSurface(this.components);
             this.labelNumber = new System.Windows.Forms.Label();
+            this.iconSettings = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // labelScore
@@ -148,10 +149,21 @@ namespace CritterWorld
             this.labelNumber.TabIndex = 11;
             this.labelNumber.Text = "999";
             // 
+            // iconSettings
+            // 
+            this.iconSettings.Image = ((System.Drawing.Image)(resources.GetObject("iconSettings.Image")));
+            this.iconSettings.Location = new System.Drawing.Point(302, 2);
+            this.iconSettings.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.iconSettings.Name = "iconSettings";
+            this.iconSettings.Size = new System.Drawing.Size(22, 22);
+            this.iconSettings.TabIndex = 12;
+            this.iconSettings.Click += new System.EventHandler(this.IconSettings_Click);
+            // 
             // CritterScorePanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.iconSettings);
             this.Controls.Add(this.labelNumber);
             this.Controls.Add(this.labelDead);
             this.Controls.Add(this.labelEscaped);
@@ -164,7 +176,7 @@ namespace CritterWorld
             this.Controls.Add(this.spriteSurfaceCritter);
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "CritterScorePanel";
-            this.Size = new System.Drawing.Size(300, 39);
+            this.Size = new System.Drawing.Size(327, 39);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -182,5 +194,6 @@ namespace CritterWorld
         private System.Windows.Forms.Label labelName;
         private System.Windows.Forms.Label labelDead;
         private System.Windows.Forms.Label labelNumber;
+        private System.Windows.Forms.Label iconSettings;
     }
 }

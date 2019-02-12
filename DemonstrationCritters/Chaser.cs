@@ -7,8 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
-namespace CritterController
+namespace DemonstrationCritters
 {
     public class Chaser : ICritterController
     {
@@ -25,6 +26,7 @@ namespace CritterController
         }
 
         private Point goal = new Point(-1, -1);
+        private Form settings = null;
 
         public string Name { get; set; }
 
@@ -41,44 +43,42 @@ namespace CritterController
             }
         }
 
-        public void Launch(ConcurrentQueue<string> messagesFromBody, ConcurrentQueue<string> messagesToBody)
+        public void LaunchUI()
         {
-            Thread t = new Thread(() => 
+            if (settings == null)
             {
-                while (true)
-                {
-                    while (messagesFromBody.TryDequeue(out string message))
-                    {
-                        Log("Message from body for " + Name + ": " + message);
-                        string[] msgParts = message.Split(':');
-                        string notification = msgParts[0];
-                        switch (notification)
-                        {
-                            case "LAUNCH":
-                                messagesToBody.Enqueue("RANDOM_DESTINATION");
-                                messagesToBody.Enqueue("SCAN:1");
-                                break;
-                            case "SCAN":
-                                Scan(message, messagesToBody);
-                                break;
-                            case "REACHED_DESTINATION":
-                            case "FIGHT":
-                            case "BUMP":
-                                messagesToBody.Enqueue("RANDOM_DESTINATION");
-                                break;
-                            case "SEE":
-                                See(message, messagesToBody);
-                                break;
-                            case "ERROR":
-                                Console.WriteLine(message);
-                                break;
-                        }
-                    }
-                    Thread.Sleep(5);
-                }
-            });
-            t.IsBackground = true;
-            t.Start();
+                settings = new ChaserSettings();
+            }
+            settings.Visible = !settings.Visible;
+            settings.Focus();
+        }
+
+        public void Receive(string message, ConcurrentQueue<string> messagesToBody)
+        {
+            Log("Message from body for " + Name + ": " + message);
+            string[] msgParts = message.Split(':');
+            string notification = msgParts[0];
+            switch (notification)
+            {
+                case "LAUNCH":
+                    messagesToBody.Enqueue("RANDOM_DESTINATION");
+                    messagesToBody.Enqueue("SCAN:1");
+                    break;
+                case "SCAN":
+                    Scan(message, messagesToBody);
+                    break;
+                case "REACHED_DESTINATION":
+                case "FIGHT":
+                case "BUMP":
+                    messagesToBody.Enqueue("RANDOM_DESTINATION");
+                    break;
+                case "SEE":
+                    See(message, messagesToBody);
+                    break;
+                case "ERROR":
+                    Console.WriteLine(message);
+                    break;
+            }
         }
 
         private void SetDestination(Point coordinate, int speed, ConcurrentQueue<string> messagesToBody)
@@ -159,9 +159,5 @@ namespace CritterController
             }
         }
 
-        public void Shutdown()
-        {
-            
-        }
     }
 }
