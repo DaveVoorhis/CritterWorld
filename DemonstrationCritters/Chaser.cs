@@ -37,7 +37,7 @@ namespace CritterController
                                 break;
                             case "REACHED_DESTINATION":
                                 messagesToBody.Enqueue("RANDOM_DESTINATION");
-                                messagesToBody.Enqueue("SENSE:3");
+                                //messagesToBody.Enqueue("SENSE:3");
                                 break;
                             case "FIGHT":
                                 messagesToBody.Enqueue("RANDOM_DESTINATION");
@@ -45,8 +45,13 @@ namespace CritterController
                             case "BUMP":
                                 messagesToBody.Enqueue("RANDOM_DESTINATION");
                                 break;
-                            case "LOOK":
-                                Console.WriteLine(message);
+                            case "SEE":
+                                string[] newlinePartition = message.Split('\n');
+                                string[] whatISee = newlinePartition[1].Split('\t');
+                                foreach (String thing in whatISee)
+                                {
+                                    Console.WriteLine(Name + " sees " + thing);
+                                }
                                 break;
                             case "SENSE":
                                 Console.WriteLine(message);
