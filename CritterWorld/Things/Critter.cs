@@ -98,7 +98,7 @@ namespace CritterWorld
                     }
                 }
 
-                critter.Look();
+                critter.See();
 
                 while (critter.MessagesToBody.TryDequeue(out string message))
                 {
@@ -115,14 +115,14 @@ namespace CritterWorld
                                 int debuggingMode = int.Parse(commandParts[1]);
                                 critter.messageDebugging = debuggingMode != 0;
                                 break;
+                            case "SENSE":
+                                critter.Sense(int.Parse(commandParts[1]));
+                                break;
                             case "GET_LEVEL_DURATION":
                                 critter.GetLevelDuration(int.Parse(commandParts[1]));
                                 break;
                             case "GET_LEVEL_TIME_REMAINING":
                                 critter.GetLevelTimeRemaining(int.Parse(commandParts[1]));
-                                break;
-                            case "SENSE":
-                                critter.Sense(int.Parse(commandParts[1]));
                                 break;
                             case "GET_HEALTH":
                                 critter.GetHealth(int.Parse(commandParts[1]));
@@ -164,9 +164,9 @@ namespace CritterWorld
             }
         }
 
-        private void Look()
+        private void See()
         {
-            string sensorReading = string.Join("\n", Engine.SpriteArray
+            string sensorReading = string.Join("\t", Engine.SpriteArray
                 .OfType<IVisible>()
                 .Cast<Sprite>()
                 .Where(sprite => sprite != this && GetDistance(sprite, this) <= sightDistance)
@@ -174,8 +174,17 @@ namespace CritterWorld
                 .Select(thing => thing.SensorSignature));
             if (sensorReading.Length > 0)
             {
-                Notify("LOOK:" + sensorReading);
+                Notify("SEE:\n" + sensorReading);
             }
+        }
+
+        private void Sense(int requestNumber)
+        {
+            string sensorReading = string.Join("\t", Engine.SpriteArray
+                .OfType<ISensable>()
+                .Cast<ISignature>()
+                .Select(thing => thing.SensorSignature));
+            Notify("SENSE:" + requestNumber + "\n" + sensorReading);
         }
 
         private void GetLevelDuration(int requestNumber)
@@ -188,18 +197,9 @@ namespace CritterWorld
             Notify("LEVEL_TIME_REMAINING:" + requestNumber + ":" + Critterworld.LevelTimeRemaining);
         }
 
-        private void Sense(int requestNumber)
-        {
-            string sensorReading = string.Join("\n", Engine.SpriteArray
-                .OfType<ISensable>()
-                .Cast<ISignature>()
-                .Select(thing => thing.SensorSignature));
-            Notify("SENSE:" + requestNumber + ":" + sensorReading);
-        }
-
         private void GetHealth(int requestNumber)
         {
-            Notify("HEALTH:" + requestNumber + ":" + Health);
+            Notify("HEALTH:" + requestNumber + ":" + Health + ":" + HealthStatus);
         }
 
         private void GetEnergy(int requestNumber)
@@ -256,9 +256,32 @@ namespace CritterWorld
             }
         }
 
+        private string HealthStatus
+        {
+            get
+            {
+                if (Health > 75)
+                {
+                    return "Strong";
+                }
+                else if (Health > 50)
+                {
+                    return "Ok";
+                }
+                else if (Health > 25)
+                {
+                    return "Adequate";
+                }
+                else
+                {
+                    return "Weak";
+                }
+            }
+        }
+
         public string SensorSignature
         {
-            get { return "Critter" + ":" + Position + ":" + NumberNameAndAuthor; }
+            get { return "Critter" + ":" + Position + ":" + NumberNameAndAuthor + ":" + HealthStatus; }
         }
 
         internal static string GetRandomName()
@@ -308,7 +331,7 @@ namespace CritterWorld
         {
             if (Mover is TargetMover mover)
             {
-
+                mover.Speed = speed;
             }
         }
 
