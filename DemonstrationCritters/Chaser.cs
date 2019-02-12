@@ -11,38 +11,20 @@ using System.Windows.Forms;
 
 namespace DemonstrationCritters
 {
-    public class Chaser : ICritterController
+    public class Chaser : DemoCritter, ICritterController
     {
-        private readonly bool Debugging = false;
+        Point goal = new Point(-1, -1);
+        Form settings = null;
 
-        private static Point PointFrom(string coordinate)
+        private void SetDestination(Point coordinate, int speed)
         {
-            string[] coordinateParts = coordinate.Substring(1, coordinate.Length - 2).Split(',');
-            string rawX = coordinateParts[0].Substring(2);
-            string rawY = coordinateParts[1].Substring(2);
-            int x = int.Parse(rawX);
-            int y = int.Parse(rawY);
-            return new Point(x, y);
+            string message = "SET_DESTINATION:" + coordinate.X + ":" + coordinate.Y + ":" + speed;
+            Send(message);
         }
 
-        private Point goal = new Point(-1, -1);
-        private Form settings = null;
-
-        public string Name { get; set; }
-
-        public Send Responder { get; set; } 
-
-        public Chaser(string name)
+        public Chaser(string name) : base(name)
         {
-            Name = name;
-        }
-
-        private void Log(string msg)
-        {
-            if (Debugging)
-            {
-                Console.WriteLine(msg);
-            }
+            Debugging = false;
         }
 
         public void LaunchUI()
@@ -63,8 +45,8 @@ namespace DemonstrationCritters
             switch (notification)
             {
                 case "LAUNCH":
-                    Responder.Invoke("RANDOM_DESTINATION");
-                    Responder.Invoke("SCAN:1");
+                    Send("RANDOM_DESTINATION");
+                    Send("SCAN:1");
                     break;
                 case "SCAN":
                     Scan(message);
@@ -72,7 +54,7 @@ namespace DemonstrationCritters
                 case "REACHED_DESTINATION":
                 case "FIGHT":
                 case "BUMP":
-                    Responder.Invoke("RANDOM_DESTINATION");
+                    Send("RANDOM_DESTINATION");
                     break;
                 case "SEE":
                     See(message);
@@ -81,12 +63,6 @@ namespace DemonstrationCritters
                     Console.WriteLine(message);
                     break;
             }
-        }
-
-        private void SetDestination(Point coordinate, int speed)
-        {
-            string message = "SET_DESTINATION:" + coordinate.X + ":" + coordinate.Y + ":" + speed;
-            Responder.Invoke(message);
         }
 
         private void See(string message)
@@ -146,8 +122,8 @@ namespace DemonstrationCritters
         private void Scan(string message)
         {
             string[] newlinePartition = message.Split('\n');
-            string[] whatISee = newlinePartition[1].Split('\t');
-            foreach (string thing in whatISee)
+            string[] whatISense = newlinePartition[1].Split('\t');
+            foreach (string thing in whatISense)
             {
                 string[] thingAttributes = thing.Split(':');
                 Point location = PointFrom(thingAttributes[1]);

@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DemoCritter.cs" />
     <Compile Include="ControllerFactory.cs" />
     <Compile Include="ChaserSettings.cs">
       <SubType>Form</SubType>
