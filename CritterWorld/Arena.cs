@@ -308,6 +308,7 @@ namespace CritterWorld
         {
             Sprite sprite1 = collision.Sprite1;
             Sprite sprite2 = collision.Sprite2;
+
             if (sprite1 is Critter critter_a1 && sprite2 is Critter critter_a2)
             {
                 Collide(critter_a1, critter_a2);
