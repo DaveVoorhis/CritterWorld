@@ -97,13 +97,10 @@ namespace DemonstrationCritters
                 string[] thingAttributes = thing.Split(':');
                 if (thingAttributes[0] == "Nothing")
                 {
-                    Log("I see nothing. Aim for the escape hatch.");
-                    if (goal != new Point(-1, -1))
+                    Log("I see nothing. Maybe aim for the escape hatch.");
+                    if (headingForGoal && goal != new Point(-1, -1))
                     {
-                        if (headingForGoal)
-                        {
-                            SetDestination(goal, 5);
-                        }
+                        SetDestination(goal, 5);
                     }
                 }
                 else
@@ -121,6 +118,7 @@ namespace DemonstrationCritters
                             break;
                         case "Bomb":
                             Log("Bomb is at " + location);
+                            Send("RANDOM_DESTINATION");
                             break;
                         case "EscapeHatch":
                             if (headingForGoal)
