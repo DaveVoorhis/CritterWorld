@@ -11,9 +11,8 @@ namespace CritterWorld
 {
     public class Food : BitmapSprite, ISensable, IVisible
     {
-        public Food(Point position) : base((Bitmap)Image.FromFile("Resources/Images/Kiwi-Fruit.png"))
+        public Food() : base((Bitmap)Image.FromFile("Resources/Images/Kiwi-Fruit.png"))
         {
-            Position = position;
         }
 
         public string SensorSignature

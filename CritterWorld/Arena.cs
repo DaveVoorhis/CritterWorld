@@ -68,21 +68,26 @@ namespace CritterWorld
             AddSprite(terrainSprite);
         }
 
-        private delegate Sprite CreateSprite(Point location);
+        private delegate Sprite CreateSprite();
         private delegate void InitialiseSprite(Sprite sprite);
 
-        private void AddItem(int count, CreateSprite factory, InitialiseSprite initialiser = null)
+        private void RelocateThing(Sprite sprite)
+        {
+            do
+            {
+                int x = rnd.Next(launchMarginLeft, Surface.Width - launchMarginRight);
+                int y = rnd.Next(launchMarginTop, Surface.Height - launchMarginBottom);
+                sprite.Position = new Point(x, y);
+            }
+            while (WillCollide(sprite));
+        }
+
+        private void AddThings(int count, CreateSprite factory, InitialiseSprite initialiser = null)
         {
             for (int i = 0; i < count; i++)
             {
-                Sprite sprite;
-                do
-                {
-                    int x = rnd.Next(launchMarginLeft, Surface.Width - launchMarginRight);
-                    int y = rnd.Next(launchMarginTop, Surface.Height - launchMarginBottom);
-                    sprite = factory(new Point(x, y));
-                }
-                while (WillCollide(sprite));
+                Sprite sprite = factory();
+                RelocateThing(sprite);
                 AddSprite(sprite);
                 initialiser?.Invoke(sprite);
             }
@@ -90,17 +95,17 @@ namespace CritterWorld
 
         public void AddGifts(int count)
         {
-            AddItem(count, location => new Gift(location));
+            AddThings(count, () => new Gift());
         }
 
         public void AddBombs(int count)
         {
-            AddItem(count, location => new Bomb(location), sprite => ((Bomb)sprite).LightFuse());
+            AddThings(count, () => new Bomb(), sprite => ((Bomb)sprite).LightFuse());
         }
 
         public void AddFoods(int count)
         {
-            AddItem(count, location => new Food(location));
+            AddThings(count, () => new Food());
         }
 
         public void AddCritter(Critter critter)
@@ -264,25 +269,22 @@ namespace CritterWorld
                 critter.StopAndSmoke(Color.Black, Color.Brown);
             };
             explosionTimer.Start();
-            bomb.Kill();
 
-            AddBombs(1);
+            RelocateThing(bomb);
         }
 
         private void Collide(Critter critter, Food food)
         {
             Sound.PlayGulp();
-            food.Kill();
             critter.Ate();
-            AddFoods(1);
+            RelocateThing(food);
         }
 
         private void Collide(Critter critter, Gift gift)
         {
             Sound.PlayYay();
-            gift.Kill();
             critter.Scored();
-            AddGifts(1);
+            RelocateThing(gift);
         }
 
         private void Collide(Critter critter, EscapeHatch hatch)

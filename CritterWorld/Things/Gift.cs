@@ -11,9 +11,8 @@ namespace CritterWorld
 {
     public class Gift : BitmapSprite, ISensable, IVisible
     {
-        public Gift(Point position) : base((Bitmap)Image.FromFile("Resources/Images/gift.png"))
+        public Gift() : base((Bitmap)Image.FromFile("Resources/Images/gift.png"))
         {
-            Position = position;
         }
 
         public string SensorSignature

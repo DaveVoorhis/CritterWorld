@@ -136,14 +136,13 @@ namespace SCG.TurboSprite
         }
 
         // Return true if a new Sprite we wish to add will be in collision on being added.
-        // If this is run on a Sprite that has been added, it will always return true.
         public bool WillCollide(Sprite sprite)
         {
             ThrowExceptionIfShapeless(sprite);
             for (int k = 0; k < Sprites.Count; k++)
             {
                 Sprite other = Sprites[k];
-                if (sprite.Bounds.IntersectsWith(other.Bounds))
+                if (sprite != other && sprite.Bounds.IntersectsWith(other.Bounds))
                 {
                     return true;
                 }
