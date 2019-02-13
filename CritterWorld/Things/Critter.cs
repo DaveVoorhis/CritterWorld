@@ -646,6 +646,10 @@ namespace CritterWorld
                     }
                     Thread.Sleep(5);
                 }
+                // Clear message queues
+                string ignore;
+                while (MessagesFromBody.TryDequeue(out ignore)) ;
+                while (MessagesToBody.TryDequeue(out ignore)) ;
             });
             controllerThread.IsBackground = true;
             controllerThread.Start();
@@ -671,11 +675,6 @@ namespace CritterWorld
             Notify("SHUTDOWN:" + Position.ToString());
 
             controllerThreadRunning = false;
-            
-            // Clear message queues
-            string ignore;
-            while (MessagesFromBody.TryDequeue(out ignore)) ;
-            while (MessagesToBody.TryDequeue(out ignore)) ;
         }
 
         // True if this critter is stopped or dead
