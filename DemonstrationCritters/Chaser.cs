@@ -20,8 +20,7 @@ namespace DemonstrationCritters
 
         private void SetDestination(Point coordinate, int speed)
         {
-            string message = "SET_DESTINATION:" + coordinate.X + ":" + coordinate.Y + ":" + speed;
-            Send(message);
+            Send("SET_DESTINATION:" + coordinate.X + ":" + coordinate.Y + ":" + speed);
         }
 
         private void Tick()
@@ -105,10 +104,6 @@ namespace DemonstrationCritters
                         {
                             SetDestination(goal, 5);
                         }
-                        else
-                        {
-                            Send("RANDOM_DESTINATION");
-                        }
                     }
                 }
                 else
@@ -131,10 +126,6 @@ namespace DemonstrationCritters
                             if (headingForGoal)
                             {
                                 SetDestination(location, 5);
-                            }
-                            else
-                            {
-                                Send("RANDOM_DESTINATION");
                             }
                             Log("EscapeHatch is at " + location);
                             break;
