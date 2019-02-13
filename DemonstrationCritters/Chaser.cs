@@ -15,11 +15,18 @@ namespace DemonstrationCritters
     {
         Point goal = new Point(-1, -1);
         Form settings = null;
+        System.Timers.Timer getInfoTimer;
+        bool headingForGoal = false;
 
         private void SetDestination(Point coordinate, int speed)
         {
             string message = "SET_DESTINATION:" + coordinate.X + ":" + coordinate.Y + ":" + speed;
             Send(message);
+        }
+
+        private void Tick()
+        {
+            Send("GET_LEVEL_TIME_REMAINING:1");
         }
 
         public Chaser(string name) : base(name)
@@ -45,8 +52,16 @@ namespace DemonstrationCritters
             switch (notification)
             {
                 case "LAUNCH":
-                    Send("RANDOM_DESTINATION");
+                    headingForGoal = false;
+                    Send("STOP");
                     Send("SCAN:1");
+                    getInfoTimer = new System.Timers.Timer();
+                    getInfoTimer.Interval = 2000;
+                    getInfoTimer.Elapsed += (obj, evt) => Tick();
+                    getInfoTimer.Start();
+                    break;
+                case "SHUTDOWN":
+                    getInfoTimer.Stop();
                     break;
                 case "SCAN":
                     Scan(message);
@@ -58,6 +73,15 @@ namespace DemonstrationCritters
                     break;
                 case "SEE":
                     See(message);
+                    break;
+                case "LEVEL_TIME_REMAINING":
+                    int secondsRemaining = int.Parse(msgParts[2]);
+                    if (secondsRemaining < 30)
+                    {
+                        Console.WriteLine(Name + " now heading for goal.");
+                        headingForGoal = true;
+                        SetDestination(goal, 5);
+                    }
                     break;
                 case "ERROR":
                     Console.WriteLine(message);
@@ -77,7 +101,14 @@ namespace DemonstrationCritters
                     Log("I see nothing. Aim for the escape hatch.");
                     if (goal != new Point(-1, -1))
                     {
-                        SetDestination(goal, 5);
+                        if (headingForGoal)
+                        {
+                            SetDestination(goal, 5);
+                        }
+                        else
+                        {
+                            Send("RANDOM_DESTINATION");
+                        }
                     }
                 }
                 else
@@ -97,7 +128,14 @@ namespace DemonstrationCritters
                             Log("Bomb is at " + location);
                             break;
                         case "EscapeHatch":
-                            SetDestination(location, 5);
+                            if (headingForGoal)
+                            {
+                                SetDestination(location, 5);
+                            }
+                            else
+                            {
+                                Send("RANDOM_DESTINATION");
+                            }
                             Log("EscapeHatch is at " + location);
                             break;
                         case "Terrain":
@@ -132,6 +170,7 @@ namespace DemonstrationCritters
                     case "EscapeHatch":
                         Log("Escape hatch is at " + location);
                         goal = location;
+                        SetDestination(location, 5);
                         break;
                 }
             }
