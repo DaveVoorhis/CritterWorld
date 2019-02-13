@@ -23,8 +23,11 @@ namespace CritterWorld
             {
                 return;
             }
-            spark = new ParticleFountainSprite(10, Color.LightGray, Color.White, 1, 1, 3);
-            spark.Position = new Point((int)(X - WidthHalf + 1), (int)(Y - HeightHalf + 1));
+            spark = new ParticleFountainSprite(10, Color.LightGray, Color.White, 1, 1, 3)
+            {
+                Mover = new SlaveMover(this),
+                Position = new Point((int)X + 7, (int)Y + 5)
+            };
             Engine?.AddSprite(spark);
         }
 
