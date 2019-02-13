@@ -71,7 +71,7 @@ namespace CritterWorld
         private delegate Sprite CreateSprite();
         private delegate void InitialiseSprite(Sprite sprite);
 
-        private void RelocateThing(Sprite sprite)
+        private void FindEmptyPlaceFor(Sprite sprite)
         {
             do
             {
@@ -87,7 +87,7 @@ namespace CritterWorld
             for (int i = 0; i < count; i++)
             {
                 Sprite sprite = factory();
-                RelocateThing(sprite);
+                FindEmptyPlaceFor(sprite);
                 AddSprite(sprite);
                 initialiser?.Invoke(sprite);
             }
@@ -270,21 +270,21 @@ namespace CritterWorld
             };
             explosionTimer.Start();
 
-            RelocateThing(bomb);
+            FindEmptyPlaceFor(bomb);
         }
 
         private void Collide(Critter critter, Food food)
         {
             Sound.PlayGulp();
             critter.Ate();
-            RelocateThing(food);
+            FindEmptyPlaceFor(food);
         }
 
         private void Collide(Critter critter, Gift gift)
         {
             Sound.PlayYay();
             critter.Scored();
-            RelocateThing(gift);
+            FindEmptyPlaceFor(gift);
         }
 
         private void Collide(Critter critter, EscapeHatch hatch)
