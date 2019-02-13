@@ -29,7 +29,7 @@ namespace DemonstrationCritters
         {
             if (Debugging)
             {
-                Console.WriteLine(msg);
+                Console.WriteLine(Name + ":" + msg);
             }
         }
 
