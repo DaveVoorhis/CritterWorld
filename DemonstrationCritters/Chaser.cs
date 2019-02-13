@@ -77,7 +77,7 @@ namespace DemonstrationCritters
                     int secondsRemaining = int.Parse(msgParts[2]);
                     if (secondsRemaining < 30)
                     {
-                        Console.WriteLine(Name + " now heading for goal.");
+                        Log("Now heading for goal.");
                         headingForGoal = true;
                         SetDestination(goal, 5);
                     }
