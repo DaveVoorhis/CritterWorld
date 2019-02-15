@@ -18,16 +18,6 @@ namespace DemonstrationCritters
 
         public Send Responder { get; set; }
 
-        private static Point PointFrom(string coordinate)
-        {
-            string[] coordinateParts = coordinate.Substring(1, coordinate.Length - 2).Split(',');
-            string rawX = coordinateParts[0].Substring(2);
-            string rawY = coordinateParts[1].Substring(2);
-            int x = int.Parse(rawX);
-            int y = int.Parse(rawY);
-            return new Point(x, y);
-        }
-
         private void Log(string msg)
         {
             if (Debugging)
