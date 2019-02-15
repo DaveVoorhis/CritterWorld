@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -9,11 +10,42 @@ using System.Threading.Tasks;
 
 namespace DemonstrationCritters
 {
-    public class Wanderer : DemoCritter, ICritterController
+    public class Wanderer : ICritterController
     {
-        public Wanderer(string name) : base(name)
+        private readonly bool Debugging = false;
+
+        public string Name { get; set; }
+
+        public Send Responder { get; set; }
+
+        private static Point PointFrom(string coordinate)
+        {
+            string[] coordinateParts = coordinate.Substring(1, coordinate.Length - 2).Split(',');
+            string rawX = coordinateParts[0].Substring(2);
+            string rawY = coordinateParts[1].Substring(2);
+            int x = int.Parse(rawX);
+            int y = int.Parse(rawY);
+            return new Point(x, y);
+        }
+
+        private void Log(string msg)
+        {
+            if (Debugging)
+            {
+                Console.WriteLine(Name + ":" + msg);
+            }
+        }
+
+        private void Send(string message)
+        {
+            Responder.Invoke(message);
+        }
+
+        public Wanderer(string name)
         {
             Debugging = false;
+
+            Name = name;
         }
 
         public void LaunchUI()

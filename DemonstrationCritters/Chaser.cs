@@ -11,12 +11,40 @@ using System.Windows.Forms;
 
 namespace DemonstrationCritters
 {
-    public class Chaser : DemoCritter, ICritterController
+    public class Chaser : ICritterController
     {
         Point goal = new Point(-1, -1);
         Form settings = null;
         System.Timers.Timer getInfoTimer;
         bool headingForGoal = false;
+        private readonly bool Debugging = false;
+
+        public string Name { get; set; }
+
+        public Send Responder { get; set; }
+
+        private static Point PointFrom(string coordinate)
+        {
+            string[] coordinateParts = coordinate.Substring(1, coordinate.Length - 2).Split(',');
+            string rawX = coordinateParts[0].Substring(2);
+            string rawY = coordinateParts[1].Substring(2);
+            int x = int.Parse(rawX);
+            int y = int.Parse(rawY);
+            return new Point(x, y);
+        }
+
+        private void Log(string msg)
+        {
+            if (Debugging)
+            {
+                Console.WriteLine(Name + ":" + msg);
+            }
+        }
+
+        private void Send(string message)
+        {
+            Responder.Invoke(message);
+        }
 
         private void SetDestination(Point coordinate, int speed)
         {
@@ -28,9 +56,11 @@ namespace DemonstrationCritters
             Send("GET_LEVEL_TIME_REMAINING:1");
         }
 
-        public Chaser(string name) : base(name)
+        public Chaser(string name)
         {
             Debugging = false;
+
+            Name = name;
         }
 
         public void LaunchUI()
