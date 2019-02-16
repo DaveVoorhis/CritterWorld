@@ -184,7 +184,7 @@ namespace CritterWorld
         {
             critterCount = 0;
             critterBindingSourceWaiting.Clear();
-            List<Critter> loadedCritters = critterLoader.LoadCritters();
+            List<Critter> loadedCritters = critterLoader.LoadCritters(IsCompetition);
             if (loadedCritters.Count == 0)
             {
                 DisplayGameOver();

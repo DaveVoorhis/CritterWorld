@@ -11,18 +11,17 @@ namespace CritterWorld
 {
     public class CritterLoader
     {
+        // Maximum number of critter controllers that may be loaded from a DLL during a competition.
+        private const int CompetitionControllerLoadMaximum = 5;
+
         // Later, this should be administrator-configurable. For now, it's just the executable directory.
         private readonly string configDLLPath = "";
 
         // Path to Critter files. As above, this should be administrator-configurable. For now, it's a created subdirectory of the executable directory.
         private readonly string filepathForCritterFiles = "CritterFiles";
 
-        public CritterLoader()
-        {
-        }
-
         // Get list of all dll files in specified folder. Iterate through them to find classes that implement ICritterControllerFactory.
-        public List<Critter> LoadCritters()
+        public List<Critter> LoadCritters(bool isCompetition)
         {
             string executablePath = Path.GetDirectoryName(Application.ExecutablePath);
             string pathForCritterFiles = executablePath + "/" + filepathForCritterFiles;
@@ -74,6 +73,7 @@ namespace CritterWorld
                                     }
                                     else
                                     {
+                                        int loadedCount = 0;
                                         foreach (ICritterController controller in controllers)
                                         {
                                             if (controller == null)
@@ -99,6 +99,12 @@ namespace CritterWorld
                                                     critter.Name = controller.Name.Trim().Replace(':', '_').Replace('\t', '_').Replace('\n', '_');
                                                 }
                                                 critters.Add(critter);
+                                                loadedCount++;
+                                                if (isCompetition && loadedCount == CompetitionControllerLoadMaximum)
+                                                {
+                                                    Console.WriteLine("During competition, maximum number of controllers loadable from a factory is " + CompetitionControllerLoadMaximum);
+                                                    break;
+                                                }
                                             }
                                         }
                                     }
