@@ -365,6 +365,11 @@ namespace CritterWorld
 
             spriteSurfaceMain.WraparoundEdges = true;
         }
+
+        public Critter[] GetCritters()
+        {
+            return spriteEngineMain.SpriteArray.OfType<Critter>().ToArray();
+        }
     }
 
     public class SpriteEventEscaped : SpriteEventArgs

@@ -53,6 +53,8 @@ namespace CritterWorld
         public string DeadReason { get; private set; } = null;
         public bool IsDead { get { return DeadReason != null; } }
 
+        public bool Debugging { get; set; } = false;
+
         public ConcurrentQueue<string> MessagesFromBody { get; } = new ConcurrentQueue<string>();
         public ConcurrentQueue<string> MessagesToBody { get; } = new ConcurrentQueue<string>();
 
@@ -68,8 +70,6 @@ namespace CritterWorld
         private ICritterController controller = null;
         Thread controllerThread = null;
         bool controllerThreadRunning = true;
-
-        private bool messageDebugging = false;
 
         private static void CritterProcessor(Sprite sprite)
         {
@@ -107,7 +107,7 @@ namespace CritterWorld
 
                 while (critter.MessagesToBody.TryDequeue(out string message))
                 {
-                    if (critter.messageDebugging)
+                    if (critter.Debugging)
                     {
                         Console.WriteLine("Message from controller for " + critter.NumberNameAndAuthor + ": " + message);
                     }
@@ -116,10 +116,6 @@ namespace CritterWorld
                         string[] commandParts = message.Split(':');
                         switch (commandParts[0])
                         {
-                            case "DEBUG":
-                                int debuggingMode = int.Parse(commandParts[1]);
-                                critter.messageDebugging = debuggingMode != 0;
-                                break;
                             case "SCAN":
                                 critter.Scan(int.Parse(commandParts[1]));
                                 break;
@@ -329,21 +325,27 @@ namespace CritterWorld
             Processors += CritterProcessor;
         }
 
-        // Send message to controller
-        private void Notify(string message)
-        {
-            if (messageDebugging)
-            {
-                Console.WriteLine("Message to controller from " + NumberNameAndAuthor + ": " + message);
-            }
-            MessagesFromBody.Enqueue(message);
-        }
-
-        // Send message to log
+        // Send message to log unconditionally
         private void Log(String message, Exception exception = null)
         {
             LogEntry newLogEntry = new LogEntry(Number, Name, Author, message, exception);
             Critterworld.Log(newLogEntry);
+        }
+
+        // Send message to log if debugging is true
+        private void LogDebugging(string message)
+        {
+            if (Debugging)
+            {
+                Log(message);
+            }
+        }
+
+        // Send message to controller
+        private void Notify(string message)
+        {
+            LogDebugging("Message to controller from " + NumberNameAndAuthor + ": " + message);
+            MessagesFromBody.Enqueue(message);
         }
 
         private void AssignSpeed(int speed)
@@ -386,6 +388,8 @@ namespace CritterWorld
             IsEscaped = false;
             DeadReason = null;
             Dead = false;
+            moveCount = 0;
+            numberPlateIncrement = 1;
         }
 
         internal void Escaped()
@@ -633,6 +637,7 @@ namespace CritterWorld
                 while (controllerThreadRunning)
                 {
                     controller.Responder = messageToBody => MessagesToBody.Enqueue(messageToBody);
+                    controller.Logger = logMessage => LogDebugging(logMessage);
                     while (MessagesFromBody.TryDequeue(out string messageFromBody))
                     {
                         try
@@ -695,6 +700,11 @@ namespace CritterWorld
                 numberPlate = null;
             }
             base.Kill();
+        }
+
+        public override string ToString()
+        {
+            return NumberNameAndAuthor;
         }
     }
 }

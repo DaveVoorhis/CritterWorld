@@ -74,6 +74,7 @@ namespace CritterWorld
                 {
                     spriteEngine.RemoveSprite(critterImage);
                 }
+                checkBoxDebug.Visible = false;
             }
             else
             {
@@ -82,6 +83,9 @@ namespace CritterWorld
                 labelScore.Visible = true;
 
                 iconSettings.Visible = true;
+
+                checkBoxDebug.Visible = true;
+                checkBoxDebug.Checked = critter.Debugging;
 
                 critterImage = new PolygonSprite(critter.Model)
                 {
@@ -124,6 +128,11 @@ namespace CritterWorld
         private void IconSettings_Click(object sender, EventArgs e)
         {
             critter.LaunchSettingsUI();
+        }
+
+        private void CheckBoxDebug_CheckedChanged(object sender, EventArgs e)
+        {
+            critter.Debugging = checkBoxDebug.Checked;
         }
     }
 }

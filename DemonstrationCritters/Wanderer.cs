@@ -12,18 +12,15 @@ namespace DemonstrationCritters
 {
     public class Wanderer : ICritterController
     {
-        private readonly bool Debugging = false;
-
         public string Name { get; set; }
 
         public Send Responder { get; set; }
 
-        private void Log(string msg)
+        public Send Logger { get; set; }
+
+        private void Log(string message)
         {
-            if (Debugging)
-            {
-                Console.WriteLine(Name + ":" + msg);
-            }
+            Logger.Invoke(message);
         }
 
         private void Send(string message)
@@ -33,8 +30,6 @@ namespace DemonstrationCritters
 
         public Wanderer(string name)
         {
-            Debugging = false;
-
             Name = name;
         }
 
@@ -51,19 +46,13 @@ namespace DemonstrationCritters
             switch (notification)
             {
                 case "LAUNCH":
-                    Send("RANDOM_DESTINATION");
-                    if (Debugging)
-                    {
-                        Send("DEBUG:1");
-                    }
-                    break;
                 case "REACHED_DESTINATION":
                 case "FIGHT":
                 case "BUMP":
                     Send("RANDOM_DESTINATION");
                     break;
                 case "ERROR":
-                    Console.WriteLine(message);
+                    Log(message);
                     break;
             }
         }

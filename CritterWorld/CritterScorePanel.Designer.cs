@@ -43,6 +43,7 @@ namespace CritterWorld
             this.spriteSurfaceCritter = new SCG.TurboSprite.SpriteSurface(this.components);
             this.labelNumber = new System.Windows.Forms.Label();
             this.iconSettings = new System.Windows.Forms.Label();
+            this.checkBoxDebug = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // labelScore
@@ -57,7 +58,7 @@ namespace CritterWorld
             // 
             // progressBarEnergy
             // 
-            this.progressBarEnergy.Location = new System.Drawing.Point(264, 7);
+            this.progressBarEnergy.Location = new System.Drawing.Point(300, 4);
             this.progressBarEnergy.Margin = new System.Windows.Forms.Padding(2);
             this.progressBarEnergy.Name = "progressBarEnergy";
             this.progressBarEnergy.Size = new System.Drawing.Size(34, 7);
@@ -65,7 +66,7 @@ namespace CritterWorld
             // 
             // progressBarHealth
             // 
-            this.progressBarHealth.Location = new System.Drawing.Point(264, 17);
+            this.progressBarHealth.Location = new System.Drawing.Point(300, 14);
             this.progressBarHealth.Margin = new System.Windows.Forms.Padding(2);
             this.progressBarHealth.Name = "progressBarHealth";
             this.progressBarHealth.Size = new System.Drawing.Size(34, 7);
@@ -84,7 +85,7 @@ namespace CritterWorld
             // labelHealth
             // 
             this.labelHealth.Image = ((System.Drawing.Image)(resources.GetObject("labelHealth.Image")));
-            this.labelHealth.Location = new System.Drawing.Point(246, 16);
+            this.labelHealth.Location = new System.Drawing.Point(282, 13);
             this.labelHealth.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelHealth.Name = "labelHealth";
             this.labelHealth.Size = new System.Drawing.Size(16, 16);
@@ -93,7 +94,7 @@ namespace CritterWorld
             // labelEnergy
             // 
             this.labelEnergy.Image = ((System.Drawing.Image)(resources.GetObject("labelEnergy.Image")));
-            this.labelEnergy.Location = new System.Drawing.Point(246, 2);
+            this.labelEnergy.Location = new System.Drawing.Point(282, -1);
             this.labelEnergy.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelEnergy.Name = "labelEnergy";
             this.labelEnergy.Size = new System.Drawing.Size(16, 16);
@@ -152,17 +153,31 @@ namespace CritterWorld
             // iconSettings
             // 
             this.iconSettings.Image = ((System.Drawing.Image)(resources.GetObject("iconSettings.Image")));
-            this.iconSettings.Location = new System.Drawing.Point(302, 2);
+            this.iconSettings.Location = new System.Drawing.Point(207, -2);
             this.iconSettings.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.iconSettings.Name = "iconSettings";
             this.iconSettings.Size = new System.Drawing.Size(22, 22);
             this.iconSettings.TabIndex = 12;
             this.iconSettings.Click += new System.EventHandler(this.IconSettings_Click);
             // 
+            // checkBoxDebug
+            // 
+            this.checkBoxDebug.AutoSize = true;
+            this.checkBoxDebug.CheckAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.checkBoxDebug.Location = new System.Drawing.Point(236, 0);
+            this.checkBoxDebug.Margin = new System.Windows.Forms.Padding(0);
+            this.checkBoxDebug.Name = "checkBoxDebug";
+            this.checkBoxDebug.Size = new System.Drawing.Size(41, 31);
+            this.checkBoxDebug.TabIndex = 13;
+            this.checkBoxDebug.Text = "debug";
+            this.checkBoxDebug.UseVisualStyleBackColor = true;
+            this.checkBoxDebug.CheckedChanged += new System.EventHandler(this.CheckBoxDebug_CheckedChanged);
+            // 
             // CritterScorePanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.checkBoxDebug);
             this.Controls.Add(this.iconSettings);
             this.Controls.Add(this.labelNumber);
             this.Controls.Add(this.labelDead);
@@ -176,7 +191,7 @@ namespace CritterWorld
             this.Controls.Add(this.spriteSurfaceCritter);
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "CritterScorePanel";
-            this.Size = new System.Drawing.Size(327, 39);
+            this.Size = new System.Drawing.Size(341, 39);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -195,5 +210,6 @@ namespace CritterWorld
         private System.Windows.Forms.Label labelDead;
         private System.Windows.Forms.Label labelNumber;
         private System.Windows.Forms.Label iconSettings;
+        private System.Windows.Forms.CheckBox checkBoxDebug;
     }
 }

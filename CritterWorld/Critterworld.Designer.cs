@@ -1,4 +1,6 @@
-﻿namespace CritterWorld
+﻿using System;
+
+namespace CritterWorld
 {
     partial class Critterworld
     {

@@ -41,49 +41,50 @@ namespace CritterWorld
         int heatNumber = 0;
 
         // Logging thread and logging flag. Set logging to false to shut down logging thread.
-        private bool logging = false;
-        private Thread logThread = null;
+        bool logging = false;
+        Thread logThread = null;
 
         // Log message queue.
-        private static BlockingCollection<LogEntry> logMessageQueue = new BlockingCollection<LogEntry>();
+        static BlockingCollection<LogEntry> logMessageQueue = new BlockingCollection<LogEntry>();
 
         // Run this level
-        private int levelNumber = 0;
+        int levelNumber = 0;
 
         // The current running Level.
-        private Level level;
+        Level level;
 
         // If in free-run mode, how many cycles have run?
-        private int cycleCounter = 0;
+        int cycleCounter = 0;
 
         // Display update thread and flag. Set displayUpdating to false to shut down the update thread.
-        private bool displayUpdating = false;
-        private Thread displayUpdateThread = null;
+        bool displayUpdating = false;
+        Thread displayUpdateThread = null;
 
         // To time how long "GAME OVER" is displayed before switching to attract mode
-        private Timer gameOverTimer = null;
+        Timer gameOverTimer = null;
 
         // True if level timer is running.
-        private bool levelTimerRunning = false;
+        bool levelTimerRunning = false;
 
         // Preserves window layout when going full screen
-        private Size oldSize;
-        private Point oldLocation;
-        private FormWindowState oldState;
-        private FormBorderStyle oldStyle;
+        Size oldSize;
+        Point oldLocation;
+        FormWindowState oldState;
+        FormBorderStyle oldStyle;
 
         // Environment state
-        private bool isFullScreen = false;
-        private bool exiting = false;
-        private bool IsCompetition { get; set; } = false;
+        bool isFullScreen = false;
+        bool exiting = false;
+        bool IsCompetition { get; set; } = false;
 
         // Critter loader
-        private CritterLoader critterLoader = new CritterLoader();
+        CritterLoader critterLoader = new CritterLoader();
 
         // True if a Critter has escaped and we need to sort the Leader Board.
-        private bool leaderBoardNeedsSorted;
+        bool leaderBoardNeedsSorted;
 
-        private bool Fullscreen
+        // Fullscreen mode.
+        bool Fullscreen
         {
             get
             {
@@ -525,6 +526,7 @@ namespace CritterWorld
         {
             logging = true;
             logThread = new Thread(() => RetrieveAndDisplayLogMessages());
+            logThread.IsBackground = true;
             logThread.Start();
         }
 
@@ -662,7 +664,6 @@ namespace CritterWorld
             LaunchDisplayUpdate();
             LaunchLogger();
         }
-
     }
 
 }

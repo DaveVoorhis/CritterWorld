@@ -17,11 +17,12 @@ namespace DemonstrationCritters
         Form settings = null;
         System.Timers.Timer getInfoTimer;
         bool headingForGoal = false;
-        private readonly bool Debugging = false;
 
         public string Name { get; set; }
 
         public Send Responder { get; set; }
+
+        public Send Logger { get; set; }
 
         private static Point PointFrom(string coordinate)
         {
@@ -33,12 +34,9 @@ namespace DemonstrationCritters
             return new Point(x, y);
         }
 
-        private void Log(string msg)
+        private void Log(string message)
         {
-            if (Debugging)
-            {
-                Console.WriteLine(Name + ":" + msg);
-            }
+            Logger.Invoke(message);
         }
 
         private void Send(string message)
@@ -58,8 +56,6 @@ namespace DemonstrationCritters
 
         public Chaser(string name)
         {
-            Debugging = false;
-
             Name = name;
         }
 
@@ -113,7 +109,7 @@ namespace DemonstrationCritters
                     }
                     break;
                 case "ERROR":
-                    Console.WriteLine(message);
+                    Log(message);
                     break;
             }
         }
