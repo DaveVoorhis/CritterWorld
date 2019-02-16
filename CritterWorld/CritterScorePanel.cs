@@ -123,6 +123,7 @@ namespace CritterWorld
                 labelScore.Text = critter.DeadReason;
                 MakeProgressBarsVisible(false);
             }
+            checkBoxDebug.Checked = critter.Debugging;
         }
 
         private void IconSettings_Click(object sender, EventArgs e)
