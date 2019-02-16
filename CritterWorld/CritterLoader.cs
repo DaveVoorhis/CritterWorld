@@ -14,6 +14,9 @@ namespace CritterWorld
         // Later, this should be administrator-configurable. For now, it's just the executable directory.
         private readonly string configDLLPath = "";
 
+        // Path to Critter files. As above, this should be administrator-configurable. For now, it's a created subdirectory of the executable directory.
+        private readonly string filepathForCritterFiles = "CritterFiles";
+
         public CritterLoader()
         {
         }
@@ -21,8 +24,25 @@ namespace CritterWorld
         // Get list of all dll files in specified folder. Iterate through them to find classes that implement ICritterControllerFactory.
         public List<Critter> LoadCritters()
         {
+            string executablePath = Path.GetDirectoryName(Application.ExecutablePath);
+            string pathForCritterFiles = executablePath + "/" + filepathForCritterFiles;
+            string dllPath = executablePath + "/" + configDLLPath;
+
             List<Critter> critters = new List<Critter>();
-            string dllPath = Path.GetDirectoryName(Application.ExecutablePath) + "/" + configDLLPath;
+
+            if (!File.Exists(pathForCritterFiles))
+            {
+                try
+                {
+                    Directory.CreateDirectory(pathForCritterFiles);
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("Unable to create Critter file directory " + pathForCritterFiles + " due to " + e, "Unable to Load Critters", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return critters;
+                }
+            }
+
             Console.WriteLine("Loading Critter controllers from " + dllPath);
             try
             {
@@ -47,30 +67,39 @@ namespace CritterWorld
                                 else
                                 {
                                     Color familyColor = Color.Black;
-                                    foreach (ICritterController controller in critterFactory.GetCritterControllers())
+                                    ICritterController[] controllers = critterFactory.GetCritterControllers();
+                                    if (controllers == null)
                                     {
-                                        if (controller == null)
+                                        Console.WriteLine("Error loading controller from " + file + ". CritterFactory.GetCritterControllers() returned null.");
+                                    }
+                                    else
+                                    {
+                                        foreach (ICritterController controller in controllers)
                                         {
-                                            Console.WriteLine("Error loading controller from " + file + ". Failed to load; controller is null.");
-                                        }
-                                        else
-                                        {
-                                            Console.WriteLine("Loaded controller " + controller.Name + " by " + critterFactory.Author + " from " + file);
-                                            Critter critter = new Critter(critterNumber++, controller);
-                                            if (familyColor == Color.Black)
+                                            if (controller == null)
                                             {
-                                                familyColor = critter.Color;
+                                                Console.WriteLine("Error loading controller from " + file + ". Failed to load; controller is null.");
                                             }
                                             else
                                             {
-                                                critter.Color = familyColor;
+                                                Console.WriteLine("Loaded controller " + controller.Name + " by " + critterFactory.Author + " from " + file);
+                                                controller.Filepath = filepathForCritterFiles;
+                                                Critter critter = new Critter(critterNumber++, controller);
+                                                if (familyColor == Color.Black)
+                                                {
+                                                    familyColor = critter.Color;
+                                                }
+                                                else
+                                                {
+                                                    critter.Color = familyColor;
+                                                }
+                                                critter.Author = critterFactory.Author.Trim().Replace(':', '_').Replace('\t', '_').Replace('\n', '_');
+                                                if (controller.Name != null)
+                                                {
+                                                    critter.Name = controller.Name.Trim().Replace(':', '_').Replace('\t', '_').Replace('\n', '_');
+                                                }
+                                                critters.Add(critter);
                                             }
-                                            critter.Author = critterFactory.Author.Trim().Replace(':', '_').Replace('\t', '_').Replace('\n', '_');
-                                            if (controller.Name != null)
-                                            {
-                                                critter.Name = controller.Name.Trim().Replace(':', '_').Replace('\t', '_').Replace('\n', '_');
-                                            }
-                                            critters.Add(critter);
                                         }
                                     }
                                 }

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -14,7 +15,6 @@ namespace DemonstrationCritters
     public class Chaser : ICritterController
     {
         Point goal = new Point(-1, -1);
-        Form settings = null;
         System.Timers.Timer getInfoTimer;
         bool headingForGoal = false;
 
@@ -23,6 +23,12 @@ namespace DemonstrationCritters
         public Send Responder { get; set; }
 
         public Send Logger { get; set; }
+
+        public string Filepath { get; set; }
+
+        public int EatSpeed { get; set; } = 5;
+
+        public int HeadForExitSpeed { get; set; } = 5;
 
         private static Point PointFrom(string coordinate)
         {
@@ -36,7 +42,14 @@ namespace DemonstrationCritters
 
         private void Log(string message)
         {
-            Logger.Invoke(message);
+            if (Logger == null)
+            {
+                Console.WriteLine(message);
+            }
+            else
+            {
+                Logger.Invoke(message);
+            }
         }
 
         private void Send(string message)
@@ -54,6 +67,53 @@ namespace DemonstrationCritters
             Send("GET_LEVEL_TIME_REMAINING:1");
         }
 
+        private void LoadSettings()
+        {
+            string fileName = "Chaser.cfg";
+            string fileSpec = Filepath + "/" + fileName;
+            try
+            {
+                using (StreamReader reader = new StreamReader(fileSpec))
+                {
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        string[] lineParts = line.Split('=');
+                        switch (lineParts[0])
+                        {
+                            case "EatSpeed":
+                                EatSpeed = int.Parse(lineParts[1]);
+                                break;
+                            case "HeadForExitSpeed":
+                                HeadForExitSpeed = int.Parse(lineParts[1]);
+                                break;
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Log("Reading configuration " + fileSpec + " failed due to " + e);
+            }
+        }
+
+        public void SaveSettings()
+        {
+            string fileName = "Chaser.cfg";
+            string fileSpec = Filepath + "/" + fileName;
+            try
+            {
+                using (StreamWriter writer = new StreamWriter(fileSpec, false)) {
+                    writer.WriteLine("EatSpeed=" + EatSpeed);
+                    writer.WriteLine("HeadForExitSpeed=" + HeadForExitSpeed);
+                }
+            }
+            catch (Exception e)
+            {
+                Log("Writing configuration " + fileSpec + " failed due to " + e);
+            }
+        }
+
         public Chaser(string name)
         {
             Name = name;
@@ -61,11 +121,8 @@ namespace DemonstrationCritters
 
         public void LaunchUI()
         {
-            if (settings == null)
-            {
-                settings = new ChaserSettings();
-            }
-            settings.Visible = !settings.Visible;
+            ChaserSettings settings = new ChaserSettings(this);
+            settings.Show();
             settings.Focus();
         }
 
@@ -77,6 +134,7 @@ namespace DemonstrationCritters
             switch (notification)
             {
                 case "LAUNCH":
+                    LoadSettings();
                     headingForGoal = false;
                     Send("STOP");
                     Send("SCAN:1");
@@ -105,7 +163,7 @@ namespace DemonstrationCritters
                     {
                         Log("Now heading for goal.");
                         headingForGoal = true;
-                        SetDestination(goal, 5);
+                        SetDestination(goal, HeadForExitSpeed);
                     }
                     break;
                 case "ERROR":
@@ -126,7 +184,7 @@ namespace DemonstrationCritters
                     Log("I see nothing. Maybe aim for the escape hatch.");
                     if (headingForGoal && goal != new Point(-1, -1))
                     {
-                        SetDestination(goal, 5);
+                        SetDestination(goal, HeadForExitSpeed);
                     }
                 }
                 else
@@ -136,11 +194,11 @@ namespace DemonstrationCritters
                     {
                         case "Food":
                             Log("Food is at " + location);
-                            SetDestination(location, 5);
+                            SetDestination(location, EatSpeed);
                             break;
                         case "Gift":
                             Log("Gift is at " + location);
-                            SetDestination(location, 5);
+                            SetDestination(location, EatSpeed);
                             break;
                         case "Bomb":
                             Log("Bomb is at " + location);
@@ -149,7 +207,7 @@ namespace DemonstrationCritters
                         case "EscapeHatch":
                             if (headingForGoal)
                             {
-                                SetDestination(location, 5);
+                                SetDestination(location, HeadForExitSpeed);
                             }
                             Log("EscapeHatch is at " + location);
                             break;

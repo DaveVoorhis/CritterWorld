@@ -18,9 +18,18 @@ namespace DemonstrationCritters
 
         public Send Logger { get; set; }
 
+        public string Filepath { get; set; }
+
         private void Log(string message)
         {
-            Logger.Invoke(message);
+            if (Logger == null)
+            {
+                Console.WriteLine(message);
+            }
+            else
+            {
+                Logger.Invoke(message);
+            }
         }
 
         private void Send(string message)

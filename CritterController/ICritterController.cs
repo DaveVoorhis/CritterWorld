@@ -14,6 +14,7 @@ namespace CritterController
         string Name { get; }
         Send Responder { get; set; }
         Send Logger { get; set; }
+        string Filepath { get; set; }
         void Receive(string message);
         void LaunchUI();
     }
