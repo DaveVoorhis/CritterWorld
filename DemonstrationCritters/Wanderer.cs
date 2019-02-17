@@ -21,13 +21,8 @@ namespace DemonstrationCritters
             }
             else
             {
-                Logger.Invoke(message);
+                Logger(message);
             }
-        }
-
-        private void Send(string message)
-        {
-            Responder.Invoke(message);
         }
 
         public Wanderer(string name)
@@ -51,7 +46,7 @@ namespace DemonstrationCritters
                 case "REACHED_DESTINATION":
                 case "FIGHT":
                 case "BUMP":
-                    Send("RANDOM_DESTINATION");
+                    Responder("RANDOM_DESTINATION");
                     break;
                 case "ERROR":
                     Log(message);

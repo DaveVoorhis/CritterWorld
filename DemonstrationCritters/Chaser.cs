@@ -41,23 +41,18 @@ namespace DemonstrationCritters
             }
             else
             {
-                Logger.Invoke(message);
+                Logger(message);
             }
-        }
-
-        private void Send(string message)
-        {
-            Responder.Invoke(message);
         }
 
         private void SetDestination(Point coordinate, int speed)
         {
-            Send("SET_DESTINATION:" + coordinate.X + ":" + coordinate.Y + ":" + speed);
+            Responder("SET_DESTINATION:" + coordinate.X + ":" + coordinate.Y + ":" + speed);
         }
 
         private void Tick()
         {
-            Send("GET_LEVEL_TIME_REMAINING:1");
+            Responder("GET_LEVEL_TIME_REMAINING:1");
         }
 
         private void LoadSettings()
@@ -129,8 +124,8 @@ namespace DemonstrationCritters
                 case "LAUNCH":
                     LoadSettings();
                     headingForGoal = false;
-                    Send("STOP");
-                    Send("SCAN:1");
+                    Responder("STOP");
+                    Responder("SCAN:1");
                     getInfoTimer = new System.Timers.Timer();
                     getInfoTimer.Interval = 2000;
                     getInfoTimer.Elapsed += (obj, evt) => Tick();
@@ -145,7 +140,7 @@ namespace DemonstrationCritters
                 case "REACHED_DESTINATION":
                 case "FIGHT":
                 case "BUMP":
-                    Send("RANDOM_DESTINATION");
+                    Responder("RANDOM_DESTINATION");
                     break;
                 case "SEE":
                     See(message);
@@ -195,7 +190,7 @@ namespace DemonstrationCritters
                             break;
                         case "Bomb":
                             Log("Bomb is at " + location);
-                            Send("RANDOM_DESTINATION");
+                            Responder("RANDOM_DESTINATION");
                             break;
                         case "EscapeHatch":
                             if (headingForGoal)
