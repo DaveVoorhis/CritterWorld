@@ -134,6 +134,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Documentation\Changes.txt" />
     <Content Include="Resources\Images\ballcache.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -223,6 +224,7 @@
     <Content Include="Resources\Sounds\Zap2.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Documentation\TODO.txt" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
