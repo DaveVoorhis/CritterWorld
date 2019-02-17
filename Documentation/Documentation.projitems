@@ -12,4 +12,8 @@
     <Content Include="$(MSBuildThisFileDirectory)Changes.txt" />
     <Content Include="$(MSBuildThisFileDirectory)TODO.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)Specification of Requirements for a Critter Controller.docx" />
+    <None Include="$(MSBuildThisFileDirectory)Specification of Requirements for a Critter Controller.pdf" />
+  </ItemGroup>
 </Project>
