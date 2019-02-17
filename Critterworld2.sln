@@ -19,7 +19,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemonstrationCritters", "De
 		{06DBFCFC-D8CF-474F-9A07-0FD1313BA9EA} = {06DBFCFC-D8CF-474F-9A07-0FD1313BA9EA}
 	EndProjectSection
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Documentation", "Documentation\Documentation.shproj", "{4E7AD907-0AD6-46A9-99F2-690AD28B259E}"
+EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Documentation\Documentation.projitems*{4e7ad907-0ad6-46a9-99f2-690ad28b259e}*SharedItemsImports = 13
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
