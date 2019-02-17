@@ -19,6 +19,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemonstrationCritters", "De
 		{06DBFCFC-D8CF-474F-9A07-0FD1313BA9EA} = {06DBFCFC-D8CF-474F-9A07-0FD1313BA9EA}
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{07104E80-CA5A-4D8C-8D49-1FA390991BFF}"
+	ProjectSection(SolutionItems) = preProject
+		CritterWorld\Documentation\Changes.txt = CritterWorld\Documentation\Changes.txt
+		CritterWorld\Documentation\TODO.txt = CritterWorld\Documentation\TODO.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
