@@ -38,7 +38,6 @@ namespace CritterWorld
         public int EscapedCount { get; private set; }
         public int BombedCount { get; private set; }
         public int CrashedCount { get; private set; }
-        public int TerminatedCount { get; private set; }
         public int StarvedCount { get; private set; }
         public int FatallyInjuredCount { get; private set; }
 
@@ -512,16 +511,6 @@ namespace CritterWorld
             Notify("CRASHED:" + Position.ToString() + ":" + e.ToString());
             CrashedCount++;
             DeadReason = "crashed";
-            Log(DeadReason);
-            Health = 0;
-            Energy = 0;
-        }
-
-        internal void Terminated(string reason)
-        {
-            Notify("TERMINATED:" + Position.ToString() + ":" + reason);
-            TerminatedCount++;
-            DeadReason = "terminated for " + reason;
             Log(DeadReason);
             Health = 0;
             Energy = 0;
