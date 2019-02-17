@@ -19,8 +19,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemonstrationCritters", "De
 		{06DBFCFC-D8CF-474F-9A07-0FD1313BA9EA} = {06DBFCFC-D8CF-474F-9A07-0FD1313BA9EA}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Documentation", "Documentation\Documentation.csproj", "{2AFE5644-1042-4DA8-8FF6-A75A20A9178E}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,8 +45,6 @@ Global
 		{9BEABD20-1A39-4913-9765-D057124641E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9BEABD20-1A39-4913-9765-D057124641E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9BEABD20-1A39-4913-9765-D057124641E8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2AFE5644-1042-4DA8-8FF6-A75A20A9178E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2AFE5644-1042-4DA8-8FF6-A75A20A9178E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
