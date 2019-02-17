@@ -109,7 +109,7 @@ namespace CritterWorld
                 {
                     if (critter.Debugging)
                     {
-                        Console.WriteLine("Message from controller for " + critter.NumberNameAndAuthor + ": " + message);
+                        critter.LogDebugging("Message from controller: " + message);
                     }
                     try
                     {
@@ -344,7 +344,7 @@ namespace CritterWorld
         // Send message to controller
         private void Notify(string message)
         {
-            LogDebugging("Message to controller from " + NumberNameAndAuthor + ": " + message);
+            LogDebugging("Message to controller: " + message);
             MessagesFromBody.Enqueue(message);
         }
 
