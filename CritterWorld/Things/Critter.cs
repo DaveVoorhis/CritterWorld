@@ -243,7 +243,7 @@ namespace CritterWorld
         {
             if (destX < 0 || destX > Critterworld.ArenaWidth - 1 || destY < 0 || destY > Critterworld.ArenaHeight - 1 || speed < 1 || speed > 10)
             {
-                Notify("SET_DESTINATION: Error: Invalid value in destination coordinate " + destX + ", " + destY + " at speed " + speed);
+                Notify("Error: SET_DESTINATION: Invalid value in destination coordinate " + destX + ", " + destY + " at speed " + speed);
             }
             else
             {
@@ -257,7 +257,7 @@ namespace CritterWorld
             {
                 if (speed < 1 || speed > 10)
                 {
-                    Notify("SET_SPEED: Error: Invalid speed " + speed);
+                    Notify("Error: SET_SPEED: Invalid speed " + speed);
                 }
                 else
                 {
