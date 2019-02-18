@@ -106,10 +106,7 @@ namespace CritterWorld
 
                 while (critter.MessagesToBody.TryDequeue(out string message))
                 {
-                    if (critter.Debugging)
-                    {
-                        critter.LogDebugging("Message from controller: " + message);
-                    }
+                    critter.LogDebugging("Message from controller: " + message);
                     try
                     {
                         string[] commandParts = message.Split(':');
