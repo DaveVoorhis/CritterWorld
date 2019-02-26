@@ -74,11 +74,6 @@ namespace CritterWorld
         {
             if (sprite is Critter critter)
             {
-                if (sprite.Mover is TargetMover mover && (mover.SpeedX != 0 || mover.SpeedY != 0))
-                {
-                    mover.TargetFacingAngle = (int)GetAngle(mover.SpeedX, mover.SpeedY) + 90;
-                }
-
                 if (critter.numberPlate != null)
                 {
                     if (critter.stopped)
@@ -100,6 +95,16 @@ namespace CritterWorld
                             critter.numberPlateIncrement = 1;
                         }
                     }
+                }
+
+                if (critter.IsDead)
+                {
+                    return;
+                }
+
+                if (sprite.Mover is TargetMover mover && (mover.SpeedX != 0 || mover.SpeedY != 0))
+                {
+                    mover.TargetFacingAngle = (int)GetAngle(mover.SpeedX, mover.SpeedY) + 90;
                 }
 
                 critter.See();
