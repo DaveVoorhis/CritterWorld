@@ -43,7 +43,7 @@ namespace CritterWorld
             InitializeComponent();
 
             // Click on anything to highlight critter
-            Click += (e, evt) => critter.ShowShockwave();
+            Click += (e, evt) => critter?.ShowShockwave();
             components.Components.Cast<Control>().ToList().ForEach(control => control.Click += (e, evt) => critter.ShowShockwave());
 
             spriteEngine = new SpriteEngine
