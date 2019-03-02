@@ -15,6 +15,8 @@ namespace CritterWorld
             Exception = exception;
         }
 
+        public LogEntry(string eventMessage, Exception exception = null) : this(0, "<system>", "<system>", eventMessage, exception) { }
+
         public DateTime Timestamp { get; }
         public int CritterNumber { get; }
         public string CritterName { get; }

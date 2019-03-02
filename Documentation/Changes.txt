@@ -1,3 +1,7 @@
+Version 2.2
+
+ - CritterLoader now sends log messages to Critterworld.Log instead of Console.
+
 Version 2.1
 
  - Fix possible NPE in Critter.
