@@ -55,7 +55,6 @@ namespace SCG.TurboSprite
                 _rotatedPoints[i] = new PointF[polySize];
             }
             RotateAndAnimate();
-            ObtainShape();
         }
 
         public PointF[][] Model { get; internal set; }
@@ -135,6 +134,7 @@ namespace SCG.TurboSprite
                     _rotatedPoints[_lastFrame][point].X = Model[_lastFrame][point].X * cos - Model[_lastFrame][point].Y * sin;
                     _rotatedPoints[_lastFrame][point].Y = Model[_lastFrame][point].Y * cos + Model[_lastFrame][point].X * sin;
                 }
+                ObtainShape();
             }
         }
 
