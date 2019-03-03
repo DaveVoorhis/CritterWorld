@@ -1,3 +1,8 @@
+Version 2.3
+
+- Critters occasionally appeared at Point(0, 0) immediately after launch due
+  to collision and broken Bounceback(). Fixed.
+
 Version 2.2
 
  - CritterLoader now sends log messages to Critterworld.Log instead of Console.

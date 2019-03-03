@@ -1,2 +1,2 @@
-﻿- Critters occasionally appear at Point(0, 0) immediately after launch. Fix.
+﻿
 
