@@ -52,8 +52,8 @@ namespace SCG.TurboSprite
         public float SpeedY { get; set; }
 
         // Last position before movement.
-        public float LastPositionX { get; private set; }
-        public float LastPositionY { get; private set; }
+        public float LastPositionX { get; private set; } = -1;
+        public float LastPositionY { get; private set; } = -1;
 
         public PointF LastPosition
         {
@@ -125,7 +125,7 @@ namespace SCG.TurboSprite
         // creeping through obstacles when a collision is detected.
         public void Bounceback()
         {
-            if (_sprite != null)
+            if (_sprite != null && LastPosition.X >= 0 && LastPosition.Y >= 0)
             {
                 _sprite.PositionF = LastPosition;
             }
