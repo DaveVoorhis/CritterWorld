@@ -292,11 +292,6 @@ namespace SCG.TurboSprite
             }
         }
 
-        // The sprite's spin (if any)
-        public SpinType Spin { get; set; }
-
-        public int SpinSpeed { get; set; }
-
         // The sprite's mover.
         public IMover Mover { get; set; }
 
@@ -306,20 +301,6 @@ namespace SCG.TurboSprite
             Dead = true;
         }
 
-        // Process the internal logic a sprite may require during each animation cycle
-        internal void PreProcess()
-        {
-            switch (Spin)
-            {
-                case SpinType.Clockwise:
-                    FacingAngle += SpinSpeed;
-                    break;
-                case SpinType.CounterClockwise:
-                    FacingAngle -= SpinSpeed;
-                    break;
-            }
-        }
-
         // Render the sprite on the SpriteSurface
         protected internal abstract void Render(Graphics g);
 
@@ -327,13 +308,10 @@ namespace SCG.TurboSprite
 
         public event Processor Processors;
 
-        // Launch any additional processing.
+        // Launch processing.
         protected internal void LaunchProcess()
         {
             Processors?.Invoke(this);
         }
     }
-
-    // Direction of sprite's spin
-    public enum SpinType { None, Clockwise, CounterClockwise };
 }

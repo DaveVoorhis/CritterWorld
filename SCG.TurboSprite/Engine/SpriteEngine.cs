@@ -205,7 +205,6 @@ namespace SCG.TurboSprite
             {
                 Sprites.ForEach(sprite =>
                 {
-                    sprite.PreProcess();
                     sprite.LaunchProcess();
                     sprite.Mover?.MoveSprite(sprite);
                 });
