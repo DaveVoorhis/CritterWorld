@@ -40,7 +40,6 @@ namespace SCG.TurboSprite
         private int _lastFrame = 0;
         private int _lastAngle;
         private readonly PointF[][] _rotatedPoints;
-        private readonly PointF[][] _drawnPoints;
 
         // Construct a polygon-based sprite with 1 or more arrays of points that can be selected to create animation.
         public PolygonSprite(PointF[][] model)
@@ -50,14 +49,13 @@ namespace SCG.TurboSprite
             _lastFrame = 0;
             FrameCount = model.Length;
             _rotatedPoints = new PointF[FrameCount][];
-            _drawnPoints = new PointF[FrameCount][];
             for (int i = 0; i < FrameCount; i++)
             {
                 int polySize = model[i].Length;
-                _drawnPoints[i] = new PointF[polySize];
                 _rotatedPoints[i] = new PointF[polySize];
             }
             RotateAndAnimate();
+            ObtainShape();
         }
 
         public PointF[][] Model { get; internal set; }
@@ -137,7 +135,6 @@ namespace SCG.TurboSprite
                     _rotatedPoints[_lastFrame][point].X = Model[_lastFrame][point].X * cos - Model[_lastFrame][point].Y * sin;
                     _rotatedPoints[_lastFrame][point].Y = Model[_lastFrame][point].Y * cos + Model[_lastFrame][point].X * sin;
                 }
-                ObtainShape();
             }
         }
 
@@ -146,27 +143,24 @@ namespace SCG.TurboSprite
         {
             RotateAndAnimate();
 
-            // Transform polygon into viewport coordinates
-            for (int point = 0; point < _rotatedPoints[_lastFrame].Length; point++)
-            {
-                _drawnPoints[_lastFrame][point].X = _rotatedPoints[_lastFrame][point].X + X - Surface.OffsetX;
-                _drawnPoints[_lastFrame][point].Y = _rotatedPoints[_lastFrame][point].Y + Y - Surface.OffsetY;
-            }
+            graphics.TranslateTransform(X - Surface.OffsetX, Y - Surface.OffsetY);
 
             // Fill it?
             if (IsFilled)
             {
                 using (Brush brush = new SolidBrush(FillColor))
                 {
-                    graphics.FillPolygon(brush, _drawnPoints[_lastFrame]);
+                    graphics.FillPolygon(brush, _rotatedPoints[_lastFrame]);
                 }
             }
 
             // Draw outline
             using (Pen pen = new Pen(Color, LineWidth))
             {
-                graphics.DrawPolygon(pen, _drawnPoints[_lastFrame]);
+                graphics.DrawPolygon(pen, _rotatedPoints[_lastFrame]);
             }
+
+            graphics.TranslateTransform(-(X + Surface.OffsetX), -(Y - Surface.OffsetY));
         }
     }
 }
