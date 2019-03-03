@@ -611,19 +611,23 @@ namespace CritterWorld
         // Launch this Critter.
         internal void Launch()
         {
-            Reset();
-
-            AttachNumberPlate();
-
-            TargetMover spriteMover = new TargetMover();
-            spriteMover.SpriteReachedTarget += (sender, spriteEvent) => Notify("REACHED_DESTINATION:" + spriteEvent.Sprite.Position.ToString());
-            spriteMover.SpriteMoved += MoveHandler;
-            Mover = spriteMover;
-
-            stopped = false;
-
             controllerThread = new Thread(() =>
             {
+                Reset();
+
+                AttachNumberPlate();
+
+                TargetMover spriteMover = new TargetMover();
+                spriteMover.SpriteReachedTarget += (sender, spriteEvent) => Notify("REACHED_DESTINATION:" + spriteEvent.Sprite.Position.ToString());
+                spriteMover.SpriteMoved += MoveHandler;
+                Mover = spriteMover;
+
+                stopped = false;
+
+                Log("launched");
+
+                Notify("LAUNCH:" + Position.ToString());
+
                 controllerThreadRunning = true;
                 while (controllerThreadRunning)
                 {
@@ -649,10 +653,6 @@ namespace CritterWorld
             });
             controllerThread.IsBackground = true;
             controllerThread.Start();
-
-            Log("launched");
-
-            Notify("LAUNCH:" + Position.ToString());
         }
 
         // Shut down this Critter.
