@@ -61,6 +61,13 @@
       <DependentUpon>Critterworld.cs</DependentUpon>
     </Compile>
     <Compile Include="LogEntry.cs" />
+    <Compile Include="PropertiesDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PropertiesDialog.Designer.cs">
+      <DependentUpon>PropertiesDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PropertiesManager.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -95,6 +102,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Critterworld.resx">
       <DependentUpon>Critterworld.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PropertiesDialog.resx">
+      <DependentUpon>PropertiesDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

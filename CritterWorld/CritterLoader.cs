@@ -11,21 +11,12 @@ namespace CritterWorld
 {
     public class CritterLoader
     {
-        // Maximum number of critter controllers that may be loaded from a DLL during a competition.
-        private const int CompetitionControllerLoadMaximum = 5;
-
-        // Later, this should be administrator-configurable. For now, it's just the executable directory.
-        private readonly string configDLLPath = "";
-
-        // Path to Critter files. As above, this should be administrator-configurable. For now, it's a created subdirectory of the executable directory.
-        private readonly string filepathForCritterFiles = "CritterFiles";
-
         // Get list of all dll files in specified folder. Iterate through them to find classes that implement ICritterControllerFactory.
         public List<Critter> LoadCritters(bool isCompetition)
         {
             string executablePath = Path.GetDirectoryName(Application.ExecutablePath);
-            string pathForCritterFiles = executablePath + "/" + filepathForCritterFiles;
-            string dllPath = executablePath + "/" + configDLLPath;
+            string pathForCritterFiles = executablePath + "/" + PropertiesManager.Properties.CritterControllerFilesPath;
+            string dllPath = executablePath + "/" + PropertiesManager.Properties.CritterControllerDLLPath;
 
             List<Critter> critters = new List<Critter>();
 
@@ -85,7 +76,7 @@ namespace CritterWorld
                                                 try
                                                 {
                                                     int number = critterNumber++;
-                                                    controller.Filepath = filepathForCritterFiles;
+                                                    controller.Filepath = PropertiesManager.Properties.CritterControllerFilesPath;
                                                     Critter critter = new Critter(number, controller);
                                                     if (familyColor == Color.Black)
                                                     {
@@ -103,9 +94,9 @@ namespace CritterWorld
                                                     Critterworld.Log(new LogEntry(number, controller.Name, critterFactory.Author, "Loaded controller from " + file));
                                                     critters.Add(critter);
                                                     loadedCount++;
-                                                    if (isCompetition && loadedCount == CompetitionControllerLoadMaximum)
+                                                    if (isCompetition && loadedCount == PropertiesManager.Properties.CompetitionControllerLoadMaximum)
                                                     {
-                                                        Critterworld.Log(new LogEntry(number, critter.Name, critter.Author, "During competition, maximum number of controllers loadable from a factory is " + CompetitionControllerLoadMaximum));
+                                                        Critterworld.Log(new LogEntry(number, critter.Name, critter.Author, "During competition, maximum number of controllers loadable from a factory is " + PropertiesManager.Properties.CompetitionControllerLoadMaximum));
                                                         break;
                                                     }
                                                 }

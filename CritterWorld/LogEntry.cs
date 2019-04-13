@@ -3,7 +3,7 @@ using System.Globalization;
 
 namespace CritterWorld
 {
-    internal class LogEntry
+    public class LogEntry
     {
         public LogEntry(int critterNumber, string critterName, string author, string eventMessage, Exception exception = null)
         {

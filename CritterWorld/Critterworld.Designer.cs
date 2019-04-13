@@ -65,6 +65,8 @@ namespace CritterWorld
             this.critterBindingSourceWaiting = new System.Windows.Forms.BindingSource(this.components);
             this.panelScore = new System.Windows.Forms.Panel();
             this.arena = new CritterWorld.Arena();
+            this.menuProperties = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.statusStrip.SuspendLayout();
             this.menuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewLeaderboard)).BeginInit();
@@ -139,6 +141,8 @@ namespace CritterWorld
             this.menuNextLevel,
             this.toolStripSeparator3,
             this.menuStop,
+            this.toolStripSeparator2,
+            this.menuProperties,
             this.toolStripSeparator1,
             this.menuExit});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
@@ -211,7 +215,7 @@ namespace CritterWorld
             // menuFullScreen
             // 
             this.menuFullScreen.Name = "menuFullScreen";
-            this.menuFullScreen.Size = new System.Drawing.Size(130, 22);
+            this.menuFullScreen.Size = new System.Drawing.Size(180, 22);
             this.menuFullScreen.Text = "Full screen";
             this.menuFullScreen.Click += new System.EventHandler(this.MenuFullScreen_Click);
             // 
@@ -371,6 +375,18 @@ namespace CritterWorld
             this.arena.Size = new System.Drawing.Size(842, 490);
             this.arena.TabIndex = 3;
             // 
+            // menuProperties
+            // 
+            this.menuProperties.Name = "menuProperties";
+            this.menuProperties.Size = new System.Drawing.Size(220, 22);
+            this.menuProperties.Text = "Properties...";
+            this.menuProperties.Click += new System.EventHandler(this.MenuProperties_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(217, 6);
+            // 
             // Critterworld
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -438,5 +454,7 @@ namespace CritterWorld
         private System.Windows.Forms.DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn authorDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn overallScoreDataGridViewTextBoxColumn;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripMenuItem menuProperties;
     }
 }

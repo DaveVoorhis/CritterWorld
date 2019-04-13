@@ -313,6 +313,11 @@ namespace CritterWorld
             DisplayGameOver();
         }
 
+        private void ShowProperties()
+        {
+            PropertiesDialog.Launch();
+        }
+
         private void DisplayGameOver()
         {
             menuNextHeat.Enabled = false;
@@ -482,7 +487,7 @@ namespace CritterWorld
             ForceLayout();
         }
 
-        internal static void Log(LogEntry logEntry)
+        public static void Log(LogEntry logEntry)
         {
             logMessageQueue.Add(logEntry);
         }
@@ -634,6 +639,11 @@ namespace CritterWorld
         private void MenuExit_Click(object sender, EventArgs e)
         {
             ExitApplication();
+        }
+
+        private void MenuProperties_Click(object sender, EventArgs e)
+        {
+            ShowProperties();
         }
 
         public Critterworld()

@@ -10,7 +10,6 @@ namespace CritterWorld
 {
     public class Level
     {
-        private const int terrainDensity = 80;
         private const int critterSpriteScale = 1;
 
         public int FoodCount { get; set; } = 5;
@@ -55,8 +54,8 @@ namespace CritterWorld
 
         private void SetupTerrain()
         {
-            int mapWidth = terrainDensity;
-            int mapHeight = (int)(terrainDensity * (float)Arena.Surface.Height / Arena.Surface.Width);
+            int mapWidth = PropertiesManager.Properties.TerrainDetailFactor;
+            int mapHeight = (int)(PropertiesManager.Properties.TerrainDetailFactor * (float)Arena.Surface.Height / Arena.Surface.Width);
             for (int y = 0; y < mapHeight; y++)
             {
                 for (int x = 0; x < mapWidth; x++)
