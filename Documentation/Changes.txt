@@ -1,3 +1,7 @@
+Version 2.4
+
+- Added Properties settings.
+
 Version 2.3
 
 - Critters occasionally appeared at Point(0, 0) immediately after launch due
