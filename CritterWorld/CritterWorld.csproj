@@ -68,6 +68,7 @@
       <DependentUpon>PropertiesDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="PropertiesManager.cs" />
+    <Compile Include="PropertiesRecord.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

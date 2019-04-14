@@ -25,10 +25,12 @@ namespace CritterWorld
 
         private void LoadControls()
         {
-            textBoxMaxControllersPerDLL.Text = PropertiesManager.Properties.CompetitionControllerLoadMaximum.ToString();
+            trackBarMaxCrittersLoadedPerDLL.Value = PropertiesManager.Properties.CompetitionControllerLoadMaximum;
             textBoxPathToCritterControllerDLLs.Text = PropertiesManager.Properties.CritterControllerDLLPath;
             textBoxPathToFilesCreatedByCritterControllers.Text = PropertiesManager.Properties.CritterControllerFilesPath;
-            textBoxTerrainDetailFactor.Text = PropertiesManager.Properties.TerrainDetailFactor.ToString();
+            trackBarTerrainDetailFactor.Value = PropertiesManager.Properties.TerrainDetailFactor;
+            labelMaxCrittersLoadedPerDLLValue.Text = trackBarMaxCrittersLoadedPerDLL.Value.ToString();
+            labelTerrainDetailFactorValue.Text = trackBarTerrainDetailFactor.Value.ToString();
         }
 
         public PropertiesDialog()
@@ -62,20 +64,10 @@ namespace CritterWorld
 
         private void buttonOk_Click(object sender, EventArgs e)
         {
-            if (!int.TryParse(textBoxMaxControllersPerDLL.Text, out int controllersPerDLL))
-            {
-                MessageInvalidInput(labelMaxControllersPerDLL.Text);
-                return;
-            }
-            if (!int.TryParse(textBoxTerrainDetailFactor.Text, out int terrainDetailFactor))
-            {
-                MessageInvalidInput(labelTerrainDetailFactor.Text);
-                return;
-            }
-            PropertiesManager.Properties.CompetitionControllerLoadMaximum = controllersPerDLL;
+            PropertiesManager.Properties.CompetitionControllerLoadMaximum = trackBarMaxCrittersLoadedPerDLL.Value;
             PropertiesManager.Properties.CritterControllerDLLPath = textBoxPathToCritterControllerDLLs.Text.Trim();
             PropertiesManager.Properties.CritterControllerFilesPath = textBoxPathToFilesCreatedByCritterControllers.Text.Trim();
-            PropertiesManager.Properties.TerrainDetailFactor = terrainDetailFactor;
+            PropertiesManager.Properties.TerrainDetailFactor = trackBarTerrainDetailFactor.Value;
             Hide();
             PropertiesManager.Save();
         }
@@ -93,6 +85,16 @@ namespace CritterWorld
                 PropertiesManager.RestoreDefaults();
                 LoadControls();
             }
+        }
+
+        private void trackBarMaxCrittersLoadedPerDLL_ValueChange(object sender, EventArgs e)
+        {
+            labelMaxCrittersLoadedPerDLLValue.Text = trackBarMaxCrittersLoadedPerDLL.Value.ToString();
+        }
+
+        private void trackBarTerrainDetailFactor_ValueChange(object sender, EventArgs e)
+        {
+            labelTerrainDetailFactorValue.Text = trackBarTerrainDetailFactor.Value.ToString();
         }
     }
 }

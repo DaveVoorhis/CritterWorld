@@ -9,7 +9,7 @@ namespace CritterWorld
     public class Version
     {
         const int majorVersion = 2;
-        const int minorVersion = 4;
+        const int minorVersion = 5;
 
         private Version() { }
 

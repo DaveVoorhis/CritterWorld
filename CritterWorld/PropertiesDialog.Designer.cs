@@ -31,18 +31,22 @@
             this.buttonOk = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.labelMaxControllersPerDLL = new System.Windows.Forms.Label();
-            this.textBoxMaxControllersPerDLL = new System.Windows.Forms.TextBox();
             this.labelPathToDLLs = new System.Windows.Forms.Label();
             this.textBoxPathToCritterControllerDLLs = new System.Windows.Forms.TextBox();
             this.buttonLaunchDLLPathPicker = new System.Windows.Forms.Button();
             this.buttonLaunchCritterFilePicker = new System.Windows.Forms.Button();
             this.textBoxPathToFilesCreatedByCritterControllers = new System.Windows.Forms.TextBox();
             this.labelPathToControllerFiles = new System.Windows.Forms.Label();
-            this.textBoxTerrainDetailFactor = new System.Windows.Forms.TextBox();
             this.labelTerrainDetailFactor = new System.Windows.Forms.Label();
             this.folderBrowserDialogCritterControllerDLL = new System.Windows.Forms.FolderBrowserDialog();
             this.folderBrowserDialogCritterCreatedFiles = new System.Windows.Forms.FolderBrowserDialog();
             this.buttonRestoreDefaults = new System.Windows.Forms.Button();
+            this.trackBarMaxCrittersLoadedPerDLL = new System.Windows.Forms.TrackBar();
+            this.trackBarTerrainDetailFactor = new System.Windows.Forms.TrackBar();
+            this.labelMaxCrittersLoadedPerDLLValue = new System.Windows.Forms.Label();
+            this.labelTerrainDetailFactorValue = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarMaxCrittersLoadedPerDLL)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarTerrainDetailFactor)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonOk
@@ -76,13 +80,6 @@
             this.labelMaxControllersPerDLL.TabIndex = 2;
             this.labelMaxControllersPerDLL.Text = "Maximum number of Critter controllers loaded from a given DLL during competition:" +
     "";
-            // 
-            // textBoxMaxControllersPerDLL
-            // 
-            this.textBoxMaxControllersPerDLL.Location = new System.Drawing.Point(15, 25);
-            this.textBoxMaxControllersPerDLL.Name = "textBoxMaxControllersPerDLL";
-            this.textBoxMaxControllersPerDLL.Size = new System.Drawing.Size(100, 20);
-            this.textBoxMaxControllersPerDLL.TabIndex = 3;
             // 
             // labelPathToDLLs
             // 
@@ -142,13 +139,6 @@
             this.labelPathToControllerFiles.TabIndex = 7;
             this.labelPathToControllerFiles.Text = "Path to files created by Critter controllers.";
             // 
-            // textBoxTerrainDetailFactor
-            // 
-            this.textBoxTerrainDetailFactor.Location = new System.Drawing.Point(15, 178);
-            this.textBoxTerrainDetailFactor.Name = "textBoxTerrainDetailFactor";
-            this.textBoxTerrainDetailFactor.Size = new System.Drawing.Size(100, 20);
-            this.textBoxTerrainDetailFactor.TabIndex = 11;
-            // 
             // labelTerrainDetailFactor
             // 
             this.labelTerrainDetailFactor.AutoSize = true;
@@ -169,14 +159,60 @@
             this.buttonRestoreDefaults.UseVisualStyleBackColor = true;
             this.buttonRestoreDefaults.Click += new System.EventHandler(this.buttonRestoreDefaults_Click);
             // 
+            // trackBarMaxCrittersLoadedPerDLL
+            // 
+            this.trackBarMaxCrittersLoadedPerDLL.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.trackBarMaxCrittersLoadedPerDLL.Location = new System.Drawing.Point(15, 23);
+            this.trackBarMaxCrittersLoadedPerDLL.Maximum = 25;
+            this.trackBarMaxCrittersLoadedPerDLL.Minimum = 1;
+            this.trackBarMaxCrittersLoadedPerDLL.Name = "trackBarMaxCrittersLoadedPerDLL";
+            this.trackBarMaxCrittersLoadedPerDLL.Size = new System.Drawing.Size(696, 45);
+            this.trackBarMaxCrittersLoadedPerDLL.TabIndex = 13;
+            this.trackBarMaxCrittersLoadedPerDLL.Value = 5;
+            this.trackBarMaxCrittersLoadedPerDLL.ValueChanged += new System.EventHandler(this.trackBarMaxCrittersLoadedPerDLL_ValueChange);
+            // 
+            // trackBarTerrainDetailFactor
+            // 
+            this.trackBarTerrainDetailFactor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.trackBarTerrainDetailFactor.Location = new System.Drawing.Point(15, 179);
+            this.trackBarTerrainDetailFactor.Maximum = 120;
+            this.trackBarTerrainDetailFactor.Minimum = 50;
+            this.trackBarTerrainDetailFactor.Name = "trackBarTerrainDetailFactor";
+            this.trackBarTerrainDetailFactor.Size = new System.Drawing.Size(696, 45);
+            this.trackBarTerrainDetailFactor.TabIndex = 14;
+            this.trackBarTerrainDetailFactor.Value = 80;
+            this.trackBarTerrainDetailFactor.ValueChanged += new System.EventHandler(this.trackBarTerrainDetailFactor_ValueChange);
+            // 
+            // labelMaxCrittersLoadedPerDLLValue
+            // 
+            this.labelMaxCrittersLoadedPerDLLValue.AutoSize = true;
+            this.labelMaxCrittersLoadedPerDLLValue.Location = new System.Drawing.Point(411, 9);
+            this.labelMaxCrittersLoadedPerDLLValue.Name = "labelMaxCrittersLoadedPerDLLValue";
+            this.labelMaxCrittersLoadedPerDLLValue.Size = new System.Drawing.Size(13, 13);
+            this.labelMaxCrittersLoadedPerDLLValue.TabIndex = 15;
+            this.labelMaxCrittersLoadedPerDLLValue.Text = "0";
+            // 
+            // labelTerrainDetailFactorValue
+            // 
+            this.labelTerrainDetailFactorValue.AutoSize = true;
+            this.labelTerrainDetailFactorValue.Location = new System.Drawing.Point(119, 162);
+            this.labelTerrainDetailFactorValue.Name = "labelTerrainDetailFactorValue";
+            this.labelTerrainDetailFactorValue.Size = new System.Drawing.Size(13, 13);
+            this.labelTerrainDetailFactorValue.TabIndex = 16;
+            this.labelTerrainDetailFactorValue.Text = "0";
+            // 
             // PropertiesDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(746, 260);
+            this.Controls.Add(this.labelTerrainDetailFactorValue);
+            this.Controls.Add(this.labelMaxCrittersLoadedPerDLLValue);
+            this.Controls.Add(this.trackBarTerrainDetailFactor);
             this.Controls.Add(this.buttonRestoreDefaults);
-            this.Controls.Add(this.textBoxTerrainDetailFactor);
             this.Controls.Add(this.labelTerrainDetailFactor);
             this.Controls.Add(this.buttonLaunchCritterFilePicker);
             this.Controls.Add(this.textBoxPathToFilesCreatedByCritterControllers);
@@ -184,15 +220,17 @@
             this.Controls.Add(this.buttonLaunchDLLPathPicker);
             this.Controls.Add(this.textBoxPathToCritterControllerDLLs);
             this.Controls.Add(this.labelPathToDLLs);
-            this.Controls.Add(this.textBoxMaxControllersPerDLL);
             this.Controls.Add(this.labelMaxControllersPerDLL);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOk);
+            this.Controls.Add(this.trackBarMaxCrittersLoadedPerDLL);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "PropertiesDialog";
             this.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.Text = "Properties";
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarMaxCrittersLoadedPerDLL)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarTerrainDetailFactor)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -203,17 +241,19 @@
         private System.Windows.Forms.Button buttonOk;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Label labelMaxControllersPerDLL;
-        private System.Windows.Forms.TextBox textBoxMaxControllersPerDLL;
         private System.Windows.Forms.Label labelPathToDLLs;
         private System.Windows.Forms.TextBox textBoxPathToCritterControllerDLLs;
         private System.Windows.Forms.Button buttonLaunchDLLPathPicker;
         private System.Windows.Forms.Button buttonLaunchCritterFilePicker;
         private System.Windows.Forms.TextBox textBoxPathToFilesCreatedByCritterControllers;
         private System.Windows.Forms.Label labelPathToControllerFiles;
-        private System.Windows.Forms.TextBox textBoxTerrainDetailFactor;
         private System.Windows.Forms.Label labelTerrainDetailFactor;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialogCritterControllerDLL;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialogCritterCreatedFiles;
         private System.Windows.Forms.Button buttonRestoreDefaults;
+        private System.Windows.Forms.TrackBar trackBarMaxCrittersLoadedPerDLL;
+        private System.Windows.Forms.TrackBar trackBarTerrainDetailFactor;
+        private System.Windows.Forms.Label labelMaxCrittersLoadedPerDLLValue;
+        private System.Windows.Forms.Label labelTerrainDetailFactorValue;
     }
 }

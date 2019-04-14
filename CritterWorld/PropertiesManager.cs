@@ -8,14 +8,6 @@ using System.Xml.Serialization;
 
 namespace CritterWorld
 {
-    public class PropertiesRecord
-    {
-        public int CompetitionControllerLoadMaximum { get; set; }
-        public string CritterControllerDLLPath { get; set; }
-        public string CritterControllerFilesPath { get; set; }
-        public int TerrainDetailFactor { get; set; }
-    };
-
     public class PropertiesManager
     {
         public const string propertiesFileName = "CritterworldProperties.xml";
@@ -36,10 +28,7 @@ namespace CritterWorld
 
         public static void RestoreDefaults()
         {
-            Properties.CompetitionControllerLoadMaximum = 5;
-            Properties.CritterControllerDLLPath = "";
-            Properties.CritterControllerFilesPath = "CritterFiles";
-            Properties.TerrainDetailFactor = 80;
+            Properties.RestoreDefaults();
         }
 
         public static bool Load()

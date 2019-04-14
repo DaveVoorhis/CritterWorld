@@ -15,8 +15,28 @@ namespace CritterWorld
         public List<Critter> LoadCritters(bool isCompetition)
         {
             string executablePath = Path.GetDirectoryName(Application.ExecutablePath);
-            string pathForCritterFiles = executablePath + "/" + PropertiesManager.Properties.CritterControllerFilesPath;
-            string dllPath = executablePath + "/" + PropertiesManager.Properties.CritterControllerDLLPath;
+            string propertiesCritterControllerFilesPath = PropertiesManager.Properties.CritterControllerDLLPath.Trim();
+            string propertiesPathForCritterFiles = PropertiesManager.Properties.CritterControllerFilesPath.Trim();
+
+            string dllPath;
+            if (propertiesCritterControllerFilesPath.Length == 0)
+            {
+                dllPath = executablePath + "/";
+            }
+            else
+            {
+                dllPath = propertiesCritterControllerFilesPath;
+            }
+
+            string pathForCritterFiles;
+            if (propertiesPathForCritterFiles.Length == 0)
+            {
+                pathForCritterFiles = executablePath + "/CritterFiles";
+            }
+            else
+            {
+                pathForCritterFiles = propertiesPathForCritterFiles;
+            }
 
             List<Critter> critters = new List<Critter>();
 

@@ -1,3 +1,9 @@
+Version 2.5
+
+- Improved choice of widgets in Properties dialog
+- Improved handling of directories set in Properties
+- Reformatting Changes.txt
+
 Version 2.4
 
 - Added Properties settings.
@@ -9,129 +15,129 @@ Version 2.3
 
 Version 2.2
 
- - CritterLoader now sends log messages to Critterworld.Log instead of Console.
+- CritterLoader now sends log messages to Critterworld.Log instead of Console.
 
 Version 2.1
 
- - Fix possible NPE in Critter.
- - Dead CritterS could send messages to controller. Fixed.
+- Fix possible NPE in Critter.
+- Dead CritterS could send messages to controller. Fixed.
 
 Version 2.0
 
- - CritterWorld 2 begins.
+- CritterWorld 2 begins.
 
 Version 0.1.11
 
- - Re-instate Configuration, since it won't be part of the assignment.
- - Added "poop".
- - Heavy refactoring.
+- Re-instate Configuration, since it won't be part of the assignment.
+- Added "poop".
+- Heavy refactoring.
 
 Version 0.1.10
 
- - Updated for assignment for 2012. Changed ICritterFactory to ICritterFactory2 and changed use of ICritterBrain to use
-   of the virtual base class CritterBrainCore.
+- Updated for assignment for 2012. Changed ICritterFactory to ICritterFactory2 and changed use of ICritterBrain to use
+  of the virtual base class CritterBrainCore.
 
 Version 0.1.9
 
- - Minor tweaks to Critter and World to simplify birth
-   and tracking of DLL file name.
+- Minor tweaks to Critter and World to simplify birth
+  and tracking of DLL file name.
 
 Version 0.1.8
 
- - In VisibleObject.PumpEvents(), Thread.Sleep(0) changed
-   to Thread.Sleep(1) to reduce CPU burn.
+- In VisibleObject.PumpEvents(), Thread.Sleep(0) changed
+  to Thread.Sleep(1) to reduce CPU burn.
 
 Version 0.1.7
 
- - Better error trapping in World.LoadCritters().
+- Better error trapping in World.LoadCritters().
 
 Version 0.1.6
 
- - Added deadCritters.Clear() to World.StopWorld() so that dead critter
-   display resets when level changes.
+- Added deadCritters.Clear() to World.StopWorld() so that dead critter
+  display resets when level changes.
 
 Version 0.1.5
 
- - Critter death now shuts down Critter timers.
- - VisibleObject message pump thread now set to below normal priority,
-   hopefully to improve responsiveness.
+- Critter death now shuts down Critter timers.
+- VisibleObject message pump thread now set to below normal priority,
+  hopefully to improve responsiveness.
 
 Version 0.1.4
 
- - Logging improved; supports multiple message levels and assocated log file, 
-   etc.
- - Crashed CritterS now immediately killed off.
+- Logging improved; supports multiple message levels and assocated log file, 
+  etc.
+- Crashed CritterS now immediately killed off.
 
 Version 0.1.3
 
- - Reverted changes to ICritter interface.  All 'Point point' changed to
-   'int x, int y'.
+- Reverted changes to ICritter interface.  All 'Point point' changed to
+  'int x, int y'.
 
 Version 0.1.2
 
- - Re-instated increase in energy consumption when moving fast,
-   in Critter.
- - Re-wrote IsCollisionWithTerrain(Point, Point, radius) in VisibleMovableObject.  
-   It might work, it might not.  Try it.
- - ICritter interface: All 'int x, int y' changed to 'Point point'.
-   Critter changed correspondingly.
- - Added scrolling "news" marquee to main form.
- - Added "competition mode" to CritterWorld.  Start up as 'CritterWorld -?'
-   to see options.
- - Created CritterWorldRunner and CritterWorldControlPanel to handle remote 
-   operation via shared folder.  If you set CritterWorldRunner to be the default
-   startup project, it will launch CritterWorld in competition mode but
-   note that it can only be shut down explicitly via "Debug | Stop Debugging"
-   or via CritterWorldControlPanel.  CritterWorldControlPanel can be used to 
-   start and stop CritterWorld and/or CritterWorldRunner.
- - Critter stats display re-engineered, mainly in CritterWorldForm, Critter,
-   and World.
- - Leaderboard (high scores) added via Leaderboard, World, and CritterWorldForm.
-   Note file name defined in World, to provide persistence.
+- Re-instated increase in energy consumption when moving fast,
+  in Critter.
+- Re-wrote IsCollisionWithTerrain(Point, Point, radius) in VisibleMovableObject.  
+  It might work, it might not.  Try it.
+- ICritter interface: All 'int x, int y' changed to 'Point point'.
+  Critter changed correspondingly.
+- Added scrolling "news" marquee to main form.
+- Added "competition mode" to CritterWorld.  Start up as 'CritterWorld -?'
+  to see options.
+- Created CritterWorldRunner and CritterWorldControlPanel to handle remote 
+  operation via shared folder.  If you set CritterWorldRunner to be the default
+  startup project, it will launch CritterWorld in competition mode but
+  note that it can only be shut down explicitly via "Debug | Stop Debugging"
+  or via CritterWorldControlPanel.  CritterWorldControlPanel can be used to 
+  start and stop CritterWorld and/or CritterWorldRunner.
+- Critter stats display re-engineered, mainly in CritterWorldForm, Critter,
+  and World.
+- Leaderboard (high scores) added via Leaderboard, World, and CritterWorldForm.
+  Note file name defined in World, to provide persistence.
 
 Version 0.1.1
 
- - Added Version class and altered title on CritterWorldForm to
-   show product name and version.
- - Fixed collision code (mainly IsTouching and related methods)
-   in VisibleObject and World.
- - Included Background01.png, Background02.png and BackgroundBase.png
-   in CritterWorld resources.  These were mistakenly excluded.
- - Fixed background image loading in WorldPanel.
- - GetDestination now returns empty Rectangle if there is no Goal,
-   instead of returning Rectangle(-1, -1, -1, -1).
- - Changed Competition definition.
- - Thread.Sleep(0) in SpriteEnvironment.Renderer() changed to invoke
-   Thread.Sleep(1) at intervals in order to to improve UI responsiveness.
- - Logged error messages now include minimal stack trace.
- - ICritterBrain method 'void NotifyBumped(IOtherCritter otherCritter)'
-   changed to 'void NotifyBumped(IWorldObject otherCritter)' to fix
-   illegal cast exceptions thrown in Critter.NotifyBumped() and
-   to allow future richer interactions between Critters and
-   environment.
- - DemoCritter project and DemoCritterBrain* updated to allow
-   for above.
- - Added alpha channel to demo4_1.png and demo4_2.png.
- - 'Energy' handling simplified and fixed in VisibleMovableObject 
-   and Critter.
- - Critters used to lose energy faster as they got older (theoretically),
-   but this added conceptual complexity.  Removed from 
-   World.UpdateAges().
- - Removed startTime from Critter.  Not used.
- - DeadReason added to VisibleObject; displayed in Critter.DisplayEnergy.
-   Set via Die().
- - Critter stats display re-written; no Refresh() required.
- - Timer, FPS, etc. removed from CritterWorldForm.  No longer needed.
- - Critter "feeding" moved from Critter to Food, to simplify both and
-   eliminate multiple feedings due to repeated collision detections.
- - Numerous minor tweaks.
+- Added Version class and altered title on CritterWorldForm to
+  show product name and version.
+- Fixed collision code (mainly IsTouching and related methods)
+  in VisibleObject and World.
+- Included Background01.png, Background02.png and BackgroundBase.png
+  in CritterWorld resources.  These were mistakenly excluded.
+- Fixed background image loading in WorldPanel.
+- GetDestination now returns empty Rectangle if there is no Goal,
+  instead of returning Rectangle(-1, -1, -1, -1).
+- Changed Competition definition.
+- Thread.Sleep(0) in SpriteEnvironment.Renderer() changed to invoke
+  Thread.Sleep(1) at intervals in order to to improve UI responsiveness.
+- Logged error messages now include minimal stack trace.
+- ICritterBrain method 'void NotifyBumped(IOtherCritter otherCritter)'
+  changed to 'void NotifyBumped(IWorldObject otherCritter)' to fix
+  illegal cast exceptions thrown in Critter.NotifyBumped() and
+  to allow future richer interactions between Critters and
+  environment.
+- DemoCritter project and DemoCritterBrain* updated to allow
+  for above.
+- Added alpha channel to demo4_1.png and demo4_2.png.
+- 'Energy' handling simplified and fixed in VisibleMovableObject 
+  and Critter.
+- Critters used to lose energy faster as they got older (theoretically),
+  but this added conceptual complexity.  Removed from 
+  World.UpdateAges().
+- Removed startTime from Critter.  Not used.
+- DeadReason added to VisibleObject; displayed in Critter.DisplayEnergy.
+  Set via Die().
+- Critter stats display re-written; no Refresh() required.
+- Timer, FPS, etc. removed from CritterWorldForm.  No longer needed.
+- Critter "feeding" moved from Critter to Food, to simplify both and
+  eliminate multiple feedings due to repeated collision detections.
+- Numerous minor tweaks.
 
 Version 0.1.0
 
- - Initial release after revisions by Dave.
- - No indication of version in software.
+- Initial release after revisions by Dave.
+- No indication of version in software.
 
 Version 0.0.0
 
- - Tanq 0.0.13 (Java) by Dave becomes basis for CritterWorld (C#) by Wayne.
- - No indication of version in software.
+- Tanq 0.0.13 (Java) by Dave becomes basis for CritterWorld (C#) by Wayne.
+- No indication of version in software.
