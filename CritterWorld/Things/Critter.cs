@@ -513,7 +513,7 @@ namespace CritterWorld
             Notify("CRASHED:" + Position.ToString() + ":" + e.ToString());
             CrashedCount++;
             DeadReason = "crashed";
-            Log(DeadReason);
+            Log(DeadReason, e);
             Health = 0;
             Energy = 0;
         }
