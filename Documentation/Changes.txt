@@ -1,3 +1,9 @@
+Version 2.8
+
+- When there are namespace collisions whilst
+  loading controllers, clearly indicate
+  the filenames of both DLLs that share a namespace.
+
 Version 2.7
 
 - Strengthened error checking in controller loading,

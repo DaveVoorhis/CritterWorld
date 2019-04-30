@@ -60,7 +60,7 @@ namespace CritterWorld
 
                 int critterNumber = 1;
 
-                HashSet<string> namespacesUsed = new HashSet<string>();
+                Dictionary<string, string> namespacesUsed = new Dictionary<string, string>();
 
                 foreach (string file in dllFiles)
                 {
@@ -79,16 +79,16 @@ namespace CritterWorld
                                     Critterworld.Log(new LogEntry("*** " + msg));
                                     MessageBox.Show(msg, "Controller Load Problem!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                                 }
-                                else if (namespacesUsed.Contains(type.Namespace))
+                                else if (namespacesUsed.TryGetValue(type.Namespace, out string usedIn))
                                 {
-                                    string msg = "Error loading controllers from " + file + ". Namespace " + type.Namespace + " has already been used.";
+                                    string msg = "Error loading controllers from " + file + ". Namespace " + type.Namespace + " has already been used in DLL " + usedIn;
                                     Critterworld.Log(new LogEntry("*** " + msg));
                                     MessageBox.Show(msg, "Controller Load Problem!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                                 }
                                 else
                                 {
                                     ICritterControllerFactory critterFactory = (ICritterControllerFactory)Activator.CreateInstance(type);
-                                    namespacesUsed.Add(type.Namespace);
+                                    namespacesUsed.Add(type.Namespace, file);
                                     if (critterFactory.Author == null)
                                     {
                                         Critterworld.Log(new LogEntry("*** Error loading controller from " + file + ". Loading succeeded but Author property is null."));
