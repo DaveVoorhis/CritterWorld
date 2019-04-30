@@ -53,76 +53,96 @@ namespace CritterWorld
                 }
             }
 
-            Critterworld.Log(new LogEntry("Loading Critter controllers from " + dllPath));
+            Critterworld.Log(new LogEntry("Loading all Critter controllers from path " + dllPath));
             try
             {
                 string[] dllFiles = System.IO.Directory.GetFiles(dllPath, "*.dll");
 
                 int critterNumber = 1;
 
+                HashSet<string> namespacesUsed = new HashSet<string>();
+
                 foreach (string file in dllFiles)
                 {
+                    Critterworld.Log(new LogEntry("Loading Critter controllers from file " + file));
                     try
                     {
-                        Assembly assembly = Assembly.LoadFrom(file);
+                        Assembly assembly = Assembly.UnsafeLoadFrom(file);
                         assembly.GetTypes().Where(type => type.IsClass && type.GetInterface("ICritterControllerFactory") != null).ToList().ForEach(type =>
                         {
                             try
                             {
-                                ICritterControllerFactory critterFactory = (ICritterControllerFactory)Activator.CreateInstance(type);
-                                if (critterFactory.Author == null)
+                                Critterworld.Log(new LogEntry("Attempting to create instance of type " + type.FullName + " from namespace " + type.Namespace + " from file " + file));
+                                if (type.Namespace == "DemonstrationCritters" && !file.EndsWith("DemonstrationCritters.dll"))
                                 {
-                                    Critterworld.Log(new LogEntry("Error loading controller from " + file + ". Loading succeeded but Author property is null."));
+                                    string msg = "Error loading controllers from " + file + ". Namespace matches DemonstrationCritters namespace.";
+                                    Critterworld.Log(new LogEntry("*** " + msg));
+                                    MessageBox.Show(msg, "Controller Load Problem!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                                }
+                                else if (namespacesUsed.Contains(type.Namespace))
+                                {
+                                    string msg = "Error loading controllers from " + file + ". Namespace " + type.Namespace + " has already been used.";
+                                    Critterworld.Log(new LogEntry("*** " + msg));
+                                    MessageBox.Show(msg, "Controller Load Problem!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                                 }
                                 else
                                 {
-                                    Color familyColor = Color.Black;
-                                    ICritterController[] controllers = critterFactory.GetCritterControllers();
-                                    if (controllers == null)
+                                    ICritterControllerFactory critterFactory = (ICritterControllerFactory)Activator.CreateInstance(type);
+                                    namespacesUsed.Add(type.Namespace);
+                                    if (critterFactory.Author == null)
                                     {
-                                        Critterworld.Log(new LogEntry("Error loading controller from " + file + ". CritterFactory.GetCritterControllers() returned null."));
+                                        Critterworld.Log(new LogEntry("*** Error loading controller from " + file + ". Loading succeeded but Author property is null."));
                                     }
                                     else
                                     {
-                                        int loadedCount = 0;
-                                        foreach (ICritterController controller in controllers)
+                                        Color familyColor = Color.Black;
+                                        ICritterController[] controllers = critterFactory.GetCritterControllers();
+                                        if (controllers == null)
                                         {
-                                            if (controller == null)
+                                            Critterworld.Log(new LogEntry("*** Error loading controller from " + file + ". CritterFactory.GetCritterControllers() returned null."));
+                                        }
+                                        else
+                                        {
+                                            int loadedCount = 0;
+                                            foreach (ICritterController controller in controllers)
                                             {
-                                                Critterworld.Log(new LogEntry("Error loading controller from " + file + ". Failed to load; controller is null."));
-                                            }
-                                            else
-                                            {
-                                                try
+                                                if (controller == null)
                                                 {
-                                                    int number = critterNumber++;
-                                                    controller.Filepath = PropertiesManager.Properties.CritterControllerFilesPath;
-                                                    Critter critter = new Critter(number, controller);
-                                                    if (familyColor == Color.Black)
-                                                    {
-                                                        familyColor = critter.Color;
-                                                    }
-                                                    else
-                                                    {
-                                                        critter.Color = familyColor;
-                                                    }
-                                                    critter.Author = critterFactory.Author.Trim().Replace(':', '_').Replace('\t', '_').Replace('\n', '_');
-                                                    if (controller.Name != null)
-                                                    {
-                                                        critter.Name = controller.Name.Trim().Replace(':', '_').Replace('\t', '_').Replace('\n', '_');
-                                                    }
-                                                    Critterworld.Log(new LogEntry(number, controller.Name, critterFactory.Author, "Loaded controller from " + file));
-                                                    critters.Add(critter);
-                                                    loadedCount++;
-                                                    if (isCompetition && loadedCount == PropertiesManager.Properties.CompetitionControllerLoadMaximum)
-                                                    {
-                                                        Critterworld.Log(new LogEntry(number, critter.Name, critter.Author, "During competition, maximum number of controllers loadable from a factory is " + PropertiesManager.Properties.CompetitionControllerLoadMaximum));
-                                                        break;
-                                                    }
+                                                    Critterworld.Log(new LogEntry("*** Error loading controller from " + file + ". Failed to load; controller is null."));
                                                 }
-                                                catch (Exception e)
+                                                else
                                                 {
-                                                    Critterworld.Log(new LogEntry("Exception loading controller from " + file, e));
+                                                    try
+                                                    {
+                                                        int number = critterNumber++;
+                                                        controller.Filepath = PropertiesManager.Properties.CritterControllerFilesPath;
+                                                        Critter critter = new Critter(number, controller);
+                                                        if (familyColor == Color.Black)
+                                                        {
+                                                            familyColor = critter.Color;
+                                                        }
+                                                        else
+                                                        {
+                                                            critter.Color = familyColor;
+                                                        }
+                                                        critter.Author = critterFactory.Author.Trim().Replace(':', '_').Replace('\t', '_').Replace('\n', '_');
+                                                        if (controller.Name != null)
+                                                        {
+                                                            critter.Name = controller.Name.Trim().Replace(':', '_').Replace('\t', '_').Replace('\n', '_');
+                                                        }
+                                                        Critterworld.Log(new LogEntry(number, controller.Name, critterFactory.Author, "Loaded controller from " + file));
+                                                        critters.Add(critter);
+                                                        loadedCount++;
+                                                        if (isCompetition && loadedCount == PropertiesManager.Properties.CompetitionControllerLoadMaximum)
+                                                        {
+                                                            Critterworld.Log(new LogEntry(number, critter.Name, critter.Author, "During competition, maximum number of controllers loadable from a factory is " + PropertiesManager.Properties.CompetitionControllerLoadMaximum));
+                                                            break;
+                                                        }
+                                                    }
+                                                    catch (Exception e)
+                                                    {
+                                                        Critterworld.Log(new LogEntry("*** Exception loading controller from " + file, e));
+                                                    }
                                                 }
                                             }
                                         }
@@ -131,19 +151,19 @@ namespace CritterWorld
                             }
                             catch (Exception e)
                             {
-                                Critterworld.Log(new LogEntry("Error loading controller from " + file, e));
+                                Critterworld.Log(new LogEntry("*** Error loading controller from " + file, e));
                             }
                         });                        
                     }
                     catch (Exception e)
                     {
-                        Critterworld.Log(new LogEntry("Error loading file " + file, e));
+                        Critterworld.Log(new LogEntry("*** Error loading file " + file, e));
                     }
                 }
             }
             catch (Exception e)
             {
-                Critterworld.Log(new LogEntry("Error accessing controller .dll directory " + dllPath, e));
+                Critterworld.Log(new LogEntry("*** Error accessing controller .dll directory " + dllPath, e));
             }
             return critters;
         }

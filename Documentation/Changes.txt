@@ -1,3 +1,10 @@
+Version 2.7
+
+- Strengthened error checking in controller loading,
+  particularly verifying that controllers do not
+  attempt to use the same namespace as each other or
+  the demonstration controllers.
+
 Version 2.6
 
 - Log information about exceptions when controllers crash.
