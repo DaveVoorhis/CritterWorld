@@ -642,6 +642,7 @@ namespace CritterWorld
                         catch (Exception e)
                         {
                             Crashed(e);
+                            break;              // prevent infinite loop of Receive crashes that enqueue messages
                         }
                     }
                     Thread.Sleep(5);
